@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom'
-import '../App.css'
 
+/**
+ * 버튼을 통해 각 프로젝트로 진입할 수 있는 컴포넌트
+ */
 function ProjectNavigator() {
   const navigate = useNavigate();
 
