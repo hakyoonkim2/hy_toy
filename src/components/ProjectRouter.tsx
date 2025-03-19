@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProjectNavigator from './ProjectNavigator';
 import Header from './Header';
 import StopWatch from '../stopwatch/components/Stopwatch';
@@ -9,7 +9,7 @@ import CoinApp from '../bitCoinChart/components/CoinApp';
  */
 const ProjectRouter = () => {
     return (
-        <HashRouter>
+        <BrowserRouter basename='/hy_toy/'>
             <div className='wrapper'>
                 <Header />
                 <Routes>
@@ -18,7 +18,7 @@ const ProjectRouter = () => {
                     <Route path='/chart' element={<CoinApp/>}/>
                 </Routes>
             </div>
-        </HashRouter>
+        </BrowserRouter>
     );
 }
 

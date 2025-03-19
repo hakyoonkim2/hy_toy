@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef } from "react";
 import { createChart, CandlestickSeries, IChartApi } from "lightweight-charts";
 import { CoinWebSocketContext } from "../context/CoinWebSocketContext";
 
-const StockChart: React.FC<{symbol: string}> = ({symbol}) => {
+const CoinChart: React.FC<{symbol: string}> = ({symbol}) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const candleData = useContext(CoinWebSocketContext);
   const seriesRef = useRef<any>(null);
@@ -73,4 +73,4 @@ const StockChart: React.FC<{symbol: string}> = ({symbol}) => {
 );
 };
 
-export default StockChart;
+export default CoinChart;

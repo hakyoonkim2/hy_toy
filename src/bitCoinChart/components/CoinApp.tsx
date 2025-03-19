@@ -1,6 +1,6 @@
 import React, { useActionState } from "react";
 import CoinWebSocketProvider from "../context/CoinWebSocketContext";
-import StockChart from "./StockChart";
+import CoinChart from "./CoinChart";
 import style from "../style/chart.module.scss"
 import TradingViewChart from "./TradingViewChart";
 
@@ -24,13 +24,13 @@ const CoinApp: React.FC = () => {
     return (
         <div>
             <form action={formAction}>
-                <input name="symbol" type="text" />
+                <input name="symbol" type="text" placeholder="영어로 입력해라 ㅡㅡ"/>
                 <button type="submit">조회</button>
             </form>
         <CoinWebSocketProvider symbol={symbol}>
             <div className={style.chartwrapper}>
                 <TradingViewChart symbol={symbol}/>
-                <StockChart symbol={symbol}/>
+                <CoinChart symbol={symbol}/>
             </div>
         </CoinWebSocketProvider>
         </div>
