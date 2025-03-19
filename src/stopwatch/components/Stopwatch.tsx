@@ -3,7 +3,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 /**
  * 스탑워치 구현
  */
-const StopwatchController = () => {
+const StopWatch = () => {
     const [time, setTime] = useState<number>(0);
     const [laps, setLaps] = useState<number[]>([]);
     const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -85,4 +85,4 @@ const StopwatchController = () => {
     );
 }
 
-export default StopwatchController;
+export default StopWatch;
