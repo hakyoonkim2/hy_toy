@@ -1,3 +1,19 @@
 .chartwrapper {
     display: flex;
 }
+
+.chart {
+    width: 50%;
+    height: 100%;
+}
+
+
+@media screen and (max-width: 768px) {
+    .chartwrapper {
+        flex-direction: column;
+    }
+
+    .chart {
+        width: 100%;
+    }
+}

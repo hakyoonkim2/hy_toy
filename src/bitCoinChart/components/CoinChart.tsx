@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { createChart, CandlestickSeries, IChartApi } from "lightweight-charts";
 import { CoinWebSocketContext } from "../context/CoinWebSocketContext";
+import style from "../style/chart.module.scss";
+import { isMobile } from "../../utils/utils";
 
 const CoinChart: React.FC<{symbol: string}> = ({symbol}) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
@@ -13,7 +15,7 @@ const CoinChart: React.FC<{symbol: string}> = ({symbol}) => {
 
     const chart = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
-      height: 500,
+      height: isMobile() ? 250 : 500,
       layout: {
         background: { color: "#181818" },
         textColor: "#FFFFFF",
@@ -67,7 +69,7 @@ const CoinChart: React.FC<{symbol: string}> = ({symbol}) => {
   }, [candleData]);
 
   return (
-    <div style={{ width: "50%", height: "100%" }}>
+    <div className={style.chart}>
       <div ref={chartContainerRef} style={{ width: "100%", height: "100%" }} />
     </div>
 );
