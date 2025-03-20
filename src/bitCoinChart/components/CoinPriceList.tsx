@@ -15,6 +15,11 @@ const CoinPriceList = ({symbol}: {symbol: string}) => {
         setSymbol(symbol);
         if (isMobile) navigator('/chart/chartview');
     }
+    // 기본값 처리
+    const price = data?.price ?? 0;
+    const openPrice = data?.openPrice ?? 1; // 0으로 두면 NaN 발생 가능하므로 1 사용
+    const priceChange = price === 0 ? 0 : ((price - openPrice) / openPrice * 100).toFixed(2);
+    const color = data?.color ?? "#FFFFFF"; // 기본 색상 지정
 
     return (
         <div className={style.chartList} onClick={handleClick} ref={ref}>
@@ -22,7 +27,8 @@ const CoinPriceList = ({symbol}: {symbol: string}) => {
                 <strong className={style.symbolListLabel}>{symbol.replace("USDT", "")}</strong>
             </div>
             <div style={{width: "100%", textAlign: "right"}}>
-                <strong className={style.price} style={{color: data?.color}}>{`${data?.price} `}</strong>
+                <strong className={style.price} style={{color: color}}>{`${price}`}</strong>
+                <strong className={style.price} style={{color: color, marginLeft: '10px'}}>{`${priceChange}% `}</strong>
                 <strong className={style.price} style={{marginLeft: '10px'}}>{`USD`}</strong>
             </div>
         </div>

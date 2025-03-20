@@ -14,25 +14,31 @@ const CoinApp: React.FC = () => {
     useEffect(() => {
         worker.port.onmessage = (event: MessageEvent) => {
             const symbolsData = event.data;
-            Object.entries(symbolsData).forEach(([symbol, data]) => {
-                queryClient.setQueryData(["symbol", symbol], data);
-            });
+            if (symbolsData?.type === 'data') {
+              Object.entries(symbolsData.data).forEach(([symbol, data]) => {
+                  queryClient.setQueryData(["symbol", symbol], data);
+              });
+              if (symbolList.length === 0) {
+                setSymbolList(Object.keys(symbolsData.data));
+              }
+              console.log(event.data);
+            }
         };
 
-        const fetchSymbols = async () => {
-            try {
-              const response = await fetch("https://api.binance.com/api/v3/exchangeInfo");
-              const data = await response.json();
-              if (data.symbols) {
-                const symbolList = data.symbols.filter(({symbol, status}: { symbol: string, status: string }) => symbol.includes("USDT") && status === "TRADING").map((symbol: { symbol: string }) => symbol.symbol);
-                setSymbolList(symbolList);
-              }
-            } catch (error) {
-              console.error("Error fetching Binance symbols:", error);
-            }
-          };
+        // const fetchSymbols = async () => {
+        //     try {
+        //       const response = await fetch("https://api.binance.com/api/v3/exchangeInfo");
+        //       const data = await response.json();
+        //       if (data.symbols) {
+        //         const symbolList = data.symbols.filter(({symbol, status}: { symbol: string, status: string }) => symbol.includes("USDT") && status === "TRADING").map((symbol: { symbol: string }) => symbol.symbol);
+        //         setSymbolList(symbolList);
+        //       }
+        //     } catch (error) {
+        //       console.error("Error fetching Binance symbols:", error);
+        //     }
+        //   };
 
-          fetchSymbols();
+        //   fetchSymbols();
     }, []);
 
 

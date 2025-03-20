@@ -10,4 +10,5 @@ export type TradingData = {
 export type CurrentPriceData = {
     price: number,
     color: string,
+    openPrice: number,
 }
