@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import style from "../style/chart.module.scss"
-import { isMobile } from "../../utils/utils";
+import { isMobile } from "react-device-detect";
 
 /**
  * tradingView 차트 위젯을 통해 차트 구성
@@ -20,7 +20,7 @@ const TradingViewChart: React.FC<{symbol: string}> = ({symbol}) => {
         new window.TradingView.widget({
           container_id: "tradingview_chart",
           width: "100%",
-          height: isMobile() ? "250px" :"500px",
+          height: isMobile ? "250px" :"500px",
           symbol: `BINANCE:${symbol}`,
           interval: "1",
           timezone: "Etc/UTC",

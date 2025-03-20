@@ -1,11 +1,5 @@
 import { CandlestickData, Time } from "lightweight-charts";
-
-type Subscriber = (data: CandlestickData[]) => void;
-
-type TradingData = {
-    price: number,
-    time: Time,
-}
+import { Subscriber, TradingData } from "../types/CoinTypes";
 
 /**
  * @symbol 코인 거래 종목
@@ -31,6 +25,7 @@ class CoinWebSocketManager {
         // const wsUrl = `wss://stream.binance.com:9443/ws/${this.symbol.toLowerCase()}@kline_${this.interval}`;
         // 실시간 trading 정보가져오는 url
         const wsUrl = `wss://stream.binance.com:9443/ws/${this.symbol.toLowerCase()}@trade`;
+        // const wsUrl = `wss://stream.binance.com:9443/ws/!ticker@arr`;
 
         // init 상황에서 이전 웹소켓이 있는경우 close
         if (this.ws) this.closeAll();
