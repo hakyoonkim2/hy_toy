@@ -43,7 +43,7 @@ async function getOpenPrice(symbol) {
         }
 
         // 어제의 open price (1d 캔들의 시작가)
-        const openPrice = data[0][1];
+        const openPrice = data.length >= 2 ? data[1][1] : data[0][1];
 
         return { symbol, openPrice };
     } catch (error) {
