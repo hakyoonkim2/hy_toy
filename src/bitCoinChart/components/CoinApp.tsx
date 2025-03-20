@@ -1,15 +1,24 @@
-import React, { ChangeEvent, useActionState, useEffect, useRef, useState } from "react";
-import CoinWebSocketProvider from "../context/CoinWebSocketContext";
-import CoinChart from "./CoinChart";
+import React, { useEffect } from "react";
 import style from "../style/chart.module.scss"
-import TradingViewChart from "./TradingViewChart";
+import CoinPriceList from "./CoinPriceList";
+import { useQueryClient } from "@tanstack/react-query";
+import { isMobile } from "react-device-detect";
+import CoinChartView from "./CoinChartView";
+import { useSymbol } from "../hooks/SymbolContextProvider";
 
 const CoinApp: React.FC = () => {
-    const [symbolList, setSymbolList] = useState<string[]>([]);
-    const [symbol, setSymbol] = useState<string>('ADAUSDT');
-    const selectRef = useRef<HTMLSelectElement>(null);
+    const {symbolList, setSymbolList, worker} = useSymbol();
+    
+    const queryClient = useQueryClient();
 
     useEffect(() => {
+        worker.port.onmessage = (event: MessageEvent) => {
+            const symbolsData = event.data;
+            Object.entries(symbolsData).forEach(([symbol, data]) => {
+                queryClient.setQueryData(["symbol", symbol], data);
+            });
+        };
+
         const fetchSymbols = async () => {
             try {
               const response = await fetch("https://api.binance.com/api/v3/exchangeInfo");
@@ -26,45 +35,14 @@ const CoinApp: React.FC = () => {
           fetchSymbols();
     }, []);
 
-    useEffect(() => {
-        if (selectRef.current) selectRef.current.value = symbol;
-    }, [symbol]);
 
-    const [_, formAction] = useActionState((prevSymbol: string, formData: FormData) => {
-        const inputSymbol = formData.get("symbol") as string;
-        const newSymbol = inputSymbol.toUpperCase() + "USDT";
-
-        const isValid = symbolList.includes(newSymbol);
-
-        if (isValid) {
-            setSymbol(newSymbol);
-            return newSymbol;
-        } else {
-            alert(`${newSymbol} 은 유효하지 않습니다`);
-            return prevSymbol;
-        }
-    }, "ADAUSDT");
-
-    const handleOptionSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-        setSymbol(e.target.value);
-    }
 
     return (
-        <div>
-            <form action={formAction}>
-                <input name="symbol" type="text" placeholder="영어로 입력해라 ㅡㅡ"/>
-                <button type="submit">조회</button>
-                <label>{`현재 선택된 심볼: ${symbol}`}</label>
-            </form>
-            <select ref={selectRef} value={symbol} onChange={handleOptionSelect}>
-                {symbolList.map(x => <option key={x} value={x}>{x}</option>)}
-            </select>
-        <CoinWebSocketProvider symbol={symbol}>
-            <div className={style.chartwrapper}>
-                <TradingViewChart symbol={symbol}/>
-                <CoinChart symbol={symbol}/>
+        <div className={style.app}>
+            <div className={style.listContainer}style={{ width: isMobile ? '100%': "300px" }}>
+                {symbolList.length > 0 ? symbolList.map((symbol) => <CoinPriceList key={symbol} symbol={symbol}/>) : <></>}
             </div>
-        </CoinWebSocketProvider>
+            {!isMobile ?  <CoinChartView />: <></>}
         </div>
     );
 };

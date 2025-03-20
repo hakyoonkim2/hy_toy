@@ -17,3 +17,49 @@
         width: 100%;
     }
 }
+
+.chartList {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    min-height: 51px;
+    overflow: hidden;
+    padding: 8px 14px 8px 26px;
+    justify-content: space-between;
+    border-bottom: 1px solid #9a9898c1;
+
+    :hover {
+        cursor: pointer;
+    }
+}
+
+.symbolListLabel {
+    font-size: 11px;
+}
+
+.price {
+    display: inline-block;
+    font-size: 12px;
+    line-height: 16px;
+    position: relative;
+    word-break: break-all;
+}
+
+.app {
+    height: calc(100svh - 120px);
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+}
+
+.chartviewContainer {
+    width: 100%;
+}
