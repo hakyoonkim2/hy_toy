@@ -20,7 +20,7 @@ async function getAllSymbols() {
 
         // USDT 마켓에 해당하는 종목만 필터링
         const symbols = data.symbols
-            .filter((s) => s.symbol.endsWith("USDT")) // USDT 페어만 가져오기
+            .filter((s) => s.symbol.endsWith("USDT") && s.status === 'TRADING') // USDT 페어만 가져오기
             .map((s) => s.symbol);
 
         return symbols;
@@ -44,11 +44,12 @@ async function getOpenPrice(symbol) {
 
         // 어제의 open price (1d 캔들의 시작가)
         const openPrice = data.length >= 2 ? data[1][1] : data[0][1];
+        const curPrice = data.length >= 2 ? data[1][4] : data[0][4];
 
-        return { symbol, openPrice };
+        return { symbol, openPrice, curPrice };
     } catch (error) {
         console.error(`Error fetching data for ${symbol}:`, error);
-        return { symbol, openPrice: null };
+        return { symbol, openPrice: null , curPrice: null };
     }
 }
 
@@ -65,7 +66,13 @@ async function fetchAllOpenPrices() {
 
     const results = await Promise.all(symbols.map(getOpenPrice));
     results.forEach(x => {
-      priceMap[x.symbol] = {price: parseFloat(x.openPrice).toString(), color: '#FFFFFF', openPrice: parseFloat(x.openPrice).toString()}
+      let color = '#FFFFFF';
+      if (parseFloat(x.openPrice) < parseFloat(x.curPrice)) {
+        color = "#f75467";
+      } else if (parseFloat(x.openPrice) > parseFloat(x.curPrice)) {
+        color = "#4386f9";
+      }
+      priceMap[x.symbol] = {price: parseFloat(x.curPrice).toString(), color: color, openPrice: parseFloat(x.openPrice).toString()}
     });
 }
 
