@@ -45,7 +45,7 @@ const CoinChart: React.FC<{symbol: string}> = ({symbol}) => {
     seriesRef.current = series;
     chartRef.current = chart;
 
-    // chart에 width가 number만 가능하기때문에 100%를 줄수가 없음. 까라서 resize observer를 통해 chartSize를 가변적으로 핸들링하도록 처리
+    // chart에 width가 number만 가능하기때문에 100%를 줄수가 없음. 따라서 resize observer를 통해 chartSize를 가변적으로 핸들링하도록 처리
     const resizeObserver = new ResizeObserver(entries => {
       for (let entry of entries) {
         if (entry.contentRect) {
@@ -64,7 +64,6 @@ const CoinChart: React.FC<{symbol: string}> = ({symbol}) => {
   }, [symbol]);
 
   useEffect(() => {
-    // ✅ 5.x 버전에서는 addSeries() 사용
     seriesRef.current.setData(candleData);
   }, [candleData]);
 
