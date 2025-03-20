@@ -30,7 +30,7 @@ const CoinApp: React.FC = () => {
         if (selectRef.current) selectRef.current.value = symbol;
     }, [symbol]);
 
-    const [_, formAction] = useActionState(async (prevSymbol: string, formData: FormData) => {
+    const [_, formAction] = useActionState((prevSymbol: string, formData: FormData) => {
         const inputSymbol = formData.get("symbol") as string;
         const newSymbol = inputSymbol.toUpperCase() + "USDT";
 
