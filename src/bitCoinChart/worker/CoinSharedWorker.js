@@ -66,7 +66,13 @@ async function fetchAllOpenPrices() {
 
     const results = await Promise.all(symbols.map(getOpenPrice));
     results.forEach(x => {
-      priceMap[x.symbol] = {price: parseFloat(x.curPrice).toString(), color: '#FFFFFF', openPrice: parseFloat(x.openPrice).toString()}
+      let color = '#FFFFFF';
+      if (parseFloat(x.openPrice) < parseFloat(x.curPrice)) {
+        color = "#f75467";
+      } else if (parseFloat(x.openPrice) > parseFloat(x.curPrice)) {
+        color = "#4386f9";
+      }
+      priceMap[x.symbol] = {price: parseFloat(x.curPrice).toString(), color: color, openPrice: parseFloat(x.openPrice).toString()}
     });
 }
 
