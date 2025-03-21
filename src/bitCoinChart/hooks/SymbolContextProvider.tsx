@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
-export const SymbolContext = createContext<{ symbol: string; setSymbol: (value: string) => void; symbolList: string[]; setSymbolList: (value: string[]) => void; worker: SharedWorker  } | null>(null);
+export const SymbolContext = createContext<{ symbol: string; setSymbol: (value: string) => void; symbolList: string[]; setSymbolList: (value: string[]) => void; worker: SharedWorker | Worker  } | null>(null);
 
 export const useSymbol = () => {
   const context = useContext(SymbolContext);
@@ -10,7 +10,7 @@ export const useSymbol = () => {
   return context;
 };
 
-const worker = new SharedWorker(new URL('../worker/CoinSharedWorker.js', import.meta.url), {type: "module"});
+const worker = typeof SharedWorker !== 'undefined' ? new SharedWorker(new URL('../worker/CoinSharedWorker.js', import.meta.url), {type: 'module'}) : new Worker(new URL('../worker/CoinWorker.js', import.meta.url), {type: 'module'});
 
 const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
     const [symbol, setSymbol] = useState<string>("ADAUSDT");
@@ -18,7 +18,11 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
       return () => {
-        worker.port.close();
+        if (worker instanceof SharedWorker) {
+          worker.port.close();
+        } else {
+          worker.terminate();
+        }
       }
     }, []);
   

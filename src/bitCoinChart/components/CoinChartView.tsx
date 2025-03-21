@@ -5,6 +5,7 @@ import style from "../style/chart.module.scss"
 import { useSymbol } from "../hooks/SymbolContextProvider";
 import CoinChart from "./CoinChart";
 import { OrderBook } from "./OrderBook";
+import { isMobile } from "react-device-detect";
 
 /**
  * 차트 제공 UI
@@ -39,7 +40,7 @@ const CoinChartView = () => {
     }, [symbol]);
 
     return (
-        <div className={`${style.chartviewContainer} ${style.scrollContainer}`}>
+        <div className={`${style.chartviewContainer}`} style={{paddingLeft: isMobile ? '0px' : '15px'}}>
                 <form action={formAction}>
                     <input name="symbol" type="text" placeholder="영어로 입력 (ex: BTC)"/>
                     <button type="submit">조회</button>
