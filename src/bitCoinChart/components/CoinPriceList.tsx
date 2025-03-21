@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import style from "../style/chart.module.scss";
 import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
@@ -17,7 +17,6 @@ const CoinPriceList: React.FC<CoinPriceListProps> = ({ symbol }) => {
     const { data } = useSymbolData(symbol);
     const ref = useRef(null);
     const navigator = useNavigate();
-
 
     const handleClick = () => {
         setSymbol(symbol);
