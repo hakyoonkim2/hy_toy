@@ -1,5 +1,5 @@
 import { CandlestickData, Time } from "lightweight-charts";
-import { Subscriber, TradingData } from "../types/CoinTypes";
+import { BINANCE_URL, Subscriber, TradingData } from "../types/CoinTypes";
 
 /**
  * @symbol 코인 거래 종목
@@ -21,11 +21,8 @@ class CoinWebSocketManager {
 
     // WebSocket 초기화
     private init(): void {
-        // kline 정보 가져오는 url
-        // const wsUrl = `wss://stream.binance.com:9443/ws/${this.symbol.toLowerCase()}@kline_${this.interval}`;
         // 실시간 trading 정보가져오는 url
-        const wsUrl = `wss://stream.binance.com:9443/ws/${this.symbol.toLowerCase()}@trade`;
-        // const wsUrl = `wss://stream.binance.com:9443/ws/!ticker@arr`;
+        const wsUrl = `${BINANCE_URL}${this.symbol.toLowerCase()}@trade`;
 
         // init 상황에서 이전 웹소켓이 있는경우 close
         if (this.ws) this.closeAll();
@@ -36,6 +33,7 @@ class CoinWebSocketManager {
         ws.onmessage = (event: MessageEvent) => {
             const json = JSON.parse(event.data);
 
+            // 받아진 json을 간단한 데이터 타입으로 변환
             const tradingData: TradingData = {
                 time: Math.floor(Number(json.T)/1000) as Time,
                 price: parseFloat(json.p)
@@ -67,6 +65,7 @@ class CoinWebSocketManager {
                     close: tradingData.price,
                 };
 
+                // 이전과 타임(1s) 기준이 다른 것이므로 새로 push
                 this.data.push(newCandle);
             }
 
