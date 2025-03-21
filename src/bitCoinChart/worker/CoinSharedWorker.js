@@ -67,12 +67,14 @@ async function fetchAllOpenPrices() {
     const results = await Promise.all(symbols.map(getOpenPrice));
     results.forEach(x => {
       let color = '#FFFFFF';
-      if (parseFloat(x.openPrice) < parseFloat(x.curPrice)) {
+      const curPrice = parseFloat(x.curPrice);
+      const openPrice = parseFloat(x.openPrice);
+      if (openPrice < curPrice) {
         color = "#f75467";
-      } else if (parseFloat(x.openPrice) > parseFloat(x.curPrice)) {
+      } else if (openPrice > curPrice) {
         color = "#4386f9";
       }
-      priceMap[x.symbol] = {price: parseFloat(x.curPrice).toString(), color: color, openPrice: parseFloat(x.openPrice).toString()}
+      priceMap[x.symbol] = {price: curPrice, color: color, openPrice: openPrice}
     });
 }
 
@@ -87,23 +89,29 @@ const connectWebSocket = () => {
   ws.onmessage = (event) => { 
       const json = JSON.parse(event.data);
       const symbolFilterArr = Array.from(json).filter(x => x.s.includes("USDT"));
-      connections.forEach((port) => {
-        port.postMessage({type: 'data', data: priceMap});
-      });
-      // 변경이 있는 데이터만 전송해주므로 따로 효율화 할 필요 없음
-      symbolFilterArr.forEach(x => {
-        let color = '#FFFFFF';
-          if (parseFloat(priceMap[x.s].openPrice) < parseFloat(x.c)) {
-            color = "#f75467";
-          } else if (parseFloat(priceMap[x.s].openPrice) > parseFloat(x.c)) {
-            color = "#4386f9";
+      try {
+        // 변경이 있는 데이터만 전송해주므로 따로 효율화 할 필요 없음
+        symbolFilterArr.forEach(x => {
+          if (priceMap[x.s]) {
+            let color = '#FFFFFF';
+            const curPrice = parseFloat(x.c);
+            if (priceMap[x.s].openPrice < curPrice) {
+              color = "#f75467";
+            } else if (priceMap[x.s].openPrice > curPrice) {
+              color = "#4386f9";
+            }
+            priceMap[x.s].price = curPrice;
+            priceMap[x.s].color = color;
           }
-          priceMap[x.s].price = parseFloat(x.c).toString();
-          priceMap[x.s].color = color;
-      });
+        });
+      } catch (e) {
+        connections.forEach((port) => {
+          port.postMessage('데이터 정리 오류');
+        });
+      }
 
       connections.forEach((port) => {
-        port.postMessage({type: 'data', data: priceMap});
+        port.postMessage({type: 'symbolData', data: priceMap});
       });
   };
 
