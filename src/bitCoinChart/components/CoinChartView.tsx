@@ -39,9 +39,9 @@ const CoinChartView = () => {
     }, [symbol]);
 
     return (
-        <div className={style.chartviewContainer}>
+        <div className={`${style.chartviewContainer} ${style.scrollContainer}`}>
                 <form action={formAction}>
-                    <input name="symbol" type="text" placeholder="영어로 입력해라 ㅡㅡ"/>
+                    <input name="symbol" type="text" placeholder="영어로 입력 (ex: BTC)"/>
                     <button type="submit">조회</button>
                 </form>
                 <label>{'현재 선택된 심볼: '}</label>

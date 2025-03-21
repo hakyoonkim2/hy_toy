@@ -26,7 +26,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({ symbol }) => {
           width: "100%",
           height: isMobile ? "250px" :"500px",
           symbol: `BINANCE:${symbol}`,
-          interval: "1",
+          interval: "1D",
           timezone: "Asia/Seoul",
           theme: "dark",
           style: "1",

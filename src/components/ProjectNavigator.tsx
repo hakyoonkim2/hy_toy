@@ -14,7 +14,7 @@ function ProjectNavigator() {
   return (
     <>
     <div>
-      <button data-path={'/stopwatch'} onClick={handleClick}>stopwatch</button>
+      <button data-path={'/stopwatch'} onClick={handleClick}>{'stopwatch(test용)'}</button>
       <button data-path={'/chart'} onClick={handleClick}>chart</button>
     </div>
     </>
