@@ -13,8 +13,8 @@ const CoinApp: React.FC = () => {
     const isListInit = useRef(false);
 
     useEffect(() => {
-        // server -> sharedWorker -> client 로 전달된 데이터 핸들링
-        worker.port.onmessage = (event: MessageEvent) => {
+        // server -> sharedWorker| worker -> client 로 전달된 데이터 핸들링
+        const onMessageCallback = (event: MessageEvent) => {
             const data = event.data;
             // data type이 'symbolData' 인 경우에만 react-query data로 적재
             if (data?.type === 'symbolData') {
@@ -34,6 +34,11 @@ const CoinApp: React.FC = () => {
                 console.log(event.data);
             }
         };
+        if (worker instanceof SharedWorker) {
+            worker.port.onmessage = onMessageCallback;
+        } else {
+            worker.onmessage = onMessageCallback;
+        }
     }, []);
 
     return (
