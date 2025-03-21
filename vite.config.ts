@@ -14,6 +14,10 @@ export default defineConfig({
       const version = Date.now(); // 또는 `git rev-parse --short HEAD`
       return html.replace(/style.scss/g, `style.css?v=${version}`)
                  .replace(/script.js/g, `script.js?v=${version}`);
-    }
+    },
   }],
+  server: {
+    host: true,
+    port: 5173,
+  },
 })

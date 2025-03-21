@@ -14,7 +14,7 @@ type CoinChartProps = {
  */
 const CoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const candleData = useContext(CoinWebSocketContext);
+  const managerData = useContext(CoinWebSocketContext);
   const seriesRef = useRef<any>(null);
   const chartRef = useRef<IChartApi | null>(null);
 
@@ -75,8 +75,8 @@ const CoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
   }, [symbol]);
 
   useEffect(() => {
-    seriesRef.current.setData(candleData);
-  }, [candleData]);
+    seriesRef.current.setData(managerData.candleData);
+  }, [managerData]);
 
   return (
     <div className={style.chart}>

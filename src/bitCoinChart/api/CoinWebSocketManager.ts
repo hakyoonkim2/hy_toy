@@ -1,5 +1,5 @@
 import { CandlestickData, Time } from "lightweight-charts";
-import { BINANCE_URL, Subscriber, TradingData } from "../types/CoinTypes";
+import { BINANCE_URL, Subscriber, TradeHistory, TradingData } from "../types/CoinTypes";
 
 /**
  * @symbol 코인 거래 종목
@@ -9,6 +9,7 @@ class CoinWebSocketManager {
     private symbol: string;
     private subscribers: Set<Subscriber>;
     private data: CandlestickData[];
+    private tradingHistory: TradeHistory[]; 
     private ws: WebSocket | null;
 
     constructor(symbol: string = "BTCUSDT") {
@@ -16,6 +17,7 @@ class CoinWebSocketManager {
         this.subscribers = new Set();
         this.data = [];
         this.ws = null;
+        this.tradingHistory = [];
         this.init();
     }
 
@@ -32,6 +34,18 @@ class CoinWebSocketManager {
 
         ws.onmessage = (event: MessageEvent) => {
             const json = JSON.parse(event.data);
+            
+            this.tradingHistory.push({
+                id: json.t,
+                price: parseFloat(json.p),
+                mount: parseFloat(json.q),
+                time: Number(json.T),
+                maker: json.m
+            });
+
+            if (this.tradingHistory.length > 50) {
+                this.tradingHistory.splice(0, this.tradingHistory.length - 50);
+            }
 
             // 받아진 json을 간단한 데이터 타입으로 변환
             const tradingData: TradingData = {
@@ -85,13 +99,13 @@ class CoinWebSocketManager {
 
     // 데이터 변경 시 구독자들에게 알림
     private notifySubscribers(): void {
-        this.subscribers.forEach((callback) => callback([...this.data]));
+        this.subscribers.forEach((callback) => callback({candleData: this.data, tradeHistory: [...this.tradingHistory].reverse()}));
     }
 
     // 구독 함수 (차트에서 데이터 가져올 때 사용)
     public subscribe(callback: Subscriber): void {
         this.subscribers.add(callback);
-        callback(this.data); // 초기 데이터 제공
+        callback({candleData: this.data, tradeHistory: [...this.tradingHistory].reverse()}); // 초기 데이터 제공
     }
 
     // 구독 취소 함수
