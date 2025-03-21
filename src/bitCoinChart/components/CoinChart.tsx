@@ -4,7 +4,15 @@ import { CoinWebSocketContext } from "../context/CoinWebSocketContext";
 import style from "../style/chart.module.scss";
 import { isMobile } from "react-device-detect";
 
-const CoinChart: React.FC<{symbol: string}> = ({symbol}) => {
+type CoinChartProps = {
+  symbol: string;
+}
+
+/**
+ * symbol을 전달받아 symbol기준으로 1초단위 차트를 생성하는 로직
+ * @returns 
+ */
+const CoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const candleData = useContext(CoinWebSocketContext);
   const seriesRef = useRef<any>(null);
@@ -13,6 +21,7 @@ const CoinChart: React.FC<{symbol: string}> = ({symbol}) => {
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
+    // 차트 생성 lightweight-charts 를 사용 
     const chart = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
       height: isMobile ? 250 : 500,
@@ -58,8 +67,10 @@ const CoinChart: React.FC<{symbol: string}> = ({symbol}) => {
 
     resizeObserver.observe(chartContainerRef.current);
 
+    // cleanup chart, resizeObserver
     return () => {
       chart.remove();
+      resizeObserver.disconnect();
     };
   }, [symbol]);
 
