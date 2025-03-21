@@ -11,7 +11,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  width: calc(100vw - 17px);
 }
 
 * {
@@ -41,7 +40,9 @@
 }
 
 body {
-  display: block; 
+  display: block;
+  width: 100%;
+  margin: 0;
 }
 
 header {

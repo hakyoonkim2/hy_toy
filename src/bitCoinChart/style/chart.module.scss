@@ -46,6 +46,18 @@
     padding: 2px;
 }
 
+.tab {
+    display: flex;
+    flex: 1;
+    font-size: 17px;
+    height: 30px;
+    font-weight: 800;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border: 1px solid #000000;
+}
+
 .app {
     height: calc(100svh - 120px);
     display: flex;
@@ -88,8 +100,7 @@
     display: flex;
     gap: 24px;
     background: #242424;
-    padding: 16px;
+    padding: 4px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(248, 248, 248, 0.05);
-    max-width: 300px;
 }

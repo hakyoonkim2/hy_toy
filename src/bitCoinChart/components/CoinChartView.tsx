@@ -1,11 +1,13 @@
 import { ChangeEvent, useActionState, useEffect, useRef } from "react";
 import CoinWebSocketProvider from "../context/CoinWebSocketContext";
 import TradingViewChart from "./TradingViewChart";
-import style from "../style/chart.module.scss"
+import style from "../style/chart.module.scss";
 import { useSymbol } from "../hooks/SymbolContextProvider";
 import CoinChart from "./CoinChart";
 import { OrderBook } from "./OrderBook";
 import { isMobile } from "react-device-detect";
+import CoinMobileTab from "./CoinMobileTab";
+import TradeHitory from "./TradeHitory";
 
 /**
  * 차트 제공 UI
@@ -40,7 +42,7 @@ const CoinChartView = () => {
     }, [symbol]);
 
     return (
-        <div className={`${style.chartviewContainer}`} style={{paddingLeft: isMobile ? '0px' : '15px'}}>
+        isMobile ? <CoinMobileTab symbol={symbol}/> : <div className={`${style.chartviewContainer}`} style={{paddingLeft: isMobile ? '0px' : '15px'}}>
                 <form action={formAction}>
                     <input name="symbol" type="text" placeholder="영어로 입력 (ex: BTC)"/>
                     <button type="submit">조회</button>
@@ -53,10 +55,15 @@ const CoinChartView = () => {
                         <CoinWebSocketProvider symbol={symbol}>
                             <div className={style.chartwrapper}>
                                 <TradingViewChart symbol={symbol}/>
-                                    <CoinChart symbol={symbol}/>
+                                <CoinChart symbol={symbol}/>
                             </div>
-                            <div>
-                                <OrderBook symbol={symbol}/>
+                            <div style={{flexDirection: 'row', display: 'flex'}}>
+                                <div style={{minWidth: '300px'}}>
+                                    <OrderBook symbol={symbol}/>
+                                </div>
+                                <div style={{minWidth: '300px', marginLeft: '20px'}}>
+                                    <TradeHitory symbol={symbol}/>
+                                </div>
                             </div>
                         </CoinWebSocketProvider>
                     </div>

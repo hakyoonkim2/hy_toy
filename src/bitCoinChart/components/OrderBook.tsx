@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import { CoinWebSocketContext } from '../context/CoinWebSocketContext';
-import { CandlestickData } from 'lightweight-charts';
 import style from '../style/chart.module.scss';
 import { BINANCE_URL } from '../types/CoinTypes';
 
@@ -18,7 +17,7 @@ export const OrderBook: React.FC<OrderBookProps> = ({ symbol }) => {
   const socketRef = useRef<WebSocket | null>(null);
   const red = '#f75467';
   const blue = '#4386f9';
-  const candleData: CandlestickData[] = useContext(CoinWebSocketContext);
+  const { candleData } = useContext(CoinWebSocketContext);
   const lastPrice = candleData.at(-1)?.close;
 
   // 최대 수량 계산 (비율 바를 위해)
