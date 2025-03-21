@@ -4,11 +4,17 @@ import TradingViewChart from "./TradingViewChart";
 import style from "../style/chart.module.scss"
 import { useSymbol } from "../hooks/SymbolContextProvider";
 import CoinChart from "./CoinChart";
+import { OrderBook } from "./OrderBook";
 
+/**
+ * 차트 제공 UI
+ * Advanced TradingView 차트, lightweight-chart(1s)
+ */
 const CoinChartView = () => {
     const { symbolList, symbol, setSymbol} = useSymbol();
     const selectRef = useRef<HTMLSelectElement>(null);
 
+    // form controll useActionState: react19 버전에서 호환됨
     const [_, formAction] = useActionState((prevSymbol: string, formData: FormData) => {
         const inputSymbol = formData.get("symbol") as string;
         const newSymbol = inputSymbol.toUpperCase() + "USDT";
@@ -33,21 +39,26 @@ const CoinChartView = () => {
     }, [symbol]);
 
     return (
-        <div className={style.chartviewContainer}>
+        <div className={`${style.chartviewContainer} ${style.scrollContainer}`}>
                 <form action={formAction}>
-                    <input name="symbol" type="text" placeholder="영어로 입력해라 ㅡㅡ"/>
+                    <input name="symbol" type="text" placeholder="영어로 입력 (ex: BTC)"/>
                     <button type="submit">조회</button>
-                    <label>{`현재 선택된 심볼: ${symbol}`}</label>
                 </form>
+                <label>{'현재 선택된 심볼: '}</label>
                 <select ref={selectRef} value={symbol} onChange={handleOptionSelect}>
                     {symbolList.map(x => <option key={x} value={x}>{x}</option>)}
                 </select>
-                <CoinWebSocketProvider symbol={symbol}>
-                    <div className={style.chartwrapper}>
-                        <TradingViewChart symbol={symbol}/>
-                        <CoinChart symbol={symbol}/>
+                    <div style={{flexDirection: 'column'}}>
+                        <CoinWebSocketProvider symbol={symbol}>
+                            <div className={style.chartwrapper}>
+                                <TradingViewChart symbol={symbol}/>
+                                    <CoinChart symbol={symbol}/>
+                            </div>
+                            <div>
+                                <OrderBook symbol={symbol}/>
+                            </div>
+                        </CoinWebSocketProvider>
                     </div>
-                </CoinWebSocketProvider>
             </div>
     )
 }

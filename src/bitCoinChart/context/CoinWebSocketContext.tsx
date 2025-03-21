@@ -2,10 +2,8 @@ import React, { createContext, useEffect, useState, ReactNode, useRef } from "re
 import CoinWebSocketManager from '../api/CoinWebSocketManager'
 import { CandlestickData } from "lightweight-charts";
 
-export type CoinWebSocketContextType = CandlestickData[];
-
 // Context 생성
-export const CoinWebSocketContext = createContext<CoinWebSocketContextType>([]);
+export const CoinWebSocketContext = createContext<CandlestickData[]>([]);
 
 interface CoinWebSocketProviderProps {
     symbol: string;
@@ -13,7 +11,7 @@ interface CoinWebSocketProviderProps {
 }
 
 const CoinWebSocketProvider: React.FC<CoinWebSocketProviderProps> = ({ symbol, children }) => {
-    const [webSocketData, setWebSocketData] = useState<CoinWebSocketContextType>([]);
+    const [webSocketData, setWebSocketData] = useState<CandlestickData[]>([]);
     const managerRef = useRef<CoinWebSocketManager | null>(null);
     
     useEffect(() => {

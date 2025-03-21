@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import style from "../style/chart.module.scss"
 import CoinPriceList from "./CoinPriceList";
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,38 +10,31 @@ const CoinApp: React.FC = () => {
     const {symbolList, setSymbolList, worker} = useSymbol();
     
     const queryClient = useQueryClient();
+    const isListInit = useRef(false);
 
     useEffect(() => {
+        // server -> sharedWorker -> client 로 전달된 데이터 핸들링
         worker.port.onmessage = (event: MessageEvent) => {
-            const symbolsData = event.data;
-            if (symbolsData?.type === 'data') {
-              Object.entries(symbolsData.data).forEach(([symbol, data]) => {
+            const data = event.data;
+            // data type이 'symbolData' 인 경우에만 react-query data로 적재
+            if (data?.type === 'symbolData') {
+              Object.entries(data.data).forEach(([symbol, data]) => {
                   queryClient.setQueryData(["symbol", symbol], data);
               });
-              if (symbolList.length === 0) {
-                setSymbolList(Object.keys(symbolsData.data));
+              
+              // symbolList가 구성되어있지 않았을때만 setting
+              if (isListInit.current === false) {
+                const symbols = Object.keys(data.data);
+                if (symbols.length > 0) {
+                    setSymbolList(Object.keys(data.data));
+                    isListInit.current = true;
+                }
               }
-              console.log(event.data);
+            } else {
+                console.log(event.data);
             }
         };
-
-        // const fetchSymbols = async () => {
-        //     try {
-        //       const response = await fetch("https://api.binance.com/api/v3/exchangeInfo");
-        //       const data = await response.json();
-        //       if (data.symbols) {
-        //         const symbolList = data.symbols.filter(({symbol, status}: { symbol: string, status: string }) => symbol.includes("USDT") && status === "TRADING").map((symbol: { symbol: string }) => symbol.symbol);
-        //         setSymbolList(symbolList);
-        //       }
-        //     } catch (error) {
-        //       console.error("Error fetching Binance symbols:", error);
-        //     }
-        //   };
-
-        //   fetchSymbols();
     }, []);
-
-
 
     return (
         <div className={style.app}>

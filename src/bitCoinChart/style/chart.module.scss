@@ -43,6 +43,7 @@
     line-height: 16px;
     position: relative;
     word-break: break-all;
+    padding: 2px;
 }
 
 .app {
@@ -57,9 +58,41 @@
     flex-direction: column;
     overflow-y: scroll;
     overflow-x: hidden;
-
+    scrollbar-width: thin;
 }
 
 .chartviewContainer {
     width: 100%;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    padding-left: 30px;
+}
+
+.pricehighlight {
+    border: 1px solid white;
+    transition: border 0.3s ease-in-out;
+}
+
+.barstyle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 0;
+}
+
+.rowStyle {
+    position: relative;
+    padding: 4px 8px;
+    font-size: 11px;
+}
+
+.orderbook {
+    display: flex;
+    gap: 24px;
+    background: #242424;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(248, 248, 248, 0.05);
+    max-width: 300px;
 }
