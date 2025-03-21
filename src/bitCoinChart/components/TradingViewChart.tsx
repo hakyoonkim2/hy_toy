@@ -5,7 +5,11 @@ import { isMobile } from "react-device-detect";
 /**
  * tradingView 차트 위젯을 통해 차트 구성
  */
-const TradingViewChart: React.FC<{symbol: string}> = ({symbol}) => {
+type TradingViewChartProps = {
+  symbol: string;
+}
+
+const TradingViewChart: React.FC<TradingViewChartProps> = ({ symbol }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,7 +27,7 @@ const TradingViewChart: React.FC<{symbol: string}> = ({symbol}) => {
           height: isMobile ? "250px" :"500px",
           symbol: `BINANCE:${symbol}`,
           interval: "1",
-          timezone: "Etc/UTC",
+          timezone: "Asia/Seoul",
           theme: "dark",
           style: "1",
           locale: "en",
