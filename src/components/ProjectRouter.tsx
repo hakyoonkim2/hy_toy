@@ -3,6 +3,7 @@ import ProjectNavigator from './ProjectNavigator';
 import Header from './Header';
 import { isMobile } from 'react-device-detect';
 import { lazy, Suspense } from 'react';
+import LoadingFallback from './LoadingFallback';
 
 
 // 진입률이 낮을거 같아서 스플리팅
@@ -20,7 +21,7 @@ const ProjectRouter = () => {
         <BrowserRouter basename='/hy_toy/'>
             <div className='wrapper'>
                 <Header />
-                <Suspense fallback={<div>페이지 로딩 중...</div>}>
+                <Suspense fallback={<LoadingFallback />}>
                     <Routes>
                         <Route path='/' element={<ProjectNavigator/>}/>
                         <Route path='/stopwatch' element={<StopWatch/>}/>
