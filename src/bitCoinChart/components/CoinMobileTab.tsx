@@ -5,6 +5,7 @@ import TradingViewChart from "./TradingViewChart";
 import CoinChart from "./CoinChart";
 import { OrderBook } from "./OrderBook";
 import TradeHitory from "./TradeHitory";
+import CoinMobileSymbolInfo from "./CoinMobileSymbolInfo";
 
 const TABS = ["차트", "호가", "시세"] as const;
 
@@ -20,9 +21,7 @@ const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
 
   return (
     <div className="w-full" style={{width: '100%'}}>
-      <div>
-        {symbol}
-      </div>
+      <CoinMobileSymbolInfo symbol={symbol}/>
       <div className="flex" style={{display: "flex"}}>
         {TABS.map((tab) => (
           <div
