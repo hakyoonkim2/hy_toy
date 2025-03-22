@@ -26,21 +26,23 @@ const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({symbol}) => 
             {symbol.replace('USDT', ' / USD')}
           </strong>
         </div>
-        <div style={{marginLeft: '20px', marginTop: '10px', color: data?.color}}>
+        <div style={{marginLeft: '20px', marginTop: '2px', color: data?.color}}>
           <div>
-            <strong style={{width: '100px'}}>
+            <strong style={{width: '100px', fontSize: '20px'}}>
               {data?.price}
             </strong>
           </div>
-          <span  style={{fontSize: '13px'}}>
-            {`${priceChange} %`}
-          </span>
-          <span style={{marginLeft: '10px'}}>
-            {parseFloat(priceChange) > 0 ? '▲' : '▼'}
-          </span>
-          <span>
-            {` ${diff.toString()}`}
-          </span>
+          <div style={{fontSize: '13px'}}>
+            <span>
+                {`${priceChange} %`}
+            </span>
+            <span style={{marginLeft: '10px'}}>
+                {parseFloat(priceChange) > 0 ? '▲' : '▼'}
+            </span>
+            <span>
+                {` ${diff.toString()}`}
+            </span>
+          </div>
         </div>
       </div>
     )
