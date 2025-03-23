@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 import { useSymbol } from "../hooks/SymbolContextProvider";
 import useSymbolData from "../hooks/useSymbolData";
+import useUpbitSymbolData from "../hooks/useUpbitSymbolData";
+import { useQuery } from "@tanstack/react-query";
+import { fetchExchangeRate } from "../utils/util";
 
 type CoinPriceListProps = {
     symbol: string;
@@ -15,8 +18,17 @@ type CoinPriceListProps = {
 const CoinPriceList: React.FC<CoinPriceListProps> = ({ symbol }) => {
     const { setSymbol } = useSymbol();
     const { data } = useSymbolData(symbol);
+    const { data: krwData } = useUpbitSymbolData(symbol);
     const ref = useRef(null);
     const navigator = useNavigate();
+
+    const { data: exchangeRatio } = useQuery({
+        queryKey: ["exchange-rate", "USD-KRW"],
+        queryFn: fetchExchangeRate,
+        staleTime: 1000 * 60 * 10, // 10분 동안은 fresh 상태
+        gcTime: 1000 * 60 * 60,
+        refetchOnWindowFocus: false,
+      });
 
     const handleClick = () => {
         setSymbol(symbol);
@@ -27,6 +39,7 @@ const CoinPriceList: React.FC<CoinPriceListProps> = ({ symbol }) => {
     const openPrice = data?.openPrice ?? 1; // 0으로 두면 NaN 발생 가능하므로 1 사용
     const priceChange = price === 0 ? 0 : ((price - openPrice) / openPrice * 100).toFixed(2);
     const color = data?.color ?? "#FFFFFF"; // 기본 색상 지정
+    const kpPositive = krwData && exchangeRatio && price && ((krwData.price/exchangeRatio) - price) > 0 ? true : false;
 
     // state방식을 활용한 highlight구현시 react render rapid가 너무 빨라 오류가 생기므로 classList toggle방식 사용
     useEffect(() => {
@@ -53,10 +66,18 @@ const CoinPriceList: React.FC<CoinPriceListProps> = ({ symbol }) => {
             <div>
                 <strong className={style.symbolListLabel}>{symbol.replace("USDT", "")}</strong>
             </div>
-            <div style={{width: "100%", textAlign: "right"}}>
-                <strong ref={ref} className={style.price} style={{color: color}}>{`${price}`}</strong>
-                <strong className={style.price} style={{color: color, marginLeft: '10px'}}>{`${priceChange}% `}</strong>
-                <strong className={style.price} style={{marginLeft: '10px'}}>{`USD`}</strong>
+            <div style={{display: 'flex', flexDirection: 'column', width: "100%", textAlign: "right"}}>
+                <div>
+                    <strong ref={ref} className={style.price} style={{color: color}}>{`${price}`}</strong>
+                    <strong className={style.price} style={{color: color, marginLeft: '10px'}}>{`${priceChange}% `}</strong>
+                    <strong className={style.price} style={{marginLeft: '10px'}}>{`USD`}</strong>
+                </div>
+            {price && krwData && exchangeRatio ? <div className={style.krwPrice}>
+                <strong>김프: </strong>
+                <strong style={{color: kpPositive ? '#f75467' : '#4386f9'}}>{`${((((krwData.price/exchangeRatio) - price) / price) * 100).toFixed(2)}% `}</strong>
+                <strong style={{marginLeft: '10px'}}>KRW: </strong>
+                <strong style={{color: color}}>{`${krwData.price.toLocaleString()}`}</strong>
+            </div> : <></>}
             </div>
         </div>
     );

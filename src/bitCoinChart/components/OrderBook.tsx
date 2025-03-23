@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useContext } from 'react';
 import { CoinWebSocketContext } from '../context/CoinWebSocketContext';
 import style from '../style/chart.module.scss';
 import { BINANCE_URL } from '../types/CoinTypes';
+import LoadingFallback from '../../components/LoadingFallback';
 
 type Order = [string, string];
 
@@ -68,7 +69,7 @@ export const OrderBook: React.FC<OrderBookProps> = ({ symbol }) => {
     );
   };
 
-  return (
+  return (bids.length === 0 ? <LoadingFallback /> :
     <div className={style.orderbook}>
       <div style={{ flex: 1 }}>
         <div style={{ color: blue, marginBottom: '8px' }}>{asks.map((order) => renderRow('ask', order))}</div>

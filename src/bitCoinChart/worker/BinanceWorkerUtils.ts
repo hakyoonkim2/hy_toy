@@ -1,9 +1,16 @@
+import { PriceMap } from "./CoinCommonTypes";
+
 export const wsUrl = `wss://stream.binance.com:9443/ws/!ticker@arr`;
 
 export const BINANCE_API_URL = "https://api.binance.com/api/v3";
 
+interface symbols {
+    symbol: string;
+    status: string;
+}
+
 // 1. 모든 종목 리스트 가져오기 (USDT 페어만 필터링)
-async function getAllSymbols() {
+async function getBinanceAllSymbols() {
     try {
         const response = await fetch(`${BINANCE_API_URL}/exchangeInfo`);
         const data = await response.json();
@@ -13,7 +20,7 @@ async function getAllSymbols() {
         }
 
         // USDT 마켓에 해당하는 종목만 필터링
-        const symbols = data.symbols
+        const symbols = (data.symbols as symbols[])
             .filter((s) => s.symbol.endsWith("USDT") && s.status === 'TRADING') // USDT 페어만 가져오기
             .map((s) => s.symbol);
 
@@ -25,7 +32,7 @@ async function getAllSymbols() {
 }
 
 // 2. 특정 종목의 한국시간 9시 시가(open price) 가져오기
-async function getOpenPrice(symbol) {
+async function getBinanceOpenPrice(symbol: string) {
     const url = `${BINANCE_API_URL}/klines?symbol=${symbol}&interval=1d&limit=2`;
 
     try {
@@ -48,8 +55,8 @@ async function getOpenPrice(symbol) {
 }
 
 // 3. 모든 종목의 9시 시가 가져오기
-export async function fetchAllOpenPrices(priceMap) {
-    const symbols = await getAllSymbols();
+export async function fetchBinanceAllOpenPrices(priceMap: PriceMap) {
+    const symbols = await getBinanceAllSymbols();
     
     if (symbols.length === 0) {
         console.error("No symbols available.");
@@ -58,7 +65,7 @@ export async function fetchAllOpenPrices(priceMap) {
 
     console.log(`Fetching open prices for ${symbols.length} symbols...`);
 
-    const results = await Promise.all(symbols.map(getOpenPrice));
+    const results = await Promise.all(symbols.map(getBinanceOpenPrice));
     results.forEach(x => {
       let color = '#FFFFFF';
       const curPrice = parseFloat(x.curPrice);
@@ -69,21 +76,5 @@ export async function fetchAllOpenPrices(priceMap) {
         color = "#4386f9";
       }
       priceMap[x.symbol] = {price: curPrice, color: color, openPrice: openPrice}
-    });
-}
-
-export function dataSetting(symbolFilterArr, priceMap) {
-    symbolFilterArr.forEach(x => {
-        if (priceMap[x.s]) {
-          let color = '#FFFFFF';
-          const curPrice = parseFloat(x.c);
-          if (priceMap[x.s].openPrice < curPrice) {
-            color = "#f75467";
-          } else if (priceMap[x.s].openPrice > curPrice) {
-            color = "#4386f9";
-          }
-          priceMap[x.s].price = curPrice;
-          priceMap[x.s].color = color;
-        }
     });
 }

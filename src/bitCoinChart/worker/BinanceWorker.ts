@@ -1,18 +1,19 @@
-import { dataSetting, fetchAllOpenPrices, wsUrl } from "./WorkerUtils";
+import { BinanceTickerData } from "./BinanceWorkerTypes";
+import { fetchBinanceAllOpenPrices, wsUrl } from "./BinanceWorkerUtils";
+import { dataSetting } from "./WorkerUtils";
 
-// shared-worker.js
 const priceMap = {};
 let ws = null;
 
 // websocket 실행 전에 호출해서 openPrice 세팅
-fetchAllOpenPrices(priceMap);
+fetchBinanceAllOpenPrices(priceMap);
 
 
 const connectWebSocket = () => {
   ws = new WebSocket(wsUrl);
 
   ws.onmessage = (event) => { 
-      const json = JSON.parse(event.data);
+      const json = JSON.parse(event.data) as BinanceTickerData[];
       const symbolFilterArr = Array.from(json).filter(x => x.s.includes("USDT"));
       try {
         dataSetting(symbolFilterArr, priceMap);
@@ -22,12 +23,12 @@ const connectWebSocket = () => {
       self.postMessage({type: 'symbolData', data: priceMap});
   };
 
-  ws.onclose = (event) => {
+  ws.onclose = () => {
     self.postMessage('연결 끊김');
   };
 }
 
-self.onmessage = (event) => {
+self.onmessage = () => {
 };
 
 connectWebSocket();
