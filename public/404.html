@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="refresh" content="0; url=/hy_toy/" />
+  <script>
+    const host = location.hostname;
+
+    if (host.includes("github.io")) {
+      // GitHub Pages일 경우
+      location.replace("/hy_toy/");
+    } else {
+      // 그 외 (예: Vercel)
+      location.replace("/");
+    }
+  </script>
 </head>
-<body>
-</body>
+<body></body>
 </html>
