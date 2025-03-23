@@ -31,6 +31,10 @@ const connectWebSocket = (isInit: boolean) => {
       ];
       
       ws?.send(JSON.stringify(msg));
+    }).catch(error => {
+      connections.forEach((port) => {
+        port.postMessage({type: 'upbit 종목 데이터 받아오기', data: error});
+      });
     });
   };
 

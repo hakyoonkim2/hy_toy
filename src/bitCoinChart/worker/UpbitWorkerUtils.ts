@@ -6,7 +6,7 @@ export const wsUrl = `wss://stream.binance.com:9443/ws/!ticker@arr`;
 export const BINANCE_API_URL = "https://api.binance.com/api/v3";
 
 
-// 1. 모든 종목 리스트 가져오기 (USDT 페어만 필터링)
+// 1. 모든 종목 리스트 가져오기 (KRW 페어만 필터링)
 async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {
     try {
         const response = await fetch(`https://api.upbit.com/v1/market/all?isDetails=true`);
@@ -18,7 +18,7 @@ async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {
 
         // USDT 마켓에 해당하는 종목만 필터링
         const symbols = (data as UpbitSymbol[])
-            .filter((symbol) => symbol.market.startsWith("KRW-")) // USDT 페어만 가져오기
+            .filter((symbol) => symbol.market.startsWith("KRW-")) // KRW 페어만 가져오기
 
         return symbols;
     } catch (error) {
