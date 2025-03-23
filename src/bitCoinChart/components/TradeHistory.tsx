@@ -4,11 +4,11 @@ import useSymbolData from '../hooks/useSymbolData';
 import style from '../style/Tradinghitory.module.scss';
 import { convertKrTime } from '../utils/util';
 
-type TradeHitoryProps = {
+type TradeHistoryProps = {
     symbol: string;
 }
 
-const TradeHitory: React.FC<TradeHitoryProps> = ({ symbol }) => {
+const TradeHistory: React.FC<TradeHistoryProps> = ({ symbol }) => {
     const { tradeHistory } = useContext(CoinWebSocketContext);
     const { data } = useSymbolData(symbol);
     const red = '#f75467';
@@ -45,4 +45,4 @@ const TradeHitory: React.FC<TradeHitoryProps> = ({ symbol }) => {
     )
 }
 
-export default TradeHitory;
+export default TradeHistory;

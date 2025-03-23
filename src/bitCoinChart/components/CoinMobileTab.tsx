@@ -4,7 +4,7 @@ import style from "../style/chart.module.scss"
 import TradingViewChart from "./TradingViewChart";
 import CoinChart from "./CoinChart";
 import { OrderBook } from "./OrderBook";
-import TradeHitory from "./TradeHitory";
+import TradeHistory from "./TradeHistory";
 import CoinMobileSymbolInfo from "./CoinMobileSymbolInfo";
 
 const TABS = ["차트", "호가", "시세"] as const;
@@ -49,7 +49,7 @@ const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
                         </div>
                     }
                     {activeTab === "시세" && 
-                        <TradeHitory symbol={symbol}/>
+                        <TradeHistory symbol={symbol}/>
                     }
                 </CoinWebSocketProvider>
             </div>
