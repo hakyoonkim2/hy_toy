@@ -1,5 +1,5 @@
 // api/markets.js
-export default async function handler(req, res) {
+export default async function handler(_, res) {
   try {
     const apiUrl = 'https://api.upbit.com/v1/market/all?isDetails=true';
 
