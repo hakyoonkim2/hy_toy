@@ -5,7 +5,7 @@ import { UpbitSymbol } from "./UpbitWorkerTypes";
 async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {
     try {
         const apiUrl = encodeURIComponent('https://api.upbit.com/v1/market/all?isDetails=true');
-        const response = await fetch(`/api/proxy?url=${apiUrl}`);
+        const response = await fetch(`https://proxy-server-flax-rho.vercel.app/api/proxy?url=${apiUrl}`);
         const data = await response.json();
 
         if (response.status !== 200) {
