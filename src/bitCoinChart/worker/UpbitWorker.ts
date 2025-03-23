@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-
+import { v4 as uuidv4 } from 'uuid';
 import { PriceMap } from "./CoinCommonTypes";
 import { UpbitTickerData } from "./UpbitWorkerTypes";
 import { fetchUpbitAllOpenPrices } from "./UpbitWorkerUtils";
@@ -20,7 +20,7 @@ const connectWebSocket = (isInit: boolean) => {
     // websocket 실행 전에 호출해서 openPrice 세팅
     fetchUpbitAllOpenPrices(priceMap).then(() => {
       const msg = [
-        { ticket: 'UNIQUE_TICKET12312432q153453245234543' },
+        { ticket: uuidv4() },
         {
           type: 'ticker',
           codes: Object.keys(priceMap),
