@@ -13,7 +13,7 @@ let ws: WebSocket| null = null;
 let initDone: boolean = false;
 let symbolCount: number = 0;
 
-const connectWebSocket = (isInit: boolean) => {
+const connectWebSocket = () => {
   ws = new WebSocket('wss://api.upbit.com/websocket/v1/ticker');
 
   ws.binaryType = 'arraybuffer';
@@ -26,7 +26,6 @@ const connectWebSocket = (isInit: boolean) => {
         {
           type: 'ticker',
           codes: Object.keys(priceMap),
-          is_only_snapshot: isInit,
         },
       ];
       
@@ -56,15 +55,6 @@ const connectWebSocket = (isInit: boolean) => {
       connections.forEach((port) => {
         port.postMessage({type: 'UpbitsymbolData', data: {...priceMap[data.code], symbol: data.code}});
       });
-
-      if (initDone === false) {
-        symbolCount++;
-        if (symbolCount === Object.keys(priceMap).length) {
-          initDone = true;
-          ws?.close();
-          setTimeout(() => connectWebSocket(false), 1000);
-        }
-      }
   };
 
   ws.onclose = () => {
