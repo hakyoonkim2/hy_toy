@@ -17,8 +17,7 @@ async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {
 
         return symbols;
     } catch (error) {
-        console.error("Error fetching symbols list:", error);
-        return [];
+        throw error;
     }
 }
 
