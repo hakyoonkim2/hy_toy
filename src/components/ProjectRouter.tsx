@@ -18,7 +18,7 @@ const CoinChartView = lazy(() => import('../bitCoinChart/components/CoinChartVie
  */
 const ProjectRouter = () => {
     return (
-        <BrowserRouter basename='/hy_toy/'>
+        <BrowserRouter basename='/'>
             <div className='wrapper'>
                 <Header />
                 <Suspense fallback={<LoadingFallback />}>
