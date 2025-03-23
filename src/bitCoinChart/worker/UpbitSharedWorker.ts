@@ -62,7 +62,7 @@ const connectWebSocket = (isInit: boolean) => {
         if (symbolCount === Object.keys(priceMap).length) {
           initDone = true;
           ws?.close();
-          connectWebSocket(false);
+          setTimeout(() => connectWebSocket(false), 1000);
         }
       }
   };
