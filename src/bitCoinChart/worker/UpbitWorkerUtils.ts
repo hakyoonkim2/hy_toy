@@ -1,11 +1,6 @@
 import { PriceMap } from "./CoinCommonTypes";
 import { UpbitSymbol } from "./UpbitWorkerTypes";
 
-export const wsUrl = `wss://stream.binance.com:9443/ws/!ticker@arr`;
-
-export const BINANCE_API_URL = "https://api.binance.com/api/v3";
-
-
 // 1. 모든 종목 리스트 가져오기 (KRW 페어만 필터링)
 async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {
     try {
@@ -16,7 +11,7 @@ async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {
             throw new Error("Failed to fetch symbols list");
         }
 
-        // USDT 마켓에 해당하는 종목만 필터링
+        // KRW 마켓에 해당하는 종목만 필터링
         const symbols = (data as UpbitSymbol[])
             .filter((symbol) => symbol.market.startsWith("KRW-")) // KRW 페어만 가져오기
 
