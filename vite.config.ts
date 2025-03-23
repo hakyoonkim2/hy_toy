@@ -1,6 +1,7 @@
 import { ConfigEnv, defineConfig, loadEnv, UserConfigExport } from 'vite'
-import react from '@vitejs/plugin-react'
-import svgr from 'vite-plugin-svgr'
+import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
+import removeConsole from 'vite-plugin-remove-console';
 
 export default ({ mode }: ConfigEnv): UserConfigExport => {
     // 1. 환경 변수 로드
@@ -14,7 +15,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       build: {
         outDir: 'dist'
       },
-      plugins: [react(), svgr(), {
+      plugins: [react(), svgr(), removeConsole(), {
         name: 'html-transform',
         transformIndexHtml(html) {
           const version = Date.now(); // 또는 `git rev-parse --short HEAD`
