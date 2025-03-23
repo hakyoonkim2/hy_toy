@@ -7,7 +7,7 @@ import CoinChart from "./CoinChart";
 import { OrderBook } from "./OrderBook";
 import { isMobile } from "react-device-detect";
 import CoinMobileTab from "./CoinMobileTab";
-import TradeHitory from "./TradeHitory";
+import TradeHistory from "./TradeHistory";
 
 /**
  * 차트 제공 UI
@@ -62,7 +62,7 @@ const CoinChartView = () => {
                                     <OrderBook symbol={symbol}/>
                                 </div>
                                 <div style={{minWidth: '300px', marginLeft: '20px'}}>
-                                    <TradeHitory symbol={symbol}/>
+                                    <TradeHistory symbol={symbol}/>
                                 </div>
                             </div>
                         </CoinWebSocketProvider>
