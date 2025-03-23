@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
-export const SymbolContext = createContext<{ symbol: string; setSymbol: (value: string) => void; symbolList: string[]; setSymbolList: (value: string[]) => void; worker: SharedWorker | Worker  } | null>(null);
+export const SymbolContext = createContext<{ symbol: string; setSymbol: (value: string) => void; symbolList: string[]; setSymbolList: (value: string[]) => void; worker: SharedWorker | Worker, upbitWorker: SharedWorker | Worker} | null>(null);
 
 export const useSymbol = () => {
   const context = useContext(SymbolContext);
@@ -10,7 +10,9 @@ export const useSymbol = () => {
   return context;
 };
 
-const worker = typeof SharedWorker !== 'undefined' ? new SharedWorker(new URL('../worker/CoinSharedWorker.js', import.meta.url), {type: 'module'}) : new Worker(new URL('../worker/CoinWorker.js', import.meta.url), {type: 'module'});
+const worker = typeof SharedWorker !== 'undefined' ? new SharedWorker(new URL('../worker/BinanceSharedWorker.ts', import.meta.url), {type: 'module'}) : new Worker(new URL('../worker/BinanceWorker.ts', import.meta.url), {type: 'module'});
+
+const upbitWorker = typeof SharedWorker !== 'undefined' ? new SharedWorker(new URL('../worker/UpbitSharedWorker.ts', import.meta.url), {type: 'module'}): new Worker(new URL('../worker/UpbitWorker.ts', import.meta.url), {type: 'module'});;
 
 const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
     const [symbol, setSymbol] = useState<string>("ADAUSDT");
@@ -23,11 +25,16 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
         } else {
           worker.terminate();
         }
+        if (upbitWorker instanceof SharedWorker) {
+          upbitWorker.port.close();
+        } else {
+          upbitWorker.terminate();
+        }
       }
     }, []);
   
     return (
-      <SymbolContext value={{ symbol, setSymbol, symbolList, setSymbolList, worker}}>
+      <SymbolContext value={{ symbol, setSymbol, symbolList, setSymbolList, worker, upbitWorker}}>
         {children}
       </SymbolContext>
     );

@@ -1,20 +1,25 @@
-import { dataSetting, fetchAllOpenPrices, wsUrl } from "./WorkerUtils";
+/// <reference lib="webworker" />
 
-// shared-worker.js
-const connections = [];
+import { BinanceTickerData } from "./BinanceWorkerTypes";
+import { fetchBinanceAllOpenPrices, wsUrl } from "./BinanceWorkerUtils";
+import { dataSetting } from "./WorkerUtils";
+
+const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
+
+const connections: MessagePort[] = [];
 const priceMap = {};
 let ws = null;
 
 // websocket 실행 전에 호출해서 openPrice 세팅
-fetchAllOpenPrices(priceMap);
+fetchBinanceAllOpenPrices(priceMap);
 
 
 const connectWebSocket = () => {
   ws = new WebSocket(wsUrl);
 
   ws.onmessage = (event) => { 
-      const json = JSON.parse(event.data);
-      const symbolFilterArr = Array.from(json).filter(x => x.s.includes("USDT"));
+      const json = JSON.parse(event.data) as BinanceTickerData[];
+      const symbolFilterArr: BinanceTickerData[] = Array.from(json).filter((x:BinanceTickerData) => x.s.includes("USDT"));
       try {
         dataSetting(symbolFilterArr, priceMap);
       } catch (e) {
@@ -28,14 +33,14 @@ const connectWebSocket = () => {
       });
   };
 
-  ws.onclose = (event) => {
+  ws.onclose = () => {
     connections.forEach((port) => {
       port.postMessage('연결 끊김');
     });
   };
 }
 
-self.onconnect = (event) => {
+sharedWorkerGlobal.onconnect = (event: MessageEvent) => {
   const port = event.ports[0]; // 새로 연결된 클라이언트의 포트
   connections.push(port);
 
@@ -55,11 +60,5 @@ self.onconnect = (event) => {
 
   port.start(); // 반드시 start() 호출해야 메시지 전송 가능
 };
-
-self.onclose = (event) => {
-  connections.forEach((port) => {
-    port.postMessage('연결 끊김');
-  });
-}
 
 connectWebSocket();
