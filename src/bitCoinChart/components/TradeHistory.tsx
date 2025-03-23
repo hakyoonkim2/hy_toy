@@ -1,7 +1,7 @@
 import { CoinWebSocketContext } from '../context/CoinWebSocketContext';
 import { useContext } from 'react';
 import useSymbolData from '../hooks/useSymbolData';
-import style from '../style/Tradinghitory.module.scss';
+import style from '../style/TradingHistory.module.scss';
 import { convertKrTime } from '../utils/util';
 
 type TradeHistoryProps = {
