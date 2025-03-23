@@ -2,9 +2,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 
+// 환경변수로 배포 대상 구분
+const isGitHub = process.env.DEPLOY_TARGET === 'GH';
+
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/hy_toy/',
+  base: isGitHub ? '/hy_toy/' : '/',
   build: {
     outDir: 'dist'
   },
