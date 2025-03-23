@@ -10,8 +10,6 @@ const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
 const connections: MessagePort[] = [];
 const priceMap: PriceMap = {};
 let ws: WebSocket| null = null;
-let initDone: boolean = false;
-let symbolCount: number = 0;
 
 const connectWebSocket = () => {
   ws = new WebSocket('wss://api.upbit.com/websocket/v1/ticker');
@@ -85,4 +83,4 @@ sharedWorkerGlobal.onconnect = (event: MessageEvent) => {
   port.start(); // 반드시 start() 호출해야 메시지 전송 가능
 };
 
-connectWebSocket(true);
+connectWebSocket();
