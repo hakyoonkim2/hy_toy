@@ -38,6 +38,9 @@ const connectWebSocket = (isInit: boolean) => {
     const enc = new TextDecoder('utf-8');
     const jsonStr = enc.decode(event.data);
     const data = JSON.parse(jsonStr) as UpbitTickerData;
+    connections.forEach((port) => {
+      port.postMessage({type: 'upbit 데이터 정리 시작', data: data});
+    });
       try {
         dataSetting([data], priceMap);
       } catch (e) {
