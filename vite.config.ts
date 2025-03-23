@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 
 // 환경변수로 배포 대상 구분
-const isGitHub = process.env.DEPLOY_TARGET === 'GH';
+const isGitHub = process.env.VITE_DEPLOY_TARGET === 'GH';
 
 // https://vite.dev/config/
 export default defineConfig({
