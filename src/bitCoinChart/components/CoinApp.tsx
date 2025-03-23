@@ -13,17 +13,6 @@ const CoinApp: React.FC = () => {
     const queryClient = useQueryClient();
     const isListInit = useRef(false);
 
-    const test = async () => {
-        try {
-            const response = await fetch(`https://api.upbit.com/v1/market/all?isDetails=true`);
-            const data = await response.json();
-            console.log(data);
-        } catch (e) {
-            throw e;
-        }
-    }
-    test();
-
     useEffect(() => {
         // server -> sharedWorker| worker -> client 로 전달된 데이터 핸들링
         const onMessageCallback = (event: MessageEvent) => {

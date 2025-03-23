@@ -21,9 +21,6 @@ const connectWebSocket = (isInit: boolean) => {
     console.log('Connected');
     // websocket 실행 전에 호출해서 openPrice 세팅
     fetchUpbitAllOpenPrices(priceMap).then(() => {
-      connections.forEach((port) => {
-        port.postMessage({type: 'upbit 종목 데이터 받아오기', data: priceMap});
-      });
       const msg = [
         { ticket: uuidv4() },
         {

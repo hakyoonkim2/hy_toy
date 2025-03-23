@@ -23,5 +23,5 @@
     "noUncheckedSideEffectImports": true,
     "types": ["vite-plugin-svgr/client"]
   },
-  "include": ["src", "global.d.ts"]
+  "include": ["src", "global.d.ts", "api"]
 }
