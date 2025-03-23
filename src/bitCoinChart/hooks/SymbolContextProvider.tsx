@@ -12,7 +12,7 @@ export const useSymbol = () => {
 
 const worker = typeof SharedWorker !== 'undefined' ? new SharedWorker(new URL('../worker/BinanceSharedWorker.ts', import.meta.url), {type: 'module'}) : new Worker(new URL('../worker/BinanceWorker.ts', import.meta.url), {type: 'module'});
 
-const upbitWorker = typeof SharedWorker !== 'undefined' ? new SharedWorker(new URL('../worker/UpbitSharedWorker.ts', import.meta.url), {type: 'module'}): new Worker(new URL('../worker/UpbitWorker.ts', import.meta.url), {type: 'module'});;
+const upbitWorker = typeof SharedWorker !== 'undefined' ? new SharedWorker(new URL('../worker/UpbitSharedWorker.ts', import.meta.url), {type: 'module'}): new Worker(new URL('../worker/UpbitWorker.ts', import.meta.url), {type: 'module'});
 
 const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
     const [symbol, setSymbol] = useState<string>("ADAUSDT");
