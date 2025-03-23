@@ -5,6 +5,7 @@ import { isMobile } from 'react-device-detect';
 import { lazy, Suspense } from 'react';
 import LoadingFallback from './LoadingFallback';
 
+const isGitHub = import.meta.env.VITE_DEPLOY_TARGET === 'GH';
 
 // 진입률이 낮을거 같아서 스플리팅
 const StopWatch = lazy(() => import('../stopwatch/components/Stopwatch'));
@@ -18,7 +19,7 @@ const CoinChartView = lazy(() => import('../bitCoinChart/components/CoinChartVie
  */
 const ProjectRouter = () => {
     return (
-        <BrowserRouter basename='/'>
+        <BrowserRouter basename={isGitHub ? '/hy_toy/' : '/'}>
             <div className='wrapper'>
                 <Header />
                 <Suspense fallback={<LoadingFallback />}>
