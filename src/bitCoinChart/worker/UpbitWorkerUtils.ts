@@ -3,9 +3,9 @@ import { UpbitSymbol } from "./UpbitWorkerTypes";
 
 // 1. 모든 종목 리스트 가져오기 (KRW 페어만 필터링)
 async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {
-    const isVerCel = import.meta.env.VITE_DEPLOY_TARGET === 'VERCEL';
     try {
-        const response = await fetch(isVerCel ? '/api/VercelServerlessMarket': `https://api.upbit.com/v1/market/all?isDetails=true`);
+        const apiUrl = encodeURIComponent('https://api.upbit.com/v1/market/all?isDetails=true');
+        const response = await fetch(`/api/proxy?url=${apiUrl}`);
         const data = await response.json();
 
         if (response.status !== 200) {

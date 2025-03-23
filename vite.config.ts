@@ -23,9 +23,18 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
                      .replace(/script.js/g, `script.js?v=${version}`);
         },
       }],
+      
       server: {
         host: true,
         port: 5173,
+        proxy: {
+          '/api/proxy': {
+            target: 'https://proxy-server-flax-rho.vercel.app',
+            changeOrigin: true,
+            secure: true,
+            rewrite: path => path, // 그대로 전달 (/api/proxy 그대로 유지)
+          },
+        },
       },
     })
 }
