@@ -21,7 +21,7 @@ const createWorker = () => {
   try {
     if (typeof SharedWorker !== 'undefined') {
       return new SharedWorker(
-        new URL('../worker/binance/BinanceSharedWorker.ts', import.meta.url),
+        new URL(/* @vite-ignore */ '../worker/binance/BinanceSharedWorker.ts', import.meta.url),
         {
           type: 'module',
         }
@@ -41,9 +41,12 @@ const createWorker = () => {
 const createUpbitWorker = () => {
   try {
     if (typeof SharedWorker !== 'undefined') {
-      return new SharedWorker(new URL('../worker/upbit/UpbitSharedWorker.ts', import.meta.url), {
-        type: 'module',
-      });
+      return new SharedWorker(
+        new URL(/* @vite-ignore */ '../worker/upbit/UpbitSharedWorker.ts', import.meta.url),
+        {
+          type: 'module',
+        }
+      );
     } else {
       return new Worker(new URL('../worker/upbit/UpbitWorker.ts', import.meta.url), {
         type: 'module',
