@@ -24,7 +24,7 @@ const createWorker = () => {
       ? '../worker/binance/BinanceSharedWorker.ts'
       : '../worker/binance/BinanceWorker.ts';
 
-  const url = new URL(/* @vite-ignore */ workerPath, import.meta.url);
+  const url = new URL(workerPath, import.meta.url);
   return new WorkerClass(url, { type: 'module' });
 };
 
@@ -35,7 +35,7 @@ const createUpbitWorker = () => {
       ? '../worker/upbit/UpbitSharedWorker.ts'
       : '../worker/upbit/UpbitWorker.ts';
 
-  const url = new URL(/* @vite-ignore */ workerPath, import.meta.url);
+  const url = new URL(workerPath, import.meta.url);
   return new WorkerClass(url, { type: 'module' });
 };
 
