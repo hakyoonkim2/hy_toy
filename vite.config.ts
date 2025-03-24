@@ -15,6 +15,9 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     build: {
       outDir: 'dist',
     },
+    worker: {
+      format: 'es',
+    },
     plugins: [
       react(),
       svgr(),
