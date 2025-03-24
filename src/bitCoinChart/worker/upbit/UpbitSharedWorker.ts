@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PriceMap } from '../CoinCommonTypes';
 import { UpbitSymbol, UpbitTickerData } from './UpbitWorkerTypes';
 import { fetchUpbitAllOpenPrices, getUpbitAllSymbols } from './UpbitWorkerUtils';
-import { dataSetting, fetchAllTickers, findIpContry, getPriceColor } from '../WorkerUtils';
+import { dataSetting, fetchAllTickers, getPriceColor, isUsCountry } from '../WorkerUtils';
 
 const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
 
@@ -119,7 +119,7 @@ const startPolling = (markets: string[], intervalMs: number = 1000) => {
 };
 
 const initWorker = async () => {
-  const isUsIp = await findIpContry();
+  const isUsIp = await isUsCountry();
 
   // 미국에서 websocket 접속이 차단되기 때문에 RestApi만 사용하여 우회
   if (isUsIp) {

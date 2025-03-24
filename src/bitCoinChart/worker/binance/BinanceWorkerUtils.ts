@@ -1,8 +1,10 @@
 import { PriceMap } from '../CoinCommonTypes';
+import { isUsCountry } from '../WorkerUtils';
 
 export const wsUrl = `wss://stream.binance.com:9443/ws/!ticker@arr`;
 
 export const BINANCE_API_URL = 'https://api.binance.com/api/v3';
+export const BINANCE_US_API_URL = 'https://api.binance.us/api/v3';
 
 interface symbols {
   symbol: string;
@@ -12,7 +14,10 @@ interface symbols {
 // 1. 모든 종목 리스트 가져오기 (USDT 페어만 필터링)
 async function getBinanceAllSymbols() {
   try {
-    const response = await fetch(`${BINANCE_API_URL}/exchangeInfo`);
+    const isUSCountry = await isUsCountry();
+    const response = await fetch(
+      `${isUSCountry ? BINANCE_US_API_URL : BINANCE_API_URL}/exchangeInfo`
+    );
     const data = await response.json();
 
     if (!data.symbols) {
@@ -33,7 +38,8 @@ async function getBinanceAllSymbols() {
 
 // 2. 특정 종목의 한국시간 9시 시가(open price) 가져오기
 async function getBinanceOpenPrice(symbol: string) {
-  const url = `${BINANCE_API_URL}/klines?symbol=${symbol}&interval=1d&limit=2`;
+  const isUSCountry = await isUsCountry();
+  const url = `${isUSCountry ? BINANCE_US_API_URL : BINANCE_API_URL}/klines?symbol=${symbol}&interval=1d&limit=2`;
 
   try {
     const response = await fetch(url);

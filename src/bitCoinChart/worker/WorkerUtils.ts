@@ -2,6 +2,8 @@ import { BinanceTickerData } from './binance/BinanceWorkerTypes';
 import { PriceMap } from './CoinCommonTypes';
 import { UpbitRestTicker, UpbitTickerData } from './upbit/UpbitWorkerTypes';
 
+let region = '';
+
 export function dataSetting<T extends BinanceTickerData | UpbitTickerData>(
   symbolFilterArr: T[],
   priceMap: PriceMap
@@ -48,16 +50,22 @@ export function getPriceColor(openPrice: number, curPrice: number): string {
   return color;
 }
 
-export async function findIpContry(): Promise<boolean> {
-  try {
-    const res = await fetch('https://ipapi.co/json/');
-    const { country_code } = await res.json();
-    return country_code !== 'US';
-  } catch (error) {
-    console.error('Failed to detect country from IP:', error);
-    return false; // 에러 발생 시 기본적으로 차단 처리
+export async function isUsCountry(): Promise<boolean> {
+  if (region.length === 0) {
+    try {
+      const res = await fetch('https://proxy-server-flax-rho.vercel.app/api/proxy?locale=find');
+      const { country } = await res.json();
+      region = country;
+      return country === 'US';
+    } catch (error) {
+      console.error('Failed to detect country from IP:', error);
+      return false; // 에러 발생 시 기본적으로 차단 처리
+    }
+  } else {
+    return region === 'US';
   }
 }
+
 function chunkMarkets(markets: string[], size: number): string[][] {
   const chunks = [];
   for (let i = 0; i < markets.length; i += size) {

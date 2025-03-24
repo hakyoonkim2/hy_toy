@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import { CoinWebSocketContext } from '../context/CoinWebSocketContext';
 import style from '../style/OrderBook.module.scss';
-import { BINANCE_URL } from '../types/CoinTypes';
+import { BINANCE_URL, BINANCE_US_URL } from '../types/CoinTypes';
 import LoadingFallback from '../../components/LoadingFallback';
+import { isUsCountry } from '../worker/WorkerUtils';
 
 type Order = [string, string];
 
@@ -28,17 +29,20 @@ export const OrderBook: React.FC<OrderBookProps> = ({ symbol }) => {
   };
 
   useEffect(() => {
-    const wsUrl = `${BINANCE_URL}${symbol.toLowerCase()}@depth10@100ms`;
-    const socket = new WebSocket(wsUrl);
-    socketRef.current = socket;
+    let socket: WebSocket;
+    isUsCountry().then((isUsCountry) => {
+      const wsUrl = `${isUsCountry ? BINANCE_US_URL : BINANCE_URL}${symbol.toLowerCase()}@depth10@100ms`;
+      socket = new WebSocket(wsUrl);
+      socketRef.current = socket;
 
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.asks && data.bids) {
-        setBids(data.bids.slice(0, 10));
-        setAsks(data.asks.slice(0, 10).reverse());
-      }
-    };
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.asks && data.bids) {
+          setBids(data.bids.slice(0, 10));
+          setAsks(data.asks.slice(0, 10).reverse());
+        }
+      };
+    });
 
     return () => {
       socket.close();
