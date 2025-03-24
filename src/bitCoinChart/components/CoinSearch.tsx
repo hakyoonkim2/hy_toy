@@ -31,7 +31,7 @@ const CoinSearch = () => {
   );
 
   const searchQuery = (inputSymbol: string) => {
-    const searchResult = searchCoinKeyword(inputSymbol, upbitSymbolList);
+    const searchResult = searchCoinKeyword(inputSymbol, upbitSymbolList, binanceSymbols);
     const newSymbol = searchResult.toUpperCase() + 'USDT';
 
     const isValid = symbolList.includes(newSymbol);
@@ -44,7 +44,7 @@ const CoinSearch = () => {
 
   const [_, formAction] = useActionState((prevSymbol: string, formData: FormData) => {
     const inputSymbol = formData.get('symbol') as string;
-    const searchResult = searchCoinKeyword(inputSymbol, upbitSymbolList);
+    const searchResult = searchCoinKeyword(inputSymbol, upbitSymbolList, binanceSymbols);
     const newSymbol = searchResult.toUpperCase() + 'USDT';
 
     const isValid = symbolList.includes(newSymbol);
