@@ -15,9 +15,6 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     build: {
       outDir: 'dist',
     },
-    worker: {
-      format: 'es', // <== Worker 전용 설정 (Vite 4+ 기준)
-    },
     plugins: [
       react(),
       svgr(),
