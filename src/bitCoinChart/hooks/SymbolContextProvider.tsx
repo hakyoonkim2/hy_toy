@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { UpbitSymbol } from '../worker/upbit/UpbitWorkerTypes';
 import { useQueryClient } from '@tanstack/react-query';
+import { isSharedWorker } from '../utils/util';
 
 export const SymbolContext = createContext<{
   symbol: string;
@@ -21,33 +22,11 @@ export const useSymbol = () => {
   return context;
 };
 
-const createWorker = () => {
-  const WorkerClass = typeof SharedWorker !== 'undefined' ? SharedWorker : Worker;
-  const workerPath =
-    typeof SharedWorker !== 'undefined'
-      ? '../worker/binance/BinanceSharedWorker.ts'
-      : '../worker/binance/BinanceWorker.ts';
-
-  const url = new URL(/* @vite-ignore */ workerPath, import.meta.url);
-  return new WorkerClass(url, { type: 'module' });
-};
-
-const createUpbitWorker = () => {
-  const WorkerClass = typeof SharedWorker !== 'undefined' ? SharedWorker : Worker;
-  const workerPath =
-    typeof SharedWorker !== 'undefined'
-      ? '../worker/upbit/UpbitSharedWorker.ts'
-      : '../worker/upbit/UpbitWorker.ts';
-
-  const url = new URL(/* @vite-ignore */ workerPath, import.meta.url);
-  return new WorkerClass(url, { type: 'module' });
-};
-
 const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
   const [symbol, setSymbol] = useState<string>('ADAUSDT');
   const [symbolList, setSymbolList] = useState<string[]>([]);
-  const [worker] = useState(() => createWorker());
-  const [upbitWorker] = useState(() => createUpbitWorker());
+  const [worker, setWorker] = useState<Worker | SharedWorker | null>(null);
+  const [upbitWorker, setUpbitWorker] = useState<Worker | SharedWorker | null>(null);
   const [upbitSymbolList, setUpbitSymbolList] = useState<UpbitSymbol[]>([]);
   const queryClient = useQueryClient();
   const isListInit = useRef(false);
@@ -99,29 +78,72 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
       }
     };
 
-    if (upbitWorker instanceof SharedWorker) {
-      upbitWorker.port.onmessage = onUbitMessageCallback;
-    } else {
-      upbitWorker.onmessage = onUbitMessageCallback;
-    }
-    if (worker instanceof SharedWorker) {
-      worker.port.onmessage = onMessageCallback;
-    } else {
-      worker.onmessage = onMessageCallback;
-    }
-    return () => {
-      if (worker instanceof SharedWorker) {
-        worker.port.close();
+    const createWorker = () => {
+      if (typeof SharedWorker !== 'undefined') {
+        return new SharedWorker(
+          new URL('../worker/binance/BinanceSharedWorker.ts', import.meta.url),
+          { type: 'module' }
+        );
       } else {
-        worker.terminate();
+        return new Worker(new URL('../worker/binance/BinanceWorker.ts', import.meta.url), {
+          type: 'module',
+        });
       }
-      if (upbitWorker instanceof SharedWorker) {
-        upbitWorker.port.close();
+    };
+
+    const createUpbitWorker = () => {
+      if (typeof SharedWorker !== 'undefined') {
+        return new SharedWorker(new URL('../worker/upbit/UpbitSharedWorker.ts', import.meta.url), {
+          type: 'module',
+        });
       } else {
-        upbitWorker.terminate();
+        return new Worker(new URL('../worker/upbit/UpbitWorker.ts', import.meta.url), {
+          type: 'module',
+        });
+      }
+    };
+
+    const webWorker = createWorker();
+    const upbitWebWorker = createUpbitWorker();
+
+    if (upbitWebWorker) {
+      if (upbitWebWorker instanceof SharedWorker) {
+        upbitWebWorker.port.onmessage = onUbitMessageCallback;
+      } else {
+        upbitWebWorker.onmessage = onUbitMessageCallback;
+      }
+    }
+
+    if (webWorker) {
+      if (webWorker instanceof SharedWorker) {
+        webWorker.port.onmessage = onMessageCallback;
+      } else {
+        webWorker.onmessage = onMessageCallback;
+      }
+    }
+    setWorker(webWorker);
+    setUpbitWorker(upbitWebWorker);
+
+    return () => {
+      if (webWorker) {
+        if (isSharedWorker(webWorker)) {
+          webWorker.port.close();
+        } else {
+          webWorker.terminate();
+        }
+      }
+
+      if (upbitWebWorker) {
+        if (isSharedWorker(upbitWebWorker)) {
+          upbitWebWorker.port.close();
+        } else {
+          upbitWebWorker.terminate();
+        }
       }
     };
   }, []);
+
+  if (!worker || !upbitWorker) return null; // 로딩 중 처리
 
   return (
     <SymbolContext

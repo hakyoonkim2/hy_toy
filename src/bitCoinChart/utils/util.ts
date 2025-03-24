@@ -64,3 +64,7 @@ export function searchCoinKeyword(query: string, symbolList: UpbitSymbol[]): str
   }
   return '';
 }
+
+export function isSharedWorker(worker: unknown): worker is SharedWorker {
+  return typeof SharedWorker !== 'undefined' && worker instanceof SharedWorker;
+}

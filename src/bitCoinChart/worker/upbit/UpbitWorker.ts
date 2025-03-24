@@ -1,4 +1,3 @@
-/// <reference lib="webworker" />
 import { v4 as uuidv4 } from 'uuid';
 import { PriceMap } from '../CoinCommonTypes';
 import { UpbitTickerData } from './UpbitWorkerTypes';
