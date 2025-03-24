@@ -107,7 +107,7 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
     const upbitWebWorker = createUpbitWorker();
 
     if (upbitWebWorker) {
-      if (upbitWebWorker instanceof SharedWorker) {
+      if (isSharedWorker(upbitWebWorker)) {
         upbitWebWorker.port.onmessage = onUbitMessageCallback;
       } else {
         upbitWebWorker.onmessage = onUbitMessageCallback;
@@ -115,7 +115,7 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (webWorker) {
-      if (webWorker instanceof SharedWorker) {
+      if (isSharedWorker(webWorker)) {
         webWorker.port.onmessage = onMessageCallback;
       } else {
         webWorker.onmessage = onMessageCallback;
