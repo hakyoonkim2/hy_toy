@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import style from '../style/ProjectNavigator.module.scss';
 
 /**
  * 버튼을 통해 각 프로젝트로 진입할 수 있는 컴포넌트
@@ -12,16 +13,14 @@ function ProjectNavigator() {
   };
 
   return (
-    <>
-      <div>
-        <button className="projectBtn" data-path={'/stopwatch'} onClick={handleClick}>
-          {'stopwatch(test용)'}
-        </button>
-        <button className="projectBtn" data-path={'/chart'} onClick={handleClick}>
-          chart
-        </button>
-      </div>
-    </>
+    <div className={style.container}>
+      <button className={style.projectBtn} data-path={'/stopwatch'} onClick={handleClick}>
+        {'Stopwatch'}
+      </button>
+      <button className={style.projectBtn} data-path={'/chart'} onClick={handleClick}>
+        Coin
+      </button>
+    </div>
   );
 }
 
