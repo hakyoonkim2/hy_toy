@@ -18,23 +18,23 @@ const CoinChartView = lazy(() => import('../bitCoinChart/components/CoinChartVie
  * 라우터
  */
 const ProjectRouter = () => {
-    return (
-        <BrowserRouter basename={isGitHub ? '/hy_toy/' : '/'}>
-            <div className='wrapper'>
-                <Header />
-                <Suspense fallback={<LoadingFallback />}>
-                    <Routes>
-                        <Route path='/' element={<ProjectNavigator/>}/>
-                        <Route path='/stopwatch' element={<StopWatch/>}/>
-                        <Route path='/chart' element={<CoinAppWrapper/>}>
-                            <Route index element={<CoinApp />} />
-                            {isMobile && <Route path="chartview" element={<CoinChartView />} />}
-                        </Route>
-                    </Routes>
-                </Suspense>
-            </div>
-        </BrowserRouter>
-    );
-}
+  return (
+    <BrowserRouter basename={isGitHub ? '/hy_toy/' : '/'}>
+      <div className="wrapper">
+        <Header />
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<ProjectNavigator />} />
+            <Route path="/stopwatch" element={<StopWatch />} />
+            <Route path="/chart" element={<CoinAppWrapper />}>
+              <Route index element={<CoinApp />} />
+              {isMobile && <Route path="chartview" element={<CoinChartView />} />}
+            </Route>
+          </Routes>
+        </Suspense>
+      </div>
+    </BrowserRouter>
+  );
+};
 
 export default ProjectRouter;
