@@ -2,7 +2,7 @@
 
 import { BinanceTickerData } from './BinanceWorkerTypes';
 import { fetchBinanceAllOpenPrices, wsUrl } from './BinanceWorkerUtils';
-import { dataSetting, findIpContry } from '../WorkerUtils';
+import { dataSetting } from '../WorkerUtils';
 
 const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
 
@@ -13,12 +13,11 @@ let ws = null;
 // websocket 실행 전에 호출해서 openPrice 세팅
 fetchBinanceAllOpenPrices(priceMap);
 
-const connectWebSocket = (url?: string) => {
-  ws = new WebSocket(url ?? wsUrl);
+const connectWebSocket = () => {
+  ws = new WebSocket(wsUrl);
 
   ws.onmessage = (event) => {
     const json = JSON.parse(event.data) as BinanceTickerData[];
-
     const symbolFilterArr: BinanceTickerData[] = Array.from(json).filter((x: BinanceTickerData) =>
       x.s.includes('USDT')
     );
@@ -57,20 +56,10 @@ sharedWorkerGlobal.onconnect = (event: MessageEvent) => {
   }
 
   connections.forEach((port) => {
-    port.postMessage('Binance shared worker 유저가 추가됨');
+    port.postMessage('유저가 추가됨');
   });
 
   port.start(); // 반드시 start() 호출해야 메시지 전송 가능
 };
 
-const initWorker = async () => {
-  const isUsIp = await findIpContry();
-
-  // 미국에서 websocket 접속이 차단되기 때문에 RestApi만 사용하여 우회
-  if (isUsIp) {
-    connectWebSocket();
-  } else {
-    connectWebSocket('wss://stream.binance.us:9443/ws/!ticker@arr');
-  }
-};
-initWorker();
+connectWebSocket();

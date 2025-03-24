@@ -1,6 +1,6 @@
 import { BinanceTickerData } from './BinanceWorkerTypes';
 import { fetchBinanceAllOpenPrices, wsUrl } from './BinanceWorkerUtils';
-import { dataSetting, findIpContry } from '../WorkerUtils';
+import { dataSetting } from '../WorkerUtils';
 
 const priceMap = {};
 let ws = null;
@@ -8,8 +8,8 @@ let ws = null;
 // websocket 실행 전에 호출해서 openPrice 세팅
 fetchBinanceAllOpenPrices(priceMap);
 
-const connectWebSocket = (url?: string) => {
-  ws = new WebSocket(url ?? wsUrl);
+const connectWebSocket = () => {
+  ws = new WebSocket(wsUrl);
 
   ws.onmessage = (event) => {
     const json = JSON.parse(event.data) as BinanceTickerData[];
@@ -29,14 +29,4 @@ const connectWebSocket = (url?: string) => {
 
 self.onmessage = () => {};
 
-const initWorker = async () => {
-  const isUsIp = await findIpContry();
-
-  // 미국에서 websocket 접속이 차단되기 때문에 RestApi만 사용하여 우회
-  if (isUsIp) {
-    connectWebSocket();
-  } else {
-    connectWebSocket('wss://stream.binance.us:9443/ws/!ticker@arr');
-  }
-};
-initWorker();
+connectWebSocket();
