@@ -1,6 +1,7 @@
 import Decimal from 'decimal.js';
 import useSymbolData from '../hooks/useSymbolData';
 import ArrowLeft from '../../assets/ArrowLeft.svg?react';
+import style from '../style/CoinMobileSymbolInfo.module.scss';
 
 type CoinMobileSymbolInfoProps = {
   symbol: string;
@@ -19,24 +20,17 @@ const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) =
   const diff = new Decimal(price).minus(openPrice);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <ArrowLeft
-          width={'30px'}
-          height={'30px'}
-          onClick={handleBack}
-          style={{ paddingLeft: '10px' }}
-        />
-        <strong style={{ fontSize: '20px' }}>{symbol.replace('USDT', ' / USD')}</strong>
+    <div className={style.container}>
+      <div className={style.topRow}>
+        <ArrowLeft className={style.backIcon} onClick={handleBack} />
+        <strong className={style.symbol}>{symbol.replace('USDT', ' / USD')}</strong>
       </div>
-      <div style={{ marginLeft: '20px', marginTop: '2px', color: data?.color }}>
-        <div>
-          <strong style={{ width: '100px', fontSize: '20px' }}>{data?.price}</strong>
-        </div>
-        <div style={{ fontSize: '13px' }}>
+      <div className={style.priceBox} style={{ color: data?.color }}>
+        <div className={style.price}>{data?.price}</div>
+        <div className={style.changeInfo} style={{ color: data?.color }}>
           <span>{`${priceChange} %`}</span>
-          <span style={{ marginLeft: '10px' }}>{parseFloat(priceChange) > 0 ? '▲' : '▼'}</span>
-          <span>{` ${diff.toString()}`}</span>
+          <span>{parseFloat(priceChange) > 0 ? '▲' : '▼'}</span>
+          <span>{diff.toString()}</span>
         </div>
       </div>
     </div>

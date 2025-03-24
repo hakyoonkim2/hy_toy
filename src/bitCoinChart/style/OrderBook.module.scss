@@ -1,0 +1,50 @@
+.orderbook {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  font-family: 'Pretendard', sans-serif;
+  background-color: #121212;
+  border-radius: 8px;
+  padding: 0.5rem;
+  overflow-y: auto;
+}
+
+.rowStyle {
+  position: relative;
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 22px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  transition: border 0.2s ease;
+}
+
+.rowStyle:hover {
+  border-color: #333;
+}
+
+.barstyle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: 4px;
+}
+
+.rowStyle span {
+  z-index: 1;
+  font-size: 0.75rem;
+}
+
+.rowStyle span:first-child {
+  font-weight: 600;
+}
+
+.rowStyle span:last-child {
+  color: #ccc;
+}

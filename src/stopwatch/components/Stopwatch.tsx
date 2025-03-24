@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
+import style from '../style/Stopwatch.module.scss';
 
 /**
  * 스탑워치 구현
@@ -37,12 +38,12 @@ const StopWatch = () => {
   const lapList = (laps: number[]) => {
     return laps.map((value, index) => (
       // key값은 value로 처리 (타이머는 시간순으로 올라가므로 중복이 될 수 없음)
-      <Fragment key={value}>
-        <div className="item">{`랩 ${laps.length - index}`}</div>
-        <div className="item" id="lapTimer">
+      <div key={value} className={style.item}>
+        <div>{`랩 ${laps.length - index}`}</div>
+        <div id="lapTimer">
           <span>{formatTime(value)}</span>
         </div>
-      </Fragment>
+      </div>
     ));
   };
 
@@ -52,7 +53,7 @@ const StopWatch = () => {
   };
 
   // 리셋 버튼 핸들링
-  const handleLapRest = () => {
+  const handleLapReset = () => {
     if (isRunning) {
       setLaps((prev) => [time, ...prev]);
     } else {
@@ -62,22 +63,22 @@ const StopWatch = () => {
   };
 
   return (
-    <div className="stopwatch">
-      <div id="timer">
-        <span>{formatTime(time)}</span>
+    <div className={style.stopwatch}>
+      <div id="timer">{formatTime(time)}</div>
+      <div className={style.buttonGroup}>
+        <button
+          className={style.btn}
+          onClick={handleLapReset}
+          disabled={!isRunning && laps.length === 0}
+        >
+          {isRunning ? '랩' : '재설정'}
+        </button>
+        <button className={style.btn} onClick={handleStartStop}>
+          {isRunning ? '중단' : '시작'}
+        </button>
       </div>
-      <button
-        className="btn__left"
-        onClick={handleLapRest}
-        disabled={!isRunning && laps.length === 0}
-      >
-        {isRunning ? '랩' : '재설정'}
-      </button>
-      <button className="btn__right" onClick={handleStartStop}>
-        {isRunning ? '중단' : '시작'}
-      </button>
-      <div className="section" id="lapContainer">
-        <div className="items">{lapList(laps)}</div>
+      <div className={style.section}>
+        <div className={style.items}>{lapList(laps)}</div>
       </div>
     </div>
   );

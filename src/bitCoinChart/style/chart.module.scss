@@ -17,55 +17,6 @@
   }
 }
 
-.chartList {
-  align-items: center;
-  box-sizing: border-box;
-  display: flex;
-  min-height: 51px;
-  overflow: hidden;
-  padding: 8px 14px 8px 26px;
-  justify-content: space-between;
-  border-bottom: 1px solid #9a9898c1;
-
-  :hover {
-    cursor: pointer;
-  }
-}
-
-.symbolListLabel {
-  font-size: 11px;
-}
-
-.price {
-  display: inline-block;
-  font-size: 12px;
-  line-height: 16px;
-  position: relative;
-  word-break: break-all;
-  padding: 2px;
-}
-
-.krwPrice {
-  display: inline-block;
-  font-size: 10px;
-  line-height: 16px;
-  position: relative;
-  word-break: break-all;
-  padding: 2px;
-}
-
-.tab {
-  display: flex;
-  flex: 1;
-  font-size: 17px;
-  height: 30px;
-  font-weight: 800;
-  align-items: center;
-  justify-content: center;
-  padding: 2px;
-  border: 1px solid #000000;
-}
-
 .app {
   height: calc(100svh - 120px);
   display: flex;
@@ -83,32 +34,4 @@
 .chartviewContainer {
   width: 100%;
   overflow-y: scroll;
-}
-
-.pricehighlight {
-  border: 1px solid white;
-  transition: border 0.3s ease-in-out;
-}
-
-.barstyle {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  z-index: 0;
-}
-
-.rowStyle {
-  position: relative;
-  padding: 4px 8px;
-  font-size: 11px;
-}
-
-.orderbook {
-  display: flex;
-  gap: 24px;
-  background: #242424;
-  padding: 4px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(248, 248, 248, 0.05);
 }

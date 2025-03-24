@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { PriceMap } from '../CoinCommonTypes';
 import { UpbitTickerData } from './UpbitWorkerTypes';
-import { fetchUpbitAllOpenPrices } from './UpbitWorkerUtils';
+import { fetchUpbitAllOpenPrices, getUpbitAllSymbols } from './UpbitWorkerUtils';
 import { dataSetting, fetchAllTickers, findIpContry, getPriceColor } from '../WorkerUtils';
 
 const priceMap: PriceMap = {};
@@ -14,17 +14,22 @@ const connectWebSocket = () => {
   ws.onopen = () => {
     console.log('Connected');
     // websocket 실행 전에 호출해서 openPrice 세팅
-    fetchUpbitAllOpenPrices(priceMap).then(() => {
-      const msg = [
-        { ticket: uuidv4() },
-        {
-          type: 'ticker',
-          codes: Object.keys(priceMap),
-        },
-      ];
+    const initSocket = async () => {
+      const symbols = await getUpbitAllSymbols();
+      self.postMessage({ type: 'upbit_symbol_list', data: symbols });
+      fetchUpbitAllOpenPrices(priceMap, symbols).then(() => {
+        const msg = [
+          { ticket: uuidv4() },
+          {
+            type: 'ticker',
+            codes: Object.keys(priceMap),
+          },
+        ];
 
-      ws?.send(JSON.stringify(msg));
-    });
+        ws?.send(JSON.stringify(msg));
+      });
+    };
+    initSocket();
   };
 
   ws.onmessage = (event) => {
@@ -80,7 +85,9 @@ const initWorker = async () => {
   if (isUsIp) {
     connectWebSocket();
   } else {
-    await fetchUpbitAllOpenPrices(priceMap);
+    const symbols = await getUpbitAllSymbols();
+    self.postMessage({ type: 'upbit_symbol_list', data: symbols });
+    await fetchUpbitAllOpenPrices(priceMap, symbols);
     const allMarkets = Object.keys(priceMap);
     startPolling(allMarkets);
   }
