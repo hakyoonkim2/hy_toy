@@ -3,9 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { PriceMap } from '../CoinCommonTypes';
 import { UpbitTickerData } from './UpbitWorkerTypes';
 import { fetchUpbitAllOpenPrices } from './UpbitWorkerUtils';
-import { dataSetting } from '../WorkerUtils';
+import { dataSetting, fetchAllTickers, findIpContry, getPriceColor } from '../WorkerUtils';
 
-const connections: MessagePort[] = [];
 const priceMap: PriceMap = {};
 let ws: WebSocket | null = null;
 
@@ -36,24 +35,56 @@ const connectWebSocket = () => {
     try {
       dataSetting([data], priceMap);
     } catch (e) {
-      connections.forEach((port) => {
-        port.postMessage(`upbit 데이터 정리 오류: ${e}`);
-      });
+      self.postMessage(`upbit 데이터 정리 오류: ${e}`);
     }
 
-    connections.forEach((port) => {
-      port.postMessage({
-        type: 'UpbitsymbolData',
-        data: { ...priceMap[data.code], symbol: data.code },
-      });
+    self.postMessage({
+      type: 'UpbitsymbolData',
+      data: { ...priceMap[data.code], symbol: data.code },
     });
   };
 
   ws.onclose = () => {
-    connections.forEach((port) => {
-      port.postMessage('연결 끊김');
-    });
+    self.postMessage('연결 끊김');
   };
 };
 
-connectWebSocket();
+const fetchAndBroadCast = (markets: string[]) => {
+  fetchAllTickers(markets).then((res) => {
+    res.forEach((data) => {
+      const target = priceMap[data.market];
+      target.openPrice = data.opening_price;
+      target.price = data.trade_price;
+      target.color = getPriceColor(data.opening_price, data.trade_price);
+    });
+  }); // 초기 1회
+
+  self.postMessage({
+    type: 'UpbitRestsymbolData',
+    data: priceMap,
+  });
+};
+
+const startPolling = (markets: string[], intervalMs: number = 1000) => {
+  // 초기 1회 설정
+  fetchAndBroadCast(markets);
+
+  setInterval(() => {
+    fetchAndBroadCast(markets);
+  }, intervalMs);
+};
+
+const initWorker = async () => {
+  const isUsIp = await findIpContry();
+
+  // 미국에서 websocket 접속이 차단되기 때문에 RestApi만 사용하여 우회
+  if (isUsIp) {
+    connectWebSocket();
+  } else {
+    await fetchUpbitAllOpenPrices(priceMap);
+    const allMarkets = Object.keys(priceMap);
+    startPolling(allMarkets);
+  }
+};
+
+initWorker();

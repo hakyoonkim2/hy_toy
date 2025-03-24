@@ -44,6 +44,11 @@ const CoinApp: React.FC = () => {
         console.log(event.data);
         queryClient.setQueryData(['symbol', data.data.symbol], data.data);
         console.log(event.data);
+      } else if (data?.type === 'UpbitRestsymbolData') {
+        Object.entries(data.data).forEach(([symbol, data]) => {
+          queryClient.setQueryData(['symbol', symbol], data);
+        });
+        console.log(event.data);
       } else {
         console.log(event.data);
       }

@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PriceMap } from '../CoinCommonTypes';
 import { UpbitTickerData } from './UpbitWorkerTypes';
 import { fetchUpbitAllOpenPrices } from './UpbitWorkerUtils';
-import { dataSetting } from '../WorkerUtils';
+import { dataSetting, fetchAllTickers, findIpContry, getPriceColor } from '../WorkerUtils';
 
 const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
 
@@ -81,7 +81,7 @@ sharedWorkerGlobal.onconnect = (event: MessageEvent) => {
 
   // 연결된 클라이언트에게 다른 클라이언트가 받아놓은 데이터가 있는 경우 priceMap을 바로 전송
   if (Object.keys(priceMap).length > 0) {
-    port.postMessage({ type: 'symbolData', data: priceMap });
+    port.postMessage({ type: 'UpbitsymbolData', data: priceMap });
   }
 
   connections.forEach((port) => {
@@ -91,4 +91,44 @@ sharedWorkerGlobal.onconnect = (event: MessageEvent) => {
   port.start(); // 반드시 start() 호출해야 메시지 전송 가능
 };
 
-connectWebSocket();
+const fetchAndBroadCast = (markets: string[]) => {
+  fetchAllTickers(markets).then((res) => {
+    res.forEach((data) => {
+      const target = priceMap[data.market];
+      target.openPrice = data.opening_price;
+      target.price = data.trade_price;
+      target.color = getPriceColor(data.opening_price, data.trade_price);
+    });
+  }); // 초기 1회
+
+  connections.forEach((port) => {
+    port.postMessage({
+      type: 'UpbitRestsymbolData',
+      data: priceMap,
+    });
+  });
+};
+
+const startPolling = (markets: string[], intervalMs: number = 1000) => {
+  // 초기 1회 설정
+  fetchAndBroadCast(markets);
+
+  setInterval(() => {
+    fetchAndBroadCast(markets);
+  }, intervalMs);
+};
+
+const initWorker = async () => {
+  const isUsIp = await findIpContry();
+
+  // 미국에서 websocket 접속이 차단되기 때문에 RestApi만 사용하여 우회
+  if (isUsIp) {
+    connectWebSocket();
+  } else {
+    await fetchUpbitAllOpenPrices(priceMap);
+    const allMarkets = Object.keys(priceMap);
+    startPolling(allMarkets);
+  }
+};
+
+initWorker();
