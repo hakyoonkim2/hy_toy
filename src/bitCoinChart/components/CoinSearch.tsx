@@ -30,8 +30,7 @@ const CoinSearch = () => {
     sym.toLowerCase().includes(inputValue.toLowerCase())
   );
 
-  const searchQuery = () => {
-    const inputSymbol = inputRef.current?.value ?? '';
+  const searchQuery = (inputSymbol: string) => {
     const searchResult = searchCoinKeyword(inputSymbol, upbitSymbolList);
     const newSymbol = searchResult.toUpperCase() + 'USDT';
 
@@ -71,7 +70,7 @@ const CoinSearch = () => {
 
   const handleSelect = (selected: string) => {
     setInputValue(selected);
-    searchQuery();
+    searchQuery(selected);
     setShowDropdown(false);
   };
 
