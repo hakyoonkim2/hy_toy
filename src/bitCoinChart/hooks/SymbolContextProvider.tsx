@@ -26,28 +26,28 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const createWorker = () => {
-      if (typeof SharedWorker !== 'undefined') {
-        return new SharedWorker(
-          new URL('../worker/binance/BinanceSharedWorker.ts', import.meta.url),
-          { type: 'module' }
-        );
-      } else {
-        return new Worker(new URL('../worker/binance/BinanceWorker.ts', import.meta.url), {
-          type: 'module',
-        });
-      }
+      // if (typeof SharedWorker !== 'undefined') {
+      //   return new SharedWorker(
+      //     new URL('../worker/binance/BinanceSharedWorker.ts', import.meta.url),
+      //     { type: 'module' }
+      //   );
+      // } else {
+      return new Worker(new URL('../worker/binance/BinanceWorker.ts', import.meta.url), {
+        type: 'module',
+      });
+      // }
     };
 
     const createUpbitWorker = () => {
-      if (typeof SharedWorker !== 'undefined') {
-        return new SharedWorker(new URL('../worker/upbit/UpbitSharedWorker.ts', import.meta.url), {
-          type: 'module',
-        });
-      } else {
-        return new Worker(new URL('../worker/upbit/UpbitWorker.ts', import.meta.url), {
-          type: 'module',
-        });
-      }
+      // if (typeof SharedWorker !== 'undefined') {
+      //   return new SharedWorker(new URL('../worker/upbit/UpbitSharedWorker.ts', import.meta.url), {
+      //     type: 'module',
+      //   });
+      // } else {
+      return new Worker(new URL('../worker/upbit/UpbitWorker.ts', import.meta.url), {
+        type: 'module',
+      });
+      // }
     };
 
     const webWorker = createWorker();
