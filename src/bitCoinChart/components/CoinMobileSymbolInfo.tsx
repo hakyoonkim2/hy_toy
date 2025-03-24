@@ -2,6 +2,7 @@ import Decimal from 'decimal.js';
 import useSymbolData from '../hooks/useSymbolData';
 import ArrowLeft from '../../assets/ArrowLeft.svg?react';
 import style from '../style/CoinMobileSymbolInfo.module.scss';
+import coinsearchStyle from '../style/SearchFrom.module.scss';
 
 type CoinMobileSymbolInfoProps = {
   symbol: string;
@@ -23,7 +24,8 @@ const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) =
     <div className={style.container}>
       <div className={style.topRow}>
         <ArrowLeft className={style.backIcon} onClick={handleBack} />
-        <strong className={style.symbol}>{symbol.replace('USDT', ' / USD')}</strong>
+        <span className={coinsearchStyle.selectedValue}>{symbol.replace('USDT', '')}</span>
+        <span className={coinsearchStyle.selectedUnit}>/ USD</span>
       </div>
       <div className={style.priceBox} style={{ color: data?.color }}>
         <div className={style.price}>{data?.price}</div>
