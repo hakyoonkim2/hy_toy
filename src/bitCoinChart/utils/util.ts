@@ -44,9 +44,18 @@ function splitKoreanName(name: string): string[] {
   return [name];
 }
 
-export function searchCoinKeyword(query: string, symbolList: UpbitSymbol[]): string {
+export function searchCoinKeyword(
+  query: string,
+  symbolList: UpbitSymbol[],
+  binanceSymbolList: string[]
+): string {
   const charType = getFirstCharType(query);
   const lowerQuery = query.toLowerCase();
+  if (charType === 'english') {
+    if (binanceSymbolList.includes(query.toUpperCase())) {
+      return query;
+    }
+  }
   for (let i = 0; i < symbolList.length; i++) {
     const { korean_name, english_name, market } = symbolList[i];
     const lowerEnglishName = english_name.toLowerCase();
