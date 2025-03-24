@@ -18,45 +18,25 @@ export const useSymbol = () => {
 };
 
 const createWorker = () => {
-  try {
-    if (typeof SharedWorker !== 'undefined') {
-      return new SharedWorker(
-        new URL(/* @vite-ignore */ '../worker/binance/BinanceSharedWorker.ts', import.meta.url),
-        {
-          type: 'module',
-        }
-      );
-    } else {
-      return new Worker(new URL('../worker/binance/BinanceWorker.ts', import.meta.url), {
-        type: 'module',
-      });
-    }
-  } catch {
-    return new Worker(new URL('../worker/binance/BinanceWorker.ts', import.meta.url), {
-      type: 'module',
-    });
-  }
+  const WorkerClass = typeof SharedWorker !== 'undefined' ? SharedWorker : Worker;
+  const workerPath =
+    typeof SharedWorker !== 'undefined'
+      ? '../worker/binance/BinanceSharedWorker.ts'
+      : '../worker/binance/BinanceWorker.ts';
+
+  const url = new URL(/* @vite-ignore */ workerPath, import.meta.url);
+  return new WorkerClass(url, { type: 'module' });
 };
 
 const createUpbitWorker = () => {
-  try {
-    if (typeof SharedWorker !== 'undefined') {
-      return new SharedWorker(
-        new URL(/* @vite-ignore */ '../worker/upbit/UpbitSharedWorker.ts', import.meta.url),
-        {
-          type: 'module',
-        }
-      );
-    } else {
-      return new Worker(new URL('../worker/upbit/UpbitWorker.ts', import.meta.url), {
-        type: 'module',
-      });
-    }
-  } catch {
-    return new Worker(new URL('../worker/upbit/UpbitWorker.ts', import.meta.url), {
-      type: 'module',
-    });
-  }
+  const WorkerClass = typeof SharedWorker !== 'undefined' ? SharedWorker : Worker;
+  const workerPath =
+    typeof SharedWorker !== 'undefined'
+      ? '../worker/upbit/UpbitSharedWorker.ts'
+      : '../worker/upbit/UpbitWorker.ts';
+
+  const url = new URL(/* @vite-ignore */ workerPath, import.meta.url);
+  return new WorkerClass(url, { type: 'module' });
 };
 
 const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
