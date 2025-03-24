@@ -85,7 +85,7 @@ sharedWorkerGlobal.onconnect = (event: MessageEvent) => {
   }
 
   connections.forEach((port) => {
-    port.postMessage('유저가 추가됨');
+    port.postMessage('Upbit SharedWorker유저가 추가됨');
   });
 
   port.start(); // 반드시 start() 호출해야 메시지 전송 가능
