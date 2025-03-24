@@ -3,23 +3,19 @@ import { UpbitSymbol } from "./UpbitWorkerTypes";
 
 // 1. 모든 종목 리스트 가져오기 (KRW 페어만 필터링)
 async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {
-    try {
-        const apiUrl = encodeURIComponent('https://api.upbit.com/v1/market/all?isDetails=true');
-        const response = await fetch(`https://proxy-server-flax-rho.vercel.app/api/proxy?url=${apiUrl}`);
-        const data = await response.json();
+    const apiUrl = encodeURIComponent('https://api.upbit.com/v1/market/all?isDetails=true');
+    const response = await fetch(`https://proxy-server-flax-rho.vercel.app/api/proxy?url=${apiUrl}`);
+    const data = await response.json();
 
-        if (response.status !== 200) {
-            throw new Error("Failed to fetch symbols list");
-        }
-
-        // KRW 마켓에 해당하는 종목만 필터링
-        const symbols = (data as UpbitSymbol[])
-            .filter((symbol) => symbol.market.startsWith("KRW-")) // KRW 페어만 가져오기
-
-        return symbols;
-    } catch (error) {
-        throw error;
+    if (response.status !== 200) {
+        throw new Error("Failed to fetch symbols list");
     }
+
+    // KRW 마켓에 해당하는 종목만 필터링
+    const symbols = (data as UpbitSymbol[])
+        .filter((symbol) => symbol.market.startsWith("KRW-")) // KRW 페어만 가져오기
+
+    return symbols;
 }
 
 // 3. 모든 종목의 9시 시가 가져오기

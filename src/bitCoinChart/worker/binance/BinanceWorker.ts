@@ -18,7 +18,7 @@ const connectWebSocket = () => {
       try {
         dataSetting(symbolFilterArr, priceMap);
       } catch (e) {
-          self.postMessage('데이터 정리 오류');
+          self.postMessage(`데이터 정리 오류: ${e}`);
       }
       self.postMessage({type: 'symbolData', data: priceMap});
   };

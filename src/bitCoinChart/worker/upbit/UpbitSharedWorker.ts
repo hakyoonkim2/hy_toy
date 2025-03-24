@@ -46,7 +46,7 @@ const connectWebSocket = () => {
         dataSetting([data], priceMap);
       } catch (e) {
         connections.forEach((port) => {
-          port.postMessage('upbit 데이터 정리 오류');
+          port.postMessage(`upbit 데이터 정리 오류: ${e}`);
         });
       }
 

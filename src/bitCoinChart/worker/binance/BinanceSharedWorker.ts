@@ -24,7 +24,7 @@ const connectWebSocket = () => {
         dataSetting(symbolFilterArr, priceMap);
       } catch (e) {
         connections.forEach((port) => {
-          port.postMessage('데이터 정리 오류');
+          port.postMessage(`데이터 정리 오류: ${e}`);
         });
       }
 

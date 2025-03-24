@@ -22,6 +22,7 @@ const CoinPriceList: React.FC<CoinPriceListProps> = ({ symbol }) => {
     const ref = useRef(null);
     const navigator = useNavigate();
 
+    // 환율 정보 10분단위로 가져옴
     const { data: exchangeRatio } = useQuery({
         queryKey: ["exchange-rate", "USD-KRW"],
         queryFn: fetchExchangeRate,

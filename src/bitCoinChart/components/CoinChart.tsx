@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { createChart, CandlestickSeries, IChartApi } from "lightweight-charts";
+import { createChart, CandlestickSeries, IChartApi, ISeriesApi } from "lightweight-charts";
 import { CoinWebSocketContext } from "../context/CoinWebSocketContext";
 import style from "../style/chart.module.scss";
 import { isMobile } from "react-device-detect";
@@ -15,7 +15,7 @@ type CoinChartProps = {
 const CoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const managerData = useContext(CoinWebSocketContext);
-  const seriesRef = useRef<any>(null);
+  const seriesRef = useRef<ISeriesApi<"Candlestick">>(null);
   const chartRef = useRef<IChartApi | null>(null);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const CoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
 
     // chart에 width가 number만 가능하기때문에 100%를 줄수가 없음. 따라서 resize observer를 통해 chartSize를 가변적으로 핸들링하도록 처리
     const resizeObserver = new ResizeObserver(entries => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         if (entry.contentRect) {
           chart.applyOptions({
             width: entry.contentRect.width,
@@ -75,7 +75,7 @@ const CoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
   }, [symbol]);
 
   useEffect(() => {
-    seriesRef.current.setData(managerData.candleData);
+    seriesRef.current?.setData(managerData.candleData);
   }, [managerData]);
 
   return (
