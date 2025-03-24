@@ -1,5 +1,4 @@
 export interface BinanceTickerData {
-    s: string;
-    c: string;
+  s: string;
+  c: string;
 }
-

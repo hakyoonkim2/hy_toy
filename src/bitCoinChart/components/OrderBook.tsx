@@ -8,7 +8,7 @@ type Order = [string, string];
 
 type OrderBookProps = {
   symbol: string;
-}
+};
 
 const BAR_WIDTH = 100;
 
@@ -63,17 +63,25 @@ export const OrderBook: React.FC<OrderBookProps> = ({ symbol }) => {
     return (
       <div key={price} className={style.rowStyle} style={rowStyle}>
         <div className={style.barstyle} style={barStyle}></div>
-        <span style={{ color: type === 'ask' ? blue : red, fontWeight: 600 }}>{parseFloat(price)}</span>{' '}
+        <span style={{ color: type === 'ask' ? blue : red, fontWeight: 600 }}>
+          {parseFloat(price)}
+        </span>{' '}
         <span style={{ float: 'right' }}>{parseFloat(amount)}</span>
       </div>
     );
   };
 
-  return (bids.length === 0 ? <LoadingFallback /> :
+  return bids.length === 0 ? (
+    <LoadingFallback />
+  ) : (
     <div className={style.orderbook}>
       <div style={{ flex: 1 }}>
-        <div style={{ color: blue, marginBottom: '8px' }}>{asks.map((order) => renderRow('ask', order))}</div>
-        <div style={{ color: red, marginBottom: '8px' }}>{bids.map((order) => renderRow('bid', order))}</div>
+        <div style={{ color: blue, marginBottom: '8px' }}>
+          {asks.map((order) => renderRow('ask', order))}
+        </div>
+        <div style={{ color: red, marginBottom: '8px' }}>
+          {bids.map((order) => renderRow('bid', order))}
+        </div>
       </div>
     </div>
   );
