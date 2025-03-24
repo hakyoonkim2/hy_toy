@@ -1,4 +1,4 @@
-import { PriceMap } from "./CoinCommonTypes";
+import { PriceMap } from "../CoinCommonTypes";
 
 export const wsUrl = `wss://stream.binance.com:9443/ws/!ticker@arr`;
 

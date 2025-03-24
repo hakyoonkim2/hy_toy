@@ -1,9 +1,9 @@
 /// <reference lib="webworker" />
 import { v4 as uuidv4 } from 'uuid';
-import { PriceMap } from "./CoinCommonTypes";
+import { PriceMap } from "../CoinCommonTypes";
 import { UpbitTickerData } from "./UpbitWorkerTypes";
 import { fetchUpbitAllOpenPrices } from "./UpbitWorkerUtils";
-import { dataSetting } from "./WorkerUtils";
+import { dataSetting } from "../WorkerUtils";
 
 const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
 

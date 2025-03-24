@@ -2,7 +2,7 @@
 
 import { BinanceTickerData } from "./BinanceWorkerTypes";
 import { fetchBinanceAllOpenPrices, wsUrl } from "./BinanceWorkerUtils";
-import { dataSetting } from "./WorkerUtils";
+import { dataSetting } from "../WorkerUtils";
 
 const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
 

@@ -1,4 +1,4 @@
-import { PriceMap } from "./CoinCommonTypes";
+import { PriceMap } from "../CoinCommonTypes";
 import { UpbitSymbol } from "./UpbitWorkerTypes";
 
 // 1. 모든 종목 리스트 가져오기 (KRW 페어만 필터링)
