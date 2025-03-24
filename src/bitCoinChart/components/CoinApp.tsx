@@ -6,6 +6,7 @@ import { isMobile } from 'react-device-detect';
 import CoinChartView from './CoinChartView';
 import { useSymbol } from '../hooks/SymbolContextProvider';
 import LoadingFallback from '../../components/LoadingFallback';
+import { isSharedWorker } from '../utils/util';
 
 const CoinApp: React.FC = () => {
   const { symbolList, setSymbolList, worker, upbitWorker } = useSymbol();
@@ -54,12 +55,12 @@ const CoinApp: React.FC = () => {
       }
     };
 
-    if (worker instanceof SharedWorker) {
+    if (isSharedWorker(worker)) {
       worker.port.onmessage = onMessageCallback;
     } else {
       worker.onmessage = onMessageCallback;
     }
-    if (upbitWorker instanceof SharedWorker) {
+    if (isSharedWorker(upbitWorker)) {
       upbitWorker.port.onmessage = onUbitMessageCallback;
     } else {
       upbitWorker.onmessage = onUbitMessageCallback;

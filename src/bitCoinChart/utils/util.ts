@@ -17,3 +17,7 @@ export const fetchExchangeRate = async (): Promise<number> => {
   const data = await res.json();
   return data.rates.KRW; // USD → KRW 환율 반환
 };
+
+export const isSharedWorker = (worker: unknown): worker is SharedWorker => {
+  return typeof SharedWorker !== 'undefined' && worker instanceof SharedWorker;
+};

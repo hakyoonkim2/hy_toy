@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { isSharedWorker } from '../utils/util';
 
 export const SymbolContext = createContext<{
   symbol: string;
@@ -41,12 +42,12 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     return () => {
-      if (worker instanceof SharedWorker) {
+      if (isSharedWorker(worker)) {
         worker.port.close();
       } else {
         worker.terminate();
       }
-      if (upbitWorker instanceof SharedWorker) {
+      if (isSharedWorker(upbitWorker)) {
         upbitWorker.port.close();
       } else {
         upbitWorker.terminate();
