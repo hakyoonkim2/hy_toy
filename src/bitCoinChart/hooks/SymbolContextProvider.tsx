@@ -41,12 +41,11 @@ const createUpbitWorker = () => {
   }
 };
 
-const worker = createWorker();
-const upbitWorker = createUpbitWorker();
-
 const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
   const [symbol, setSymbol] = useState<string>('ADAUSDT');
   const [symbolList, setSymbolList] = useState<string[]>([]);
+  const [worker] = useState(() => createWorker());
+  const [upbitWorker] = useState(() => createUpbitWorker());
 
   useEffect(() => {
     return () => {
