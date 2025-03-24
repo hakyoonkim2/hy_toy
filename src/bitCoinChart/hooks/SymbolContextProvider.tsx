@@ -17,33 +17,27 @@ export const useSymbol = () => {
   return context;
 };
 
-const createWorker = () => {
-  const WorkerClass = typeof SharedWorker !== 'undefined' ? SharedWorker : Worker;
-  const workerPath =
-    typeof SharedWorker !== 'undefined'
-      ? '../worker/binance/BinanceSharedWorker.ts'
-      : '../worker/binance/BinanceWorker.ts';
+const worker =
+  typeof SharedWorker !== 'undefined'
+    ? new SharedWorker(new URL('../worker/binance/BinanceSharedWorker.ts', import.meta.url), {
+        type: 'module',
+      })
+    : new Worker(new URL('../worker/binance/BinanceWorker.ts', import.meta.url), {
+        type: 'module',
+      });
 
-  const url = new URL(workerPath, import.meta.url);
-  return new WorkerClass(url, { type: 'module' });
-};
-
-const createUpbitWorker = () => {
-  const WorkerClass = typeof SharedWorker !== 'undefined' ? SharedWorker : Worker;
-  const workerPath =
-    typeof SharedWorker !== 'undefined'
-      ? '../worker/upbit/UpbitSharedWorker.ts'
-      : '../worker/upbit/UpbitWorker.ts';
-
-  const url = new URL(workerPath, import.meta.url);
-  return new WorkerClass(url, { type: 'module' });
-};
+const upbitWorker =
+  typeof SharedWorker !== 'undefined'
+    ? new SharedWorker(new URL('../worker/upbit/UpbitSharedWorker.ts', import.meta.url), {
+        type: 'module',
+      })
+    : new Worker(new URL('../worker/upbit/UpbitWorker.ts', import.meta.url), {
+        type: 'module',
+      });
 
 const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
   const [symbol, setSymbol] = useState<string>('ADAUSDT');
   const [symbolList, setSymbolList] = useState<string[]>([]);
-  const [worker] = useState(() => createWorker());
-  const [upbitWorker] = useState(() => createUpbitWorker());
 
   useEffect(() => {
     return () => {

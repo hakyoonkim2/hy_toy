@@ -54,15 +54,15 @@ const CoinApp: React.FC = () => {
       }
     };
 
-    if (upbitWorker instanceof SharedWorker) {
-      upbitWorker.port.onmessage = onUbitMessageCallback;
-    } else {
-      upbitWorker.onmessage = onUbitMessageCallback;
-    }
     if (worker instanceof SharedWorker) {
       worker.port.onmessage = onMessageCallback;
     } else {
       worker.onmessage = onMessageCallback;
+    }
+    if (upbitWorker instanceof SharedWorker) {
+      upbitWorker.port.onmessage = onUbitMessageCallback;
+    } else {
+      upbitWorker.onmessage = onUbitMessageCallback;
     }
   }, []);
 
