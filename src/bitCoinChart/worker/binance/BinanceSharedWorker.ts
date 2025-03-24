@@ -18,6 +18,7 @@ const connectWebSocket = (url?: string) => {
 
   ws.onmessage = (event) => {
     const json = JSON.parse(event.data) as BinanceTickerData[];
+
     const symbolFilterArr: BinanceTickerData[] = Array.from(json).filter((x: BinanceTickerData) =>
       x.s.includes('USDT')
     );
