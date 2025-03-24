@@ -1,4 +1,3 @@
-import { BINANCE_URL, BINANCE_US_URL } from '../types/CoinTypes';
 import { BinanceTickerData } from './binance/BinanceWorkerTypes';
 import { PriceMap } from './CoinCommonTypes';
 import { UpbitRestTicker, UpbitTickerData } from './upbit/UpbitWorkerTypes';
@@ -81,9 +80,4 @@ export async function fetchAllTickers(allMarkets: string[]): Promise<UpbitRestTi
   const allResults = await Promise.all(chunks.map(fetchTickerChunk));
 
   return allResults.flat();
-}
-
-export async function getBinanaceUrlFromRegion() {
-  const isNotUsIp = await findIpContry();
-  return isNotUsIp ? BINANCE_URL : BINANCE_US_URL;
 }
