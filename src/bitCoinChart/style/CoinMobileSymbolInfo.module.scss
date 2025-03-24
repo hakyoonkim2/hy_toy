@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1rem 0.5rem 1rem;
+  background-color: #121212;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.backIcon {
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.symbol {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.priceBox {
+  margin-left: 2rem;
+  margin-top: 0.25rem;
+  color: #fff;
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.changeInfo {
+  font-size: 0.75rem;
+  color: #ccc;
+  margin-top: 2px;
+
+  span {
+    margin-right: 0.5rem;
+  }
+}

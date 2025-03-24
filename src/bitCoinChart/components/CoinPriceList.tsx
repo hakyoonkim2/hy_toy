@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import style from '../style/chart.module.scss';
+import style from '../style/CoinPriceList.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
 import { useSymbol } from '../hooks/SymbolContextProvider';

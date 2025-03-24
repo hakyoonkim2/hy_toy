@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import CoinWebSocketProvider from '../context/CoinWebSocketContext';
-import style from '../style/chart.module.scss';
+import style from '../style/CoinMobileTab.module.scss';
 import TradingViewChart from './TradingViewChart';
 import CoinChart from './CoinChart';
 import { OrderBook } from './OrderBook';
 import TradeHistory from './TradeHistory';
 import CoinMobileSymbolInfo from './CoinMobileSymbolInfo';
+import CoinSearch from './CoinSearch';
 
 const TABS = ['차트', '호가', '시세'] as const;
 
@@ -20,6 +21,7 @@ const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
 
   return (
     <div className={style.mobileTabContainer}>
+      <CoinSearch />
       <CoinMobileSymbolInfo symbol={symbol} />
       <div style={{ display: 'flex' }}>
         {TABS.map((tab) => (

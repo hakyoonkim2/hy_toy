@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import { CoinWebSocketContext } from '../context/CoinWebSocketContext';
-import style from '../style/chart.module.scss';
+import style from '../style/OrderBook.module.scss';
 import { BINANCE_URL } from '../types/CoinTypes';
 import LoadingFallback from '../../components/LoadingFallback';
 

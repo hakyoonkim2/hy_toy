@@ -1,0 +1,59 @@
+.chartList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.5rem 0.75rem;
+  margin: 0.25rem 0;
+  background-color: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #242424;
+  }
+}
+
+.symbolListLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ffffffcc;
+}
+
+.priceWrpper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.price {
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.krwPrice {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  flex-wrap: wrap;
+
+  strong {
+    font-weight: 400;
+  }
+}
+
+.pricehighlight {
+  animation: priceFlash 0.3s ease;
+}
+
+@keyframes priceFlash {
+  0% {
+    background-color: #555555;
+  }
+  100% {
+    background-color: transparent;
+  }
+}

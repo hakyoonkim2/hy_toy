@@ -2,7 +2,7 @@ import { PriceMap } from '../CoinCommonTypes';
 import { UpbitSymbol } from './UpbitWorkerTypes';
 
 // 1. 모든 종목 리스트 가져오기 (KRW 페어만 필터링)
-async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {
+export async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {
   const apiUrl = encodeURIComponent('https://api.upbit.com/v1/market/all?isDetails=true');
   const response = await fetch(`https://proxy-server-flax-rho.vercel.app/api/proxy?url=${apiUrl}`);
   const data = await response.json();
@@ -18,9 +18,7 @@ async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {
 }
 
 // 3. 모든 종목의 9시 시가 가져오기
-export async function fetchUpbitAllOpenPrices(priceMap: PriceMap) {
-  const symbols: UpbitSymbol[] = await getUpbitAllSymbols();
-
+export async function fetchUpbitAllOpenPrices(priceMap: PriceMap, symbols: UpbitSymbol[]) {
   if (symbols.length === 0) {
     console.error('No symbols available.');
     return;

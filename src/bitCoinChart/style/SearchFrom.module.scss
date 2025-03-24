@@ -1,0 +1,53 @@
+.seachContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+}
+
+.searchFrom {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.searchFrom input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.searchFrom input::placeholder {
+  color: #888;
+}
+
+.searchFrom button {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid #888;
+  color: #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.searchFrom button:hover {
+  background-color: #333;
+  border-color: #bbb;
+  color: #fff;
+}
+
+.searchSelect {
+  padding: 0.5rem;
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 8px;
+}

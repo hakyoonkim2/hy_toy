@@ -17,14 +17,7 @@ const TradeHistory: React.FC<TradeHistoryProps> = ({ symbol }) => {
 
   return (
     <div className={style.table}>
-      <table
-        style={{
-          width: '100%',
-          textAlign: 'center',
-          border: '1px solid #eee',
-          borderCollapse: 'collapse',
-        }}
-      >
+      <table>
         <thead>
           <tr>
             <td>체결시간</td>
@@ -37,7 +30,7 @@ const TradeHistory: React.FC<TradeHistoryProps> = ({ symbol }) => {
             <tr key={trade.id}>
               <td>{convertKrTime(trade.time)}</td>
               <td style={trade.price > openPrice ? { color: red } : { color: blue }}>
-                {trade.price}
+                {trade.price.toLocaleString()}
               </td>
               <td style={trade.maker ? { color: red } : { color: blue }}>{trade.mount}</td>
             </tr>

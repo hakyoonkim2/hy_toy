@@ -1,14 +1,15 @@
 /// <reference lib="webworker" />
 import { v4 as uuidv4 } from 'uuid';
 import { PriceMap } from '../CoinCommonTypes';
-import { UpbitTickerData } from './UpbitWorkerTypes';
-import { fetchUpbitAllOpenPrices } from './UpbitWorkerUtils';
+import { UpbitSymbol, UpbitTickerData } from './UpbitWorkerTypes';
+import { fetchUpbitAllOpenPrices, getUpbitAllSymbols } from './UpbitWorkerUtils';
 import { dataSetting, fetchAllTickers, findIpContry, getPriceColor } from '../WorkerUtils';
 
 const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
 
 const connections: MessagePort[] = [];
 const priceMap: PriceMap = {};
+let symbolList: UpbitSymbol[] = [];
 let ws: WebSocket | null = null;
 
 const connectWebSocket = () => {
@@ -18,8 +19,13 @@ const connectWebSocket = () => {
   ws.onopen = () => {
     console.log('Connected');
     // websocket 실행 전에 호출해서 openPrice 세팅
-    fetchUpbitAllOpenPrices(priceMap)
-      .then(() => {
+    const initSocket = async () => {
+      const symbols = await getUpbitAllSymbols();
+      symbolList = symbols;
+      connections.forEach((port) => {
+        port.postMessage({ type: 'upbit_symbol_list', data: symbols });
+      });
+      fetchUpbitAllOpenPrices(priceMap, symbols).then(() => {
         const msg = [
           { ticket: uuidv4() },
           {
@@ -29,24 +35,15 @@ const connectWebSocket = () => {
         ];
 
         ws?.send(JSON.stringify(msg));
-      })
-      .catch((error) => {
-        connections.forEach((port) => {
-          port.postMessage({
-            type: 'error upbit 종목 데이터 받아오기',
-            data: error,
-          });
-        });
       });
+    };
+    initSocket();
   };
 
   ws.onmessage = (event) => {
     const enc = new TextDecoder('utf-8');
     const jsonStr = enc.decode(event.data);
     const data = JSON.parse(jsonStr) as UpbitTickerData;
-    connections.forEach((port) => {
-      port.postMessage({ type: 'upbit 데이터 정리 시작', data: data });
-    });
     try {
       dataSetting([data], priceMap);
     } catch (e) {
@@ -80,6 +77,9 @@ sharedWorkerGlobal.onconnect = (event: MessageEvent) => {
   };
 
   // 연결된 클라이언트에게 다른 클라이언트가 받아놓은 데이터가 있는 경우 priceMap을 바로 전송
+  if (symbolList.length > 0) {
+    port.postMessage({ type: 'upbit_symbol_list', data: symbolList });
+  }
   if (Object.keys(priceMap).length > 0) {
     port.postMessage({ type: 'UpbitsymbolData', data: priceMap });
   }
@@ -125,7 +125,11 @@ const initWorker = async () => {
   if (isUsIp) {
     connectWebSocket();
   } else {
-    await fetchUpbitAllOpenPrices(priceMap);
+    const symbols = await getUpbitAllSymbols();
+    connections.forEach((port) => {
+      port.postMessage({ type: 'upbit_symbol_list', data: symbols });
+    });
+    await fetchUpbitAllOpenPrices(priceMap, symbols);
     const allMarkets = Object.keys(priceMap);
     startPolling(allMarkets);
   }
