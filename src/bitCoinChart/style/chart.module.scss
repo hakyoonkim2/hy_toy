@@ -112,3 +112,14 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(248, 248, 248, 0.05);
 }
+
+.priceWrpper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: right;
+}
+
+.mobileTabContainer {
+  width: 100%;
+}

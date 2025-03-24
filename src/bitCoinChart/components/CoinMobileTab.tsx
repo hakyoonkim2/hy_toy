@@ -19,9 +19,9 @@ const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
   const [activeTab, setActiveTab] = useState<Tab>('차트');
 
   return (
-    <div className="w-full" style={{ width: '100%' }}>
+    <div className={style.mobileTabContainer}>
       <CoinMobileSymbolInfo symbol={symbol} />
-      <div className="flex" style={{ display: 'flex' }}>
+      <div style={{ display: 'flex' }}>
         {TABS.map((tab) => (
           <div
             key={tab}
@@ -35,7 +35,7 @@ const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
       </div>
 
       {/* 탭 컨텐츠 */}
-      <div className="p-4" style={{ display: 'flex', marginTop: '10px' }}>
+      <div style={{ display: 'flex', marginTop: '10px' }}>
         <div style={{ flex: '1' }}>
           <CoinWebSocketProvider symbol={symbol}>
             {activeTab === '호가' && <OrderBook symbol={symbol} />}

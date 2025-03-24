@@ -68,7 +68,7 @@ const CoinPriceList: React.FC<CoinPriceListProps> = ({ symbol }) => {
       <div>
         <strong className={style.symbolListLabel}>{symbol.replace('USDT', '')}</strong>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', width: '100%', textAlign: 'right' }}>
+      <div className={style.priceWrpper}>
         <div>
           <strong ref={ref} className={style.price} style={{ color: color }}>{`${price}`}</strong>
           <strong
