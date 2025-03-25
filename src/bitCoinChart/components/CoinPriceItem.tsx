@@ -39,7 +39,7 @@ const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark })
 
   const handleClick = () => {
     setSymbol(symbol);
-    if (isMobile) navigator('/chart/chartview');
+    if (isMobile) navigator('/coin/chartview');
   };
   // 기본값 처리
   const price = data?.price ?? 0;
