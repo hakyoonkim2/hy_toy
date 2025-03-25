@@ -26,6 +26,7 @@ const CoinPriceList: React.FC<CoinPriceListProps> = ({ symbol }) => {
   const { data: exchangeRatio } = useQuery({
     queryKey: ['exchange-rate', 'USD-KRW'],
     queryFn: fetchExchangeRate,
+    refetchInterval: 1000 * 60 * 10, // 10분단위로 refetch 하도록 처리
     staleTime: 1000 * 60 * 10, // 10분 동안은 fresh 상태
     gcTime: 1000 * 60 * 60,
     refetchOnWindowFocus: false,
