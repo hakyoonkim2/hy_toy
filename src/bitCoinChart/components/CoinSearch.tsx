@@ -43,6 +43,7 @@ const CoinSearch = () => {
     if (isValid) {
       scrollToSearchTarget(newSymbol);
       setSymbol(newSymbol);
+      inputRef.current?.blur();
     } else {
       alert(`${inputSymbol} 은 유효하지 않습니다`);
     }
@@ -60,6 +61,7 @@ const CoinSearch = () => {
       setSymbol(newSymbol);
       // 찾았을때만 dropdown 제거
       setShowDropdown(false);
+      inputRef.current?.blur();
       return newSymbol;
     } else {
       alert(`${inputSymbol} 은 유효하지 않습니다`);
