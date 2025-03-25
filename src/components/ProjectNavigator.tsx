@@ -17,7 +17,7 @@ function ProjectNavigator() {
       <button className={style.projectBtn} data-path={'/stopwatch'} onClick={handleClick}>
         {'Stopwatch'}
       </button>
-      <button className={style.projectBtn} data-path={'/chart'} onClick={handleClick}>
+      <button className={style.projectBtn} data-path={'/coin'} onClick={handleClick}>
         Coin
       </button>
     </div>

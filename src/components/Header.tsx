@@ -26,7 +26,7 @@ const Header = () => {
         onClick={handleLogoClick}
       />
       <div className={style.right}>
-        {currentProject !== '' ? `현재 프로젝트: ${currentProject}` : '프로젝트를 선택해주세요'}
+        {currentProject !== '' ? `${currentProject?.toUpperCase()}` : '프로젝트를 선택해주세요'}
       </div>
     </header>
   );

@@ -26,7 +26,7 @@ const ProjectRouter = () => {
           <Routes>
             <Route path="/" element={<ProjectNavigator />} />
             <Route path="/stopwatch" element={<StopWatch />} />
-            <Route path="/chart" element={<CoinAppWrapper />}>
+            <Route path="/coin" element={<CoinAppWrapper />}>
               <Route index element={<CoinApp />} />
               {isMobile && <Route path="chartview" element={<CoinChartView />} />}
             </Route>
