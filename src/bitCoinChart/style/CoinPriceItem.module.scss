@@ -1,4 +1,4 @@
-.chartList {
+.priceItem {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -56,4 +56,11 @@
   100% {
     background-color: transparent;
   }
+}
+
+.priceTitle {
+  display: flex;
+  align-items: center;
+  height: 25px;
+  justify-content: space-between;
 }
