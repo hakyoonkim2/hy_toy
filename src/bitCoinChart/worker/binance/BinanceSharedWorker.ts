@@ -1,8 +1,10 @@
 /// <reference lib="webworker" />
 
 import { BinanceTickerData } from './BinanceWorkerTypes';
-import { fetchBinanceAllOpenPrices, wsUrl } from './BinanceWorkerUtils';
+import { fetchBinanceAllOpenPrices } from './BinanceWorkerUtils';
 import { dataSetting, isUsCountry } from '../WorkerUtils';
+import { BINANCE_WEBSOCKET_URL, BINANCE_WEBSOCKET_US_URL } from '../../types/CoinTypes';
+import { WorkerMessageEnum } from '../enum/WorkerMessageEnum';
 
 const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
 
@@ -13,8 +15,8 @@ let ws = null;
 // websocket 실행 전에 호출해서 openPrice 세팅
 fetchBinanceAllOpenPrices(priceMap);
 
-const connectWebSocket = (url?: string) => {
-  ws = new WebSocket(url ?? wsUrl);
+const connectWebSocket = (url: string) => {
+  ws = new WebSocket(url);
 
   ws.onmessage = (event) => {
     const json = JSON.parse(event.data) as BinanceTickerData[];
@@ -30,7 +32,7 @@ const connectWebSocket = (url?: string) => {
     }
 
     connections.forEach((port) => {
-      port.postMessage({ type: 'symbolData', data: priceMap });
+      port.postMessage({ type: WorkerMessageEnum.BINANCE_SYMBOLS_DATA, data: priceMap });
     });
   };
 
@@ -52,7 +54,7 @@ sharedWorkerGlobal.onconnect = (event: MessageEvent) => {
 
   // 연결된 클라이언트에게 다른 클라이언트가 받아놓은 데이터가 있는 경우 priceMap을 바로 전송
   if (Object.keys(priceMap).length > 0) {
-    port.postMessage({ type: 'symbolData', data: priceMap });
+    port.postMessage({ type: WorkerMessageEnum.BINANCE_SYMBOLS_DATA, data: priceMap });
   }
 
   connections.forEach((port) => {
@@ -67,9 +69,9 @@ const initWorker = async () => {
 
   // 미국에서 websocket 접속이 차단되기 때문에 RestApi만 사용하여 우회
   if (isUsIp) {
-    connectWebSocket('wss://stream.binance.us:9443/ws/!ticker@arr');
+    connectWebSocket(`${BINANCE_WEBSOCKET_US_URL}!ticker@arr`);
   } else {
-    connectWebSocket();
+    connectWebSocket(`${BINANCE_WEBSOCKET_URL}!ticker@arr`);
   }
 };
 initWorker();

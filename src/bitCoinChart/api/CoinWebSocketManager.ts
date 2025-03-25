@@ -1,7 +1,7 @@
 import { CandlestickData, Time } from 'lightweight-charts';
 import {
-  BINANCE_URL,
-  BINANCE_US_URL,
+  BINANCE_WEBSOCKET_URL,
+  BINANCE_WEBSOCKET_US_URL,
   Subscriber,
   TradeHistory,
   TradingData,
@@ -32,7 +32,7 @@ class CoinWebSocketManager {
   private init(): void {
     // 실시간 trading 정보가져오는 url
     isUsCountry().then((isUsCountry) => {
-      const wsUrl = `${isUsCountry ? BINANCE_US_URL : BINANCE_URL}${this.symbol.toLowerCase()}@trade`;
+      const wsUrl = `${isUsCountry ? BINANCE_WEBSOCKET_US_URL : BINANCE_WEBSOCKET_URL}${this.symbol.toLowerCase()}@trade`;
 
       // init 상황에서 이전 웹소켓이 있는경우 close
       if (this.ws) this.closeAll();

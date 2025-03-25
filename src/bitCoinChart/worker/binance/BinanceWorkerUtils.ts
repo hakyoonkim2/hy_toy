@@ -1,8 +1,6 @@
 import { PriceMap } from '../CoinCommonTypes';
 import { isUsCountry } from '../WorkerUtils';
 
-export const wsUrl = `wss://stream.binance.com:9443/ws/!ticker@arr`;
-
 export const BINANCE_API_URL = 'https://api.binance.com/api/v3';
 export const BINANCE_US_API_URL = 'https://api.binance.us/api/v3';
 
