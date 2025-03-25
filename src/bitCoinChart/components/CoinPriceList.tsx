@@ -65,7 +65,7 @@ const CoinPriceList: React.FC<CoinPriceListProps> = ({ symbol }) => {
   }, [data]);
 
   return (
-    <div className={style.chartList} onClick={handleClick}>
+    <div id={`${symbol}-pricelist`} className={style.chartList} onClick={handleClick}>
       <div>
         <strong className={style.symbolListLabel}>{symbol.replace('USDT', '')}</strong>
       </div>
