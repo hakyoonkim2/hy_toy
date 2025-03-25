@@ -30,12 +30,18 @@ const CoinSearch = () => {
     sym.toLowerCase().includes(inputValue.toLowerCase())
   );
 
+  const scrollToSearchTarget = (symbol: string): void => {
+    const target = document.getElementById(`${symbol}-pricelist`);
+    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   const searchQuery = (inputSymbol: string) => {
     const searchResult = searchCoinKeyword(inputSymbol, upbitSymbolList, binanceSymbols);
     const newSymbol = searchResult.toUpperCase() + 'USDT';
 
     const isValid = symbolList.includes(newSymbol);
     if (isValid) {
+      scrollToSearchTarget(newSymbol);
       setSymbol(newSymbol);
     } else {
       alert(`${inputSymbol} 은 유효하지 않습니다`);
@@ -50,7 +56,10 @@ const CoinSearch = () => {
     const isValid = symbolList.includes(newSymbol);
 
     if (isValid) {
+      scrollToSearchTarget(newSymbol);
       setSymbol(newSymbol);
+      // 찾았을때만 dropdown 제거
+      setShowDropdown(false);
       return newSymbol;
     } else {
       alert(`${inputSymbol} 은 유효하지 않습니다`);
