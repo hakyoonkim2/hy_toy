@@ -15,7 +15,7 @@ const Header = () => {
     navigate('/');
   };
 
-  const currentProject = window.location.href.split('/').at(-1);
+  const currentProject = window.location.href.replace(window.location.origin, '').split('/').at(0);
 
   return (
     <header>
