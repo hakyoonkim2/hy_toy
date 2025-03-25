@@ -28,7 +28,7 @@
 - **SharedWorker 기반 데이터 공유**
 
   - `SharedWorker`를 활용해 여러 브라우저 탭에서도 데이터가 공유되도록 구현
-  - Android 기반 모바일 환경에서는 `SharedWorker`가 지원되지 않음 → Fallback 방식으로 처리
+  - Android 기반 모바일 환경에서는 `SharedWorker`가 지원되지 않음 → Worker로 Fallback 방식 처리
 
 - **모바일 및 웹뷰 최적화**
 
