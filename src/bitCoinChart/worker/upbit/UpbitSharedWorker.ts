@@ -4,6 +4,8 @@ import { PriceMap } from '../CoinCommonTypes';
 import { UpbitSymbol, UpbitTickerData } from './UpbitWorkerTypes';
 import { fetchUpbitAllOpenPrices, getUpbitAllSymbols } from './UpbitWorkerUtils';
 import { dataSetting, fetchAllTickers, getPriceColor, isUsCountry } from '../WorkerUtils';
+import { UPBIT_WEBSOCKET_URL } from '../../types/CoinTypes';
+import { WorkerMessageEnum } from '../enum/WorkerMessageEnum';
 
 const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
 
@@ -13,7 +15,7 @@ let symbolList: UpbitSymbol[] = [];
 let ws: WebSocket | null = null;
 
 const connectWebSocket = () => {
-  ws = new WebSocket('wss://api.upbit.com/websocket/v1/ticker');
+  ws = new WebSocket(`${UPBIT_WEBSOCKET_URL}ticker`);
 
   ws.binaryType = 'arraybuffer';
   ws.onopen = () => {
@@ -23,7 +25,7 @@ const connectWebSocket = () => {
       const symbols = await getUpbitAllSymbols();
       symbolList = symbols;
       connections.forEach((port) => {
-        port.postMessage({ type: 'upbit_symbol_list', data: symbols });
+        port.postMessage({ type: WorkerMessageEnum.UPBIT_SYMBOL_LIST, data: symbols });
       });
       fetchUpbitAllOpenPrices(priceMap, symbols).then(() => {
         const msg = [
@@ -54,7 +56,7 @@ const connectWebSocket = () => {
 
     connections.forEach((port) => {
       port.postMessage({
-        type: 'UpbitsymbolData',
+        type: WorkerMessageEnum.UPBIT_SYMBOL_TRADE_DATA,
         data: { ...priceMap[data.code], symbol: data.code },
       });
     });
@@ -103,7 +105,7 @@ const fetchAndBroadCast = (markets: string[]) => {
 
   connections.forEach((port) => {
     port.postMessage({
-      type: 'UpbitRestsymbolData',
+      type: WorkerMessageEnum.UPBIT_SYMBOLS_RESTAPI_TRADE_DATA,
       data: priceMap,
     });
   });
@@ -127,7 +129,7 @@ const initWorker = async () => {
   } else {
     const symbols = await getUpbitAllSymbols();
     connections.forEach((port) => {
-      port.postMessage({ type: 'upbit_symbol_list', data: symbols });
+      port.postMessage({ type: WorkerMessageEnum.UPBIT_SYMBOL_LIST, data: symbols });
     });
     await fetchUpbitAllOpenPrices(priceMap, symbols);
     const allMarkets = Object.keys(priceMap);

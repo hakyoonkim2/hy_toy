@@ -3,12 +3,14 @@ import { PriceMap } from '../CoinCommonTypes';
 import { UpbitTickerData } from './UpbitWorkerTypes';
 import { fetchUpbitAllOpenPrices, getUpbitAllSymbols } from './UpbitWorkerUtils';
 import { dataSetting, fetchAllTickers, isUsCountry, getPriceColor } from '../WorkerUtils';
+import { UPBIT_WEBSOCKET_URL } from '../../types/CoinTypes';
+import { WorkerMessageEnum } from '../enum/WorkerMessageEnum';
 
 const priceMap: PriceMap = {};
 let ws: WebSocket | null = null;
 
 const connectWebSocket = () => {
-  ws = new WebSocket('wss://api.upbit.com/websocket/v1/ticker');
+  ws = new WebSocket(`${UPBIT_WEBSOCKET_URL}ticker`);
 
   ws.binaryType = 'arraybuffer';
   ws.onopen = () => {
@@ -16,7 +18,7 @@ const connectWebSocket = () => {
     // websocket 실행 전에 호출해서 openPrice 세팅
     const initSocket = async () => {
       const symbols = await getUpbitAllSymbols();
-      self.postMessage({ type: 'upbit_symbol_list', data: symbols });
+      self.postMessage({ type: WorkerMessageEnum.UPBIT_SYMBOL_LIST, data: symbols });
       fetchUpbitAllOpenPrices(priceMap, symbols).then(() => {
         const msg = [
           { ticket: uuidv4() },
@@ -43,7 +45,7 @@ const connectWebSocket = () => {
     }
 
     self.postMessage({
-      type: 'UpbitsymbolData',
+      type: WorkerMessageEnum.UPBIT_SYMBOL_TRADE_DATA,
       data: { ...priceMap[data.code], symbol: data.code },
     });
   };
@@ -64,7 +66,7 @@ const fetchAndBroadCast = (markets: string[]) => {
   }); // 초기 1회
 
   self.postMessage({
-    type: 'UpbitRestsymbolData',
+    type: WorkerMessageEnum.UPBIT_SYMBOLS_RESTAPI_TRADE_DATA,
     data: priceMap,
   });
 };
@@ -86,7 +88,7 @@ const initWorker = async () => {
     connectWebSocket();
   } else {
     const symbols = await getUpbitAllSymbols();
-    self.postMessage({ type: 'upbit_symbol_list', data: symbols });
+    self.postMessage({ type: WorkerMessageEnum.UPBIT_SYMBOL_LIST, data: symbols });
     await fetchUpbitAllOpenPrices(priceMap, symbols);
     const allMarkets = Object.keys(priceMap);
     startPolling(allMarkets);

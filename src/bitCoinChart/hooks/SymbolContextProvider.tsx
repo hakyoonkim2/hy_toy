@@ -2,6 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useRef, useState } fro
 import { UpbitSymbol } from '../worker/upbit/UpbitWorkerTypes';
 import { useQueryClient } from '@tanstack/react-query';
 import { isSharedWorker } from '../utils/util';
+import { WorkerMessageEnum } from '../worker/enum/WorkerMessageEnum';
 
 export const SymbolContext = createContext<{
   symbol: string;
@@ -37,7 +38,7 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
     const onMessageCallback = (event: MessageEvent) => {
       const data = event.data;
       // data type이 'symbolData' 인 경우에만 react-query data로 적재
-      if (data?.type === 'symbolData') {
+      if (data?.type === WorkerMessageEnum.BINANCE_SYMBOLS_DATA) {
         Object.entries(data.data).forEach(([symbol, data]) => {
           queryClient.setQueryData(['symbol', symbol], data);
         });
@@ -59,16 +60,16 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
     const onUbitMessageCallback = (event: MessageEvent) => {
       const data = event.data;
       // data type이 'symbolData' 인 경우에만 react-query data로 적재
-      if (data?.type === 'UpbitsymbolData') {
+      if (data?.type === WorkerMessageEnum.UPBIT_SYMBOL_TRADE_DATA) {
         console.log(event.data);
         queryClient.setQueryData(['symbol', data.data.symbol], data.data);
         console.log(event.data);
-      } else if (data?.type === 'UpbitRestsymbolData') {
+      } else if (data?.type === WorkerMessageEnum.UPBIT_SYMBOLS_RESTAPI_TRADE_DATA) {
         Object.entries(data.data).forEach(([symbol, data]) => {
           queryClient.setQueryData(['symbol', symbol], data);
         });
         console.log(event.data);
-      } else if (data?.type === 'upbit_symbol_list') {
+      } else if (data?.type === WorkerMessageEnum.UPBIT_SYMBOL_LIST) {
         if (isUpbitListInit.current === false) {
           setUpbitSymbolList(data.data);
           isUpbitListInit.current = true;
