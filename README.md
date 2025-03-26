@@ -39,7 +39,7 @@
   - 업비트의 WebSocket 연결 제한 → REST API 기반 Polling 방식으로 처리
   - 미국 지역에서는 업비트 REST API 호출 제한이 있어 **Region 체크 및 Proxy 서버 우회 방식** 적용
   - 바이낸스 URL을 .com이 아닌 .us로 변경 (Websocket, RESTAPI 동일)
-  - 이를 위해 **Vercel 서버리스 함수와 Express 기반 Proxy 서버** 배포 및 연동
+  - 이를 위해 **Vercel 서버리스 함수를 기반한 Express Proxy 용 프로젝트** 배포 및 연동
 
 ### 📡 데이터 흐름 구조
 

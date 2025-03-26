@@ -52,7 +52,7 @@ const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark, k
 
   // state방식을 활용한 highlight구현시 react render rapid가 너무 빨라 오류가 생기므로 classList toggle방식 사용
   useEffect(() => {
-    let timer: number | null = null;
+    let timer: ReturnType<typeof setTimeout> | null = null;
     if (ref.current) {
       const target = ref.current as HTMLElement;
       target.classList.add(style.pricehighlight);

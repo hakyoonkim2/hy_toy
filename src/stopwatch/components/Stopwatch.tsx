@@ -8,7 +8,7 @@ const StopWatch = () => {
   const [time, setTime] = useState<number>(0);
   const [laps, setLaps] = useState<number[]>([]);
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // running 상황이면 interval 실행
   useEffect(() => {
