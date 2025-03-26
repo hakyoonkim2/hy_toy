@@ -32,7 +32,6 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
         },
       },
     ],
-
     server: {
       host: true,
       port: 5173,
