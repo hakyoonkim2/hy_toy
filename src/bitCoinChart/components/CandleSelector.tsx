@@ -26,29 +26,29 @@ export default function CandleSelector({
 }: {
   onChange: (type: CandleType, unit: number) => void;
 }) {
-  const [selectedType, setSelectedType] = useState<CandleType>('minutes');
+  const [selectedType, setSelectedType] = useState<CandleType>('days');
   const [selectedUnit, setSelectedUnit] = useState<number>(1);
   const [openType, setOpenType] = useState<CandleType | null>(null);
-  const singleOption = ['seconds','days', 'weeks', 'months', 'years'];
+  const singleOption = ['seconds', 'days', 'weeks', 'months', 'years'];
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleTypeClick = (type: CandleType) => {
     if (singleOption.includes(type)) {
-        setSelectedType(type);
-        setSelectedUnit(candleUnitOptions[type][0]);
-        onChange(type, candleUnitOptions[type][0]);
-        setOpenType(null);
+      setSelectedType(type);
+      setSelectedUnit(candleUnitOptions[type][0]);
+      onChange(type, candleUnitOptions[type][0]);
+      setOpenType(null);
     } else {
-        setOpenType(type);
+      setOpenType(type);
     }
   };
 
   const handleUnitClick = (unit: number) => {
     if (openType) {
-        setSelectedType(openType);
-        setSelectedUnit(unit);
-        onChange(openType, unit);
-        setOpenType(null);
+      setSelectedType(openType);
+      setSelectedUnit(unit);
+      onChange(openType, unit);
+      setOpenType(null);
     }
   };
 
@@ -65,7 +65,7 @@ export default function CandleSelector({
   }, []);
 
   return (
-    <div className={styles.wrapper}  ref={wrapperRef}>
+    <div className={styles.wrapper} ref={wrapperRef}>
       <div className={styles.typeButtons}>
         {candleTypeOptions.map((type) => (
           <button
@@ -75,7 +75,9 @@ export default function CandleSelector({
               selectedType === type.value ? styles.activeType : ''
             }`}
           >
-            {selectedType === type.value ? `${selectedUnit === 1 ? '' : selectedUnit}${type.label}` : type.label}
+            {selectedType === type.value
+              ? `${selectedUnit === 1 ? '' : selectedUnit}${type.label}`
+              : type.label}
           </button>
         ))}
       </div>
@@ -87,9 +89,7 @@ export default function CandleSelector({
               key={unit}
               onClick={() => handleUnitClick(unit)}
               className={`${styles.unitButton} ${
-                unit === selectedUnit && openType === selectedType
-                  ? styles.activeUnit
-                  : ''
+                unit === selectedUnit && openType === selectedType ? styles.activeUnit : ''
               }`}
             >
               {unit}

@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { createChart, CandlestickSeries, IChartApi, ISeriesApi, HistogramSeries } from 'lightweight-charts';
+import {
+  createChart,
+  CandlestickSeries,
+  IChartApi,
+  ISeriesApi,
+  HistogramSeries,
+} from 'lightweight-charts';
 import style from '../style/chart.module.scss';
 import { isMobile } from 'react-device-detect';
 import { useUpbitCandle } from '../hooks/UpbitHooks';
@@ -16,7 +22,7 @@ type CoinChartProps = {
 const UpbitCoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const [candleInterval, setCandleInterval] = useState<number>(1);
-  const [candleType, setCandleType] = useState<CandleType>('minutes');
+  const [candleType, setCandleType] = useState<CandleType>('days');
   const unit = ['seconds', 'days', 'weeks', 'months', 'years'].includes(candleType);
   const { data } = useUpbitCandle(symbol, candleType, unit ? undefined : candleInterval);
   const seriesRef = useRef<ISeriesApi<'Candlestick'>>(null);
@@ -72,33 +78,33 @@ const UpbitCoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
     });
 
     const series = chart.addSeries(CandlestickSeries, {
-      upColor: '#d32634',           // 양봉 바디 색상
-      downColor: '#135ce7',         // 음봉 바디 색상
+      upColor: '#d32634', // 양봉 바디 색상
+      downColor: '#135ce7', // 음봉 바디 색상
       borderUpColor: '#d32634',
       borderDownColor: '#135ce7',
-      wickUpColor: '#d32634',       //  양봉 꼬리 색상
-      wickDownColor: '#135ce7',     //  음봉 꼬리 색상
+      wickUpColor: '#d32634', //  양봉 꼬리 색상
+      wickDownColor: '#135ce7', //  음봉 꼬리 색상
     });
     const volumeSeries = chart.addSeries(HistogramSeries, {
       color: '#26a69a',
       priceFormat: {
-          type: 'volume',
+        type: 'volume',
       },
       priceScaleId: '',
-  });
+    });
     series.priceScale().applyOptions({
       scaleMargins: {
         top: 0.1,
         bottom: 0.15,
-    },
-    })
+      },
+    });
     series.applyOptions({ priceFormat: { precision: 0, minMove: 1 } });
     volumeSeries.priceScale().applyOptions({
       scaleMargins: {
         top: 0.7, // 차트 아래 20% 공간 사용
         bottom: 0,
-      }
-    })
+      },
+    });
     seriesRef.current = series;
     chartRef.current = chart;
     volumeSeriesRef.current = volumeSeries;
@@ -127,9 +133,11 @@ const UpbitCoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
   useEffect(() => {
     if (data) {
       seriesRef.current?.setData(data);
-      volumeSeriesRef.current?.setData(data.map(x => {
-        return {value: x.customValues.volume, time: x.time, color: x.customValues.color};
-      }));
+      volumeSeriesRef.current?.setData(
+        data.map((x) => {
+          return { value: x.customValues.volume, time: x.time, color: x.customValues.color };
+        })
+      );
     }
   }, [data]);
 
@@ -137,14 +145,14 @@ const UpbitCoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
     setCandleType(type);
     setCandleInterval(unit);
     candleTypeRef.current = type;
-  }
+  };
 
   return (
-    <div style={{width: '100%', height: '100%'}}>
-        <div className={style.chart}>
-            <div ref={chartContainerRef} />
-            <CandleSelector  onChange={onChange}/>
-        </div>
+    <div style={{ width: '100%', height: '100%' }}>
+      <div className={style.chart}>
+        <div ref={chartContainerRef} />
+        <CandleSelector onChange={onChange} />
+      </div>
     </div>
   );
 };
