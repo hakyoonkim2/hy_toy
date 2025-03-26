@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import CoinWebSocketProvider from '../context/CoinWebSocketContext';
 import style from '../style/CoinMobileTab.module.scss';
 import TradingViewChart from './TradingViewChart';
-import CoinChart from './CoinChart';
 import { OrderBook } from './OrderBook';
 import TradeHistory from './TradeHistory';
 import CoinMobileSymbolInfo from './CoinMobileSymbolInfo';
