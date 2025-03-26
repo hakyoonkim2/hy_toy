@@ -40,3 +40,44 @@
   - 미국 지역에서는 업비트 REST API 호출 제한이 있어 **Region 체크 및 Proxy 서버 우회 방식** 적용
   - 바이낸스 URL을 .com이 아닌 .us로 변경 (Websocket, RESTAPI 동일)
   - 이를 위해 **Vercel 서버리스 함수와 Express 기반 Proxy 서버** 배포 및 연동
+
+### 📡 데이터 흐름 구조
+
+```plaintext
+[Upbit / Binance WebSocket]
+            │
+            ▼
+   (실시간 데이터 수신)
+            │
+            ▼
+ [SharedWorker / Worker]
+        └─ 쓰로틀링 처리 (300ms)
+            │
+            ▼
+   [React 애플리케이션]
+        └─ React Query Client 적재
+            │
+            ▼
+     컴포넌트 렌더링
+```
+
+---
+
+#### 🔍 상세 설명
+
+- **거래소 (Upbit, Binance)**  
+  실시간 시세 데이터를 WebSocket을 통해 전송합니다.
+
+- **Worker / SharedWorker**  
+  중앙에서 WebSocket 연결을 유지하며, 클라이언트로 전달하기 전에 `300ms` 간격으로 쓰로틀링합니다.
+
+- **React 애플리케이션**  
+  쓰로틀링된 데이터를 받아 `React Query`에 캐싱하고, 필요한 컴포넌트만 효율적으로 리렌더링합니다.
+
+---
+
+#### ✅ 장점
+
+- **WebSocket 연결 최소화**: 하나의 Worker로 여러 탭 공유 (SharedWorker 사용 시)
+- **성능 최적화**: 빈번한 데이터 업데이트를 쓰로틀링으로 제어
+- **React Query 사용**: 전역 상태 관리 없이도 데이터 캐싱 및 갱신 용이
