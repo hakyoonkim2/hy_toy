@@ -103,11 +103,11 @@ const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark })
         </div>
         {price && krwData && exchangeRatio ? (
           <div className={style.krwPrice}>
-            <strong>김프: </strong>
+            <strong>김프: &nbsp;</strong>
             <strong
               style={{ color: kpPositive ? '#f75467' : '#4386f9' }}
             >{`${(((krwData.price / exchangeRatio - price) / price) * 100).toFixed(2)}% `}</strong>
-            <strong style={{ marginLeft: '10px' }}>KRW: </strong>
+            <strong style={{ marginLeft: '10px' }}>KRW: &nbsp;</strong>
             <strong style={{ color: color }}>{`${krwData.price.toLocaleString()}`}</strong>
           </div>
         ) : (
