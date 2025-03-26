@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import LoadingFallback from '../../components/LoadingFallback';
 import { bookmarkStorage } from '../utils/BookmarkStorageUtil';
 import CoinPriceItem from './CoinPriceItem';

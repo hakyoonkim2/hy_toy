@@ -1,4 +1,4 @@
-import { ChangeEvent, useActionState, useRef, useState, KeyboardEvent, useMemo } from 'react';
+import { ChangeEvent, useActionState, useRef, useState, useMemo } from 'react';
 import { useSymbol } from '../hooks/SymbolContextProvider';
 import { findKoreanSymbol, searchCoinKeyword } from '../utils/util';
 import style from '../style/SearchFrom.module.scss';
