@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
 import { useSymbol } from '../hooks/SymbolContextProvider';
 import useSymbolData from '../hooks/useSymbolData';
-import useUpbitSymbolData from '../hooks/useUpbitSymbolData';
 import { useQuery } from '@tanstack/react-query';
 import { fetchExchangeRate } from '../utils/util';
 import Bookmarked from '../assets/Bookmarked.svg?react';
 import NotBookmarked from '../assets/NotBookmarked.svg?react';
 import { bookmarkStorage } from '../utils/BookmarkStorageUtil';
+import { useUpbitSymbolData } from '../hooks/UpbitHooks';
 
 type CoinPriceItemProps = {
   symbol: string;
