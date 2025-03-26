@@ -1,6 +1,6 @@
-import { ChangeEvent, useActionState, useRef, useState, KeyboardEvent, useMemo } from 'react';
+import { ChangeEvent, useActionState, useRef, useState, useMemo } from 'react';
 import { useSymbol } from '../hooks/SymbolContextProvider';
-import { searchCoinKeyword } from '../utils/util';
+import { findKoreanSymbol, searchCoinKeyword } from '../utils/util';
 import style from '../style/SearchFrom.module.scss';
 import { isMobile } from 'react-device-detect';
 
@@ -21,7 +21,7 @@ const CoinSearch = () => {
           return binanceSymbols.includes(upbitSym);
         })
         .map((sym) => sym.korean_name),
-    [upbitSymbolList]
+    [upbitSymbolList, symbolList]
   );
 
   const seachSuggestionList = [...ubitSymbols, ...binanceSymbols];
@@ -45,13 +45,21 @@ const CoinSearch = () => {
       setSymbol(newSymbol);
       inputRef.current?.blur();
     } else {
+      if (inputRef.current) inputRef.current.focus();
       alert(`${inputSymbol} 은 유효하지 않습니다`);
     }
   };
 
   const [_, formAction] = useActionState((prevSymbol: string, formData: FormData) => {
     const inputSymbol = formData.get('symbol') as string;
-    const searchResult = searchCoinKeyword(inputSymbol, upbitSymbolList, binanceSymbols);
+
+    // conpomision 동작으로 인해 input value를 ajudst 하기위해 dropdown을 이용
+    const targetSymbol = activeIndex >= 0 ? filteredList[activeIndex] : filteredList[0];
+    if (targetSymbol) setInputValue(targetSymbol);
+
+    const adjustSymbol = targetSymbol ?? inputSymbol;
+
+    const searchResult = searchCoinKeyword(adjustSymbol, upbitSymbolList, binanceSymbols);
     const newSymbol = searchResult.toUpperCase() + 'USDT';
 
     const isValid = symbolList.includes(newSymbol);
@@ -64,7 +72,8 @@ const CoinSearch = () => {
       inputRef.current?.blur();
       return newSymbol;
     } else {
-      alert(`${inputSymbol} 은 유효하지 않습니다`);
+      if (inputRef.current) inputRef.current.focus();
+      alert(`${adjustSymbol} 은 유효하지 않습니다`);
       return prevSymbol;
     }
   }, 'ADAUSDT');
@@ -85,7 +94,7 @@ const CoinSearch = () => {
     setShowDropdown(false);
   };
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!showDropdown || filteredList.length === 0) return;
 
     if (e.key === 'ArrowDown') {
@@ -94,11 +103,10 @@ const CoinSearch = () => {
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setActiveIndex((prev) => (prev <= 0 ? filteredList.length - 1 : prev - 1));
-    } else if (e.key === 'Enter' && activeIndex >= 0) {
-      e.preventDefault();
-      handleSelect(filteredList[activeIndex]);
     }
   };
+
+  const koreanSymbol = findKoreanSymbol(symbol, upbitSymbolList);
 
   return (
     <div className={style.seachContainer}>
@@ -135,7 +143,12 @@ const CoinSearch = () => {
       {!isMobile && (
         <div className={style.selectedSymbolBox}>
           <span className={style.selectedValue}>{symbol.replace('USDT', '')}</span>
-          <span className={style.selectedUnit}>/ USD</span>
+          {koreanSymbol && (
+            <span
+              className={style.selectedUnit}
+              style={{ marginLeft: '6px' }}
+            >{`${koreanSymbol}`}</span>
+          )}
         </div>
       )}
     </div>

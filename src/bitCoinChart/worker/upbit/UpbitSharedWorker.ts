@@ -80,10 +80,10 @@ sharedWorkerGlobal.onconnect = (event: MessageEvent) => {
 
   // 연결된 클라이언트에게 다른 클라이언트가 받아놓은 데이터가 있는 경우 priceMap을 바로 전송
   if (symbolList.length > 0) {
-    port.postMessage({ type: 'upbit_symbol_list', data: symbolList });
+    port.postMessage({ type: WorkerMessageEnum.UPBIT_SYMBOL_LIST, data: symbolList });
   }
   if (Object.keys(priceMap).length > 0) {
-    port.postMessage({ type: 'UpbitsymbolData', data: priceMap });
+    port.postMessage({ type: WorkerMessageEnum.UPBIT_SYMBOL_TRADE_DATA, data: priceMap });
   }
 
   connections.forEach((port) => {
@@ -124,7 +124,7 @@ const initWorker = async () => {
   const isUsIp = await isUsCountry();
 
   // 미국에서 websocket 접속이 차단되기 때문에 RestApi만 사용하여 우회
-  if (isUsIp) {
+  if (!isUsIp) {
     connectWebSocket();
   } else {
     const symbols = await getUpbitAllSymbols();
