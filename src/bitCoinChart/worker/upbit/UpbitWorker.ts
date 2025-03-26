@@ -8,7 +8,7 @@ import { WorkerMessageEnum } from '../enum/WorkerMessageEnum';
 
 const priceMap: PriceMap = {};
 let ws: WebSocket | null = null;
-let timer: number | null = null;
+let timer: ReturnType<typeof setTimeout> | null = null;
 // 쓰로틀링 처리 과정에서 priceMap 을 전체 client에서 할일이 많아지기 때문에 worker에서 변동 내역만 보내주기위함
 let newMessageMap: PriceMap = {};
 
