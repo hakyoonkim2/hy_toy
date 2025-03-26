@@ -12,7 +12,9 @@ interface CoinWebSocketProviderProps {
   symbol: string;
   children: ReactNode;
 }
-
+/**
+ * @deprecated 점검후 제거예정
+ */
 const CoinWebSocketProvider: React.FC<CoinWebSocketProviderProps> = ({ symbol, children }) => {
   const [webSocketData, setWebSocketData] = useState<CoinManagerData>({
     candleData: [],

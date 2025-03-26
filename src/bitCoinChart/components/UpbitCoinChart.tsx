@@ -88,7 +88,6 @@ const UpbitCoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
   });
     series.priceScale().applyOptions({
       scaleMargins: {
-        // positioning the price scale for the area series
         top: 0.1,
         bottom: 0.15,
     },
