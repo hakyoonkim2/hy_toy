@@ -77,3 +77,15 @@ export function searchCoinKeyword(
 export function isSharedWorker(worker: unknown): worker is SharedWorker {
   return typeof SharedWorker !== 'undefined' && worker instanceof SharedWorker;
 }
+
+export function findKoreanSymbol(
+  symbol: string,
+  upbitSymbolList: UpbitSymbol[]
+): string | undefined {
+  const upbitSymbolsMap = new Map();
+  upbitSymbolList.forEach((upbitsymbol) => {
+    upbitSymbolsMap.set(upbitsymbol.market.replace('KRW-', ''), upbitsymbol.korean_name);
+  });
+  const result = upbitSymbolsMap.get(symbol.replace('USDT', ''));
+  return result;
+}

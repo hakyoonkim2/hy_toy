@@ -71,7 +71,7 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
         console.log(event.data);
       } else if (data?.type === WorkerMessageEnum.UPBIT_SYMBOL_LIST) {
         if (isUpbitListInit.current === false) {
-          setUpbitSymbolList(data.data);
+          setUpbitSymbolList([...data.data]);
           isUpbitListInit.current = true;
         }
       } else {

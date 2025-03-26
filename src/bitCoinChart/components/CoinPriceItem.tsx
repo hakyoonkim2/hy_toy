@@ -14,12 +14,13 @@ import { bookmarkStorage } from '../utils/BookmarkStorageUtil';
 type CoinPriceItemProps = {
   symbol: string;
   toggleBookmark: (symbol: string) => void;
+  koreanSymbol?: string;
 };
 
 /**
  * 여러 종목 리스트의 현재가격을 실시간으로 추적하는 UI
  */
-const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark }) => {
+const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark, koreanSymbol }) => {
   const { setSymbol } = useSymbol();
   const { data } = useSymbolData(symbol);
   const { data: krwData } = useUpbitSymbolData(symbol);
@@ -85,7 +86,10 @@ const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark })
   return (
     <div id={`${symbol}-pricelist`} className={style.priceItem} onClick={handleClick}>
       <div className={style.priceTitle}>
-        <strong className={style.symbolListLabel}>{symbol.replace('USDT', '')}</strong>
+        <div>
+          <strong className={style.symbolListLabel}>{symbol.replace('USDT', '')}</strong>
+          {koreanSymbol && <strong className={style.priceKoreanLabel}>{`${koreanSymbol}`}</strong>}
+        </div>
         {isBookmarked ? (
           <Bookmarked width={20} height={20} onClick={handleBookmarkClick} />
         ) : (

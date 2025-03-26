@@ -84,7 +84,7 @@ const initWorker = async () => {
   const isUsIp = await isUsCountry();
 
   // 미국에서 websocket 접속이 차단되기 때문에 RestApi만 사용하여 우회
-  if (isUsIp) {
+  if (!isUsIp) {
     connectWebSocket();
   } else {
     const symbols = await getUpbitAllSymbols();

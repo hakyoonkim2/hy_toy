@@ -1,13 +1,12 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import LoadingFallback from '../../components/LoadingFallback';
 import { bookmarkStorage } from '../utils/BookmarkStorageUtil';
 import CoinPriceItem from './CoinPriceItem';
+import { useSymbol } from '../hooks/SymbolContextProvider';
+import { findKoreanSymbol } from '../utils/util';
 
-type Props = {
-  symbolList: string[];
-};
-
-const CoinPriceList = ({ symbolList }: Props) => {
+const CoinPriceList = () => {
+  const { symbolList, upbitSymbolList } = useSymbol();
   const [bookmarkList, setBookmarkList] = useState<string[]>(bookmarkStorage.get());
 
   const toggleBookmark = (symbol: string): void => {
@@ -38,9 +37,15 @@ const CoinPriceList = ({ symbolList }: Props) => {
 
   return (
     <>
+      {/* symbolList가 있으면 react-query data는 항상 있으므로 suspense를 쓸수 없음, 따라서 fallback을 수동으로 설정*/}
       {sortedSymbolList.length > 0 ? (
         sortedSymbolList.map((symbol) => (
-          <CoinPriceItem key={symbol} symbol={symbol} toggleBookmark={toggleBookmark} />
+          <CoinPriceItem
+            key={symbol}
+            symbol={symbol}
+            koreanSymbol={findKoreanSymbol(symbol, upbitSymbolList)}
+            toggleBookmark={toggleBookmark}
+          />
         ))
       ) : (
         <LoadingFallback />
