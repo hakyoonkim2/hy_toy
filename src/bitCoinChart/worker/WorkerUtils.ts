@@ -6,7 +6,8 @@ let region = '';
 
 export function dataSetting<T extends BinanceTickerData | UpbitTickerData>(
   symbolFilterArr: T[],
-  priceMap: PriceMap
+  priceMap: PriceMap,
+  newMessageMap: PriceMap
 ) {
   symbolFilterArr.forEach((x) => {
     const { symbol, price: curPrice, openPrice } = getSymbolAndPrice(x);
@@ -17,6 +18,11 @@ export function dataSetting<T extends BinanceTickerData | UpbitTickerData>(
       priceMap[symbol].color = color;
       if (openPrice) {
         priceMap[symbol].openPrice = openPrice;
+      }
+
+      // 쓰로틀링 단위 시간동안 같은 symbol데이터가 여러번 들어왔을때 반복 처리하지않고 없는 경우 포인터만 한번 연결함으로써 자동추적되도록 처리
+      if (!newMessageMap[symbol]) {
+        newMessageMap[symbol] = priceMap[symbol];
       }
     }
   });

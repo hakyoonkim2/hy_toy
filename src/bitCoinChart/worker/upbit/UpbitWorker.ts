@@ -8,6 +8,9 @@ import { WorkerMessageEnum } from '../enum/WorkerMessageEnum';
 
 const priceMap: PriceMap = {};
 let ws: WebSocket | null = null;
+let timer: number | null = null;
+// 쓰로틀링 처리 과정에서 priceMap 을 전체 client에서 할일이 많아지기 때문에 worker에서 변동 내역만 보내주기위함
+let newMessageMap: PriceMap = {};
 
 const connectWebSocket = () => {
   ws = new WebSocket(`${UPBIT_WEBSOCKET_URL}ticker`);
@@ -39,15 +42,23 @@ const connectWebSocket = () => {
     const jsonStr = enc.decode(event.data);
     const data = JSON.parse(jsonStr) as UpbitTickerData;
     try {
-      dataSetting([data], priceMap);
+      dataSetting([data], priceMap, newMessageMap);
     } catch (e) {
       self.postMessage(`upbit 데이터 정리 오류: ${e}`);
     }
 
-    self.postMessage({
-      type: WorkerMessageEnum.UPBIT_SYMBOL_TRADE_DATA,
-      data: { ...priceMap[data.code], symbol: data.code },
-    });
+    if (!timer) {
+      timer = setTimeout(() => {
+        self.postMessage({
+          type: WorkerMessageEnum.UPBIT_SYMBOL_TRADE_DATA,
+          data: newMessageMap,
+        });
+
+        // messageMap 초기화하여 다음 쓰로틀 처리 이벤트까지 새로운 객체에 담음
+        newMessageMap = {};
+        timer = null;
+      }, 300);
+    }
   };
 
   ws.onclose = () => {
@@ -71,7 +82,7 @@ const fetchAndBroadCast = (markets: string[]) => {
   });
 };
 
-const startPolling = (markets: string[], intervalMs: number = 1000) => {
+const startPolling = (markets: string[], intervalMs: number = 300) => {
   // 초기 1회 설정
   fetchAndBroadCast(markets);
 

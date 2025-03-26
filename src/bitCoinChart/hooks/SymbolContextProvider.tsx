@@ -61,9 +61,9 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
       const data = event.data;
       // data type이 'symbolData' 인 경우에만 react-query data로 적재
       if (data?.type === WorkerMessageEnum.UPBIT_SYMBOL_TRADE_DATA) {
-        console.log(event.data);
-        queryClient.setQueryData(['symbol', data.data.symbol], data.data);
-        console.log(event.data);
+        Object.entries(data.data).forEach(([symbol, data]) => {
+          queryClient.setQueryData(['symbol', symbol], data);
+        });
       } else if (data?.type === WorkerMessageEnum.UPBIT_SYMBOLS_RESTAPI_TRADE_DATA) {
         Object.entries(data.data).forEach(([symbol, data]) => {
           queryClient.setQueryData(['symbol', symbol], data);
