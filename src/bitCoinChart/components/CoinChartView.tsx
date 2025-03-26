@@ -2,19 +2,25 @@ import CoinWebSocketProvider from '../context/CoinWebSocketContext';
 import TradingViewChart from './TradingViewChart';
 import style from '../style/chart.module.scss';
 import { useSymbol } from '../hooks/SymbolContextProvider';
-import CoinChart from './CoinChart';
 import { OrderBook } from './OrderBook';
 import { isMobile } from 'react-device-detect';
 import CoinMobileTab from './CoinMobileTab';
 import TradeHistory from './TradeHistory';
 import CoinSearch from './CoinSearch';
+import UpbitCoinChart from './UpbitCoinChart';
+import { useMemo } from 'react';
 
 /**
  * 차트 제공 UI
  * Advanced TradingView 차트, lightweight-chart(1s)
  */
 const CoinChartView = () => {
-  const { symbol } = useSymbol();
+  const { symbol, upbitSymbolList } = useSymbol();
+
+  const isInUpbit = useMemo(() => {
+    const adjustSymbol = symbol.replace('USDT', '')
+    return upbitSymbolList.some(x => x.market.replace('KRW-', '') === adjustSymbol);
+  }, [symbol, upbitSymbolList]);
 
   return isMobile ? (
     <CoinMobileTab symbol={symbol} />
@@ -25,20 +31,22 @@ const CoinChartView = () => {
     >
       <CoinSearch />
       <div style={{ flexDirection: 'column' }}>
-        <CoinWebSocketProvider symbol={symbol}>
+        
           <div className={style.chartwrapper}>
             <TradingViewChart symbol={symbol} />
-            <CoinChart symbol={symbol} />
+            {/* <CoinChart symbol={symbol} /> */}
+            {isInUpbit ? <UpbitCoinChart symbol={symbol} /> : <></>}
           </div>
           <div style={{ flexDirection: 'row', display: 'flex' }}>
             <div style={{ minWidth: '300px' }}>
               <OrderBook symbol={symbol} />
             </div>
-            <div style={{ minWidth: '300px', marginLeft: '20px' }}>
-              <TradeHistory symbol={symbol} />
-            </div>
+              <div style={{ minWidth: '300px', marginLeft: '20px' }}>
+                <CoinWebSocketProvider symbol={symbol}>
+                    <TradeHistory symbol={symbol} />
+                </CoinWebSocketProvider>
+              </div>
           </div>
-        </CoinWebSocketProvider>
       </div>
     </div>
   );
