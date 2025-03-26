@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import CoinWebSocketProvider from '../context/CoinWebSocketContext';
 import style from '../style/CoinMobileTab.module.scss';
 import TradingViewChart from './TradingViewChart';
-import CoinChart from './CoinChart';
 import { OrderBook } from './OrderBook';
 import TradeHistory from './TradeHistory';
 import CoinMobileSymbolInfo from './CoinMobileSymbolInfo';
 import CoinSearch from './CoinSearch';
+import UpbitCoinChart from './UpbitCoinChart';
+import { useSymbol } from '../hooks/SymbolContextProvider';
 
 const TABS = ['차트', '호가', '시세'] as const;
 
@@ -18,6 +19,11 @@ type CoinMobileTabProps = {
 
 const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
   const [activeTab, setActiveTab] = useState<Tab>('차트');
+  const { upbitSymbolList } = useSymbol();
+  const isInUpbit = useMemo(() => {
+    const adjustSymbol = symbol.replace('USDT', '');
+    return upbitSymbolList.some((x) => x.market.replace('KRW-', '') === adjustSymbol);
+  }, [symbol, upbitSymbolList]);
 
   return (
     <div className={style.mobileTabContainer}>
@@ -44,7 +50,7 @@ const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
             {activeTab === '차트' && (
               <div className={style.chartwrapper}>
                 <TradingViewChart symbol={symbol} />
-                <CoinChart symbol={symbol} />
+                {isInUpbit ? <UpbitCoinChart symbol={symbol} /> : <></>}
               </div>
             )}
             {activeTab === '시세' && <TradeHistory symbol={symbol} />}
