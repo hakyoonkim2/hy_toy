@@ -13,6 +13,7 @@ import { useMemo } from 'react';
 /**
  * 차트 제공 UI
  * Advanced TradingView 차트, lightweight-chart(1s)
+ * @deprecated 점검후 제거예정
  */
 const CoinChartView = () => {
   const { symbol, upbitSymbolList } = useSymbol();

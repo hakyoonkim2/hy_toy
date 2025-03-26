@@ -11,6 +11,7 @@ import { isUsCountry } from '../worker/WorkerUtils';
 /**
  * @symbol 코인 거래 종목
  * @subscriber CoinWebSocketContext의 state를 처리
+ * @deprecated 점검후 제거예정
  */
 class CoinWebSocketManager {
   private symbol: string;
