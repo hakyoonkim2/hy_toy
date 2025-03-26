@@ -3,6 +3,8 @@ import { useSymbol } from '../hooks/SymbolContextProvider';
 import { findKoreanSymbol, searchCoinKeyword } from '../utils/util';
 import style from '../style/SearchFrom.module.scss';
 import { isMobile } from 'react-device-detect';
+import ClearIcon from '../assets/ClearIcon.svg?react';
+import SearchIcon from '../assets/SearchIcon.svg?react';
 
 const CoinSearch = () => {
   const { symbolList, symbol, setSymbol, upbitSymbolList } = useSymbol();
@@ -95,6 +97,13 @@ const CoinSearch = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // ESC키를 눌렀을때 input값이 삭제되고 input blur 처리
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setInputValue('');
+      setShowDropdown(false);
+      if (inputRef.current) inputRef.current.blur();
+    }
     if (!showDropdown || filteredList.length === 0) return;
 
     if (e.key === 'ArrowDown') {
@@ -111,19 +120,33 @@ const CoinSearch = () => {
   return (
     <div className={style.seachContainer}>
       <form className={style.searchFrom} action={formAction}>
-        <input
-          ref={inputRef}
-          name="symbol"
-          type="text"
-          placeholder="코인을 입력하세요"
-          autoComplete="off"
-          value={inputValue}
-          onFocus={() => setShowDropdown(true)}
-          onBlur={handleBlur}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-        />
-        <button type="submit">조회</button>
+        <div className={style.inputWrapper}>
+          <input
+            ref={inputRef}
+            name="symbol"
+            type="text"
+            placeholder="코인을 입력하세요"
+            autoComplete="off"
+            value={inputValue}
+            onFocus={() => setShowDropdown(true)}
+            onBlur={handleBlur}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+          />
+          {inputValue && (
+            <button
+              type="button"
+              className={style.clearButton}
+              onClick={() => setInputValue('')}
+              aria-label="입력 삭제"
+            >
+              <ClearIcon width={22} height={22} />
+            </button>
+          )}
+        </div>
+        <button className={style.searchBtn} type="submit">
+          <SearchIcon width={15} height={15} />
+        </button>
       </form>
 
       {showDropdown && filteredList.length > 0 && (

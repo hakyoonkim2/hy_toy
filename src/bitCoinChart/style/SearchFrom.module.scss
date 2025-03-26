@@ -13,6 +13,7 @@
 .searchFrom {
   display: flex;
   gap: 0.5rem;
+  position: relative;
 }
 
 .searchFrom input {
@@ -27,22 +28,6 @@
 
 .searchFrom input::placeholder {
   color: #888;
-}
-
-.searchFrom button {
-  padding: 0.5rem 1rem;
-  background-color: transparent;
-  border: 1px solid #888;
-  color: #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.searchFrom button:hover {
-  background-color: #333;
-  border-color: #bbb;
-  color: #fff;
 }
 
 .searchSelect {
@@ -104,4 +89,54 @@
 .selectedUnit {
   font-size: 0.8rem;
   color: #aaa;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  input {
+    padding-right: 30px; // X 버튼 들어갈 공간 확보
+  }
+
+  .clearButton {
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: #aaa;
+
+    svg {
+      pointer-events: none;
+    }
+
+    &:hover {
+      color: white;
+      border-color: none !important;
+      background-color: none !important;
+    }
+  }
+}
+
+.searchBtn {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid #888;
+  color: #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 50px;
+
+  :hover {
+    background-color: #333;
+    border-color: #bbb;
+    color: #fff;
+  }
 }
