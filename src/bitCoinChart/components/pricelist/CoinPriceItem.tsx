@@ -1,15 +1,15 @@
 import { useEffect, useRef } from 'react';
-import style from '../style/CoinPriceItem.module.scss';
+import style from '@bitCoinChart/style/CoinPriceItem.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
-import { useSymbol } from '../hooks/SymbolContextProvider';
-import useSymbolData from '../hooks/useSymbolData';
 import { useQuery } from '@tanstack/react-query';
-import { fetchExchangeRate } from '../utils/util';
-import Bookmarked from '../assets/Bookmarked.svg?react';
-import NotBookmarked from '../assets/NotBookmarked.svg?react';
-import { bookmarkStorage } from '../utils/BookmarkStorageUtil';
-import { useUpbitSymbolData } from '../hooks/UpbitHooks';
+import Bookmarked from '@bitCoinChart/assets/Bookmarked.svg?react';
+import NotBookmarked from '@bitCoinChart/assets/NotBookmarked.svg?react';
+import { useSymbol } from '@bitCoinChart/hooks/SymbolContextProvider';
+import { useBinanceSymbolData } from '@bitCoinChart/hooks/BinanceHooks';
+import { useUpbitSymbolData } from '@bitCoinChart/hooks/UpbitHooks';
+import { bookmarkStorage } from '@bitCoinChart/utils/BookmarkStorageUtil';
+import { fetchExchangeRate } from '@bitCoinChart/utils/util';
 
 type CoinPriceItemProps = {
   symbol: string;
@@ -22,7 +22,7 @@ type CoinPriceItemProps = {
  */
 const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark, koreanSymbol }) => {
   const { setSymbol } = useSymbol();
-  const { data } = useSymbolData(symbol);
+  const { data } = useBinanceSymbolData(symbol);
   const { data: krwData } = useUpbitSymbolData(symbol);
   const ref = useRef(null);
   const navigator = useNavigate();

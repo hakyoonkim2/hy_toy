@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { CoinWebSocketContext } from '../context/CoinWebSocketContext';
-import style from '../style/OrderBook.module.scss';
-import { BINANCE_WEBSOCKET_URL, BINANCE_WEBSOCKET_US_URL } from '../types/CoinTypes';
-import LoadingFallback from '../../components/LoadingFallback';
-import { isUsCountry } from '../worker/WorkerUtils';
+import style from '@bitCoinChart/style/OrderBook.module.scss';
+import { CoinWebSocketContext } from '@bitCoinChart/context/CoinWebSocketContext';
+import { isUsCountry } from '@bitCoinChart/worker/util/WorkerUtils';
+import { BINANCE_WEBSOCKET_URL, BINANCE_WEBSOCKET_US_URL } from '@bitCoinChart/types/CoinTypes';
+import LoadingFallback from '@components/LoadingFallback';
 
 type Order = [string, string];
 

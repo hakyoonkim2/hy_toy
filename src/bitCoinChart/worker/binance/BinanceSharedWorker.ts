@@ -1,11 +1,11 @@
 /// <reference lib="webworker" />
 
-import { BinanceTickerData } from './BinanceWorkerTypes';
-import { fetchBinanceAllOpenPrices } from './BinanceWorkerUtils';
-import { dataSetting, isUsCountry } from '../WorkerUtils';
-import { BINANCE_WEBSOCKET_URL, BINANCE_WEBSOCKET_US_URL } from '../../types/CoinTypes';
-import { WorkerMessageEnum } from '../enum/WorkerMessageEnum';
-import { PriceMap } from '../CoinCommonTypes';
+import { BINANCE_WEBSOCKET_URL, BINANCE_WEBSOCKET_US_URL } from '@bitCoinChart/types/CoinTypes';
+import { BinanceTickerData } from '@bitCoinChart/worker/binance/type/BinanceWorkerTypes';
+import { fetchBinanceAllOpenPrices } from '@bitCoinChart/worker/binance/util/BinanceWorkerUtils';
+import { PriceMap } from '@bitCoinChart/worker/type/CoinCommonTypes';
+import { WorkerMessageEnum } from '@bitCoinChart/worker/enum/WorkerMessageEnum';
+import { dataSetting, isUsCountry } from '@bitCoinChart/worker/util/WorkerUtils';
 
 const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
 

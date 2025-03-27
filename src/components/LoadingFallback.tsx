@@ -1,4 +1,4 @@
-import style from '../style/LoadingFallback.module.scss';
+import style from '@style/LoadingFallback.module.scss';
 
 const LoadingFallback = () => {
   return <div className={style.spinner} />;

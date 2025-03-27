@@ -1,15 +1,15 @@
 import Decimal from 'decimal.js';
-import useSymbolData from '../hooks/useSymbolData';
-import ArrowLeft from '../../assets/ArrowLeft.svg?react';
-import style from '../style/CoinMobileSymbolInfo.module.scss';
-import coinsearchStyle from '../style/SearchFrom.module.scss';
+import ArrowLeft from '@assets/ArrowLeft.svg?react';
+import style from '@bitCoinChart/style/CoinMobileSymbolInfo.module.scss';
+import coinsearchStyle from '@bitCoinChart/style/SearchFrom.module.scss';
+import { useBinanceSymbolData } from '@bitCoinChart/hooks/BinanceHooks';
 
 type CoinMobileSymbolInfoProps = {
   symbol: string;
 };
 
 const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) => {
-  const { data } = useSymbolData(symbol);
+  const { data } = useBinanceSymbolData(symbol);
 
   const handleBack = () => {
     window.history.back();

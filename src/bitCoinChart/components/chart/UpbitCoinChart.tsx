@@ -9,12 +9,13 @@ import {
   Time,
   MouseEventParams,
 } from 'lightweight-charts';
-import style from '../style/chart.module.scss';
+import style from '@bitCoinChart/style/chart.module.scss';
 import { isMobile } from 'react-device-detect';
-import { fetchUpbitCandles, useUpbitCandle } from '../hooks/UpbitHooks';
-import CandleSelector from './CandleSelector';
-import { CandleType, UpbitCandleChartData } from '../types/CoinTypes';
-import { getPreviousTime } from '../utils/util';
+import { useUpbitCandle } from '@bitCoinChart/hooks/UpbitHooks';
+import { CandleType, UpbitCandleChartData } from '@bitCoinChart/types/CoinTypes';
+import { getPreviousTime } from '@bitCoinChart/utils/util';
+import CandleSelector from '@bitCoinChart/components/chart/CandleSelector';
+import { fetchUpbitCandles } from '@bitCoinChart/api/UpbitApi';
 
 type CoinChartProps = {
   symbol: string;

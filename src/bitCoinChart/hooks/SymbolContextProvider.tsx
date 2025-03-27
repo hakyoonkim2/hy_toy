@@ -1,8 +1,8 @@
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { UpbitSymbol } from '../worker/upbit/UpbitWorkerTypes';
 import { useQueryClient } from '@tanstack/react-query';
-import { isSharedWorker } from '../utils/util';
-import { WorkerMessageEnum } from '../worker/enum/WorkerMessageEnum';
+import { UpbitSymbol } from '@bitCoinChart/worker/upbit/type/UpbitWorkerTypes';
+import { WorkerMessageEnum } from '@bitCoinChart/worker/enum/WorkerMessageEnum';
+import { isSharedWorker } from '@bitCoinChart/utils/util';
 
 export const SymbolContext = createContext<{
   symbol: string;

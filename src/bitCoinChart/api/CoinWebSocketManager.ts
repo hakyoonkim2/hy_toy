@@ -5,8 +5,8 @@ import {
   Subscriber,
   TradeHistory,
   TradingData,
-} from '../types/CoinTypes';
-import { isUsCountry } from '../worker/WorkerUtils';
+} from '@bitCoinChart/types/CoinTypes';
+import { isUsCountry } from '@bitCoinChart/worker/util/WorkerUtils';
 
 /**
  * @symbol 코인 거래 종목

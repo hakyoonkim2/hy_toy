@@ -1,15 +1,15 @@
-import CoinWebSocketProvider from '../context/CoinWebSocketContext';
-import TradingViewChart from './TradingViewChart';
-import style from '../style/chart.module.scss';
-import { useSymbol } from '../hooks/SymbolContextProvider';
-import { OrderBook } from './OrderBook';
+import style from '@bitCoinChart/style/chart.module.scss';
 import { isMobile } from 'react-device-detect';
-import CoinMobileTab from './CoinMobileTab';
-import TradeHistory from './TradeHistory';
-import CoinSearch from './CoinSearch';
-import UpbitCoinChart from './UpbitCoinChart';
 import { useMemo } from 'react';
-import AveragePriceCalculator from './AveragePriceCalculator';
+import { useSymbol } from '@bitCoinChart/hooks/SymbolContextProvider';
+import CoinSearch from '@bitCoinChart/components/pricelist/CoinSearch';
+import { OrderBook } from '@bitCoinChart/components/additional/OrderBook';
+import CoinWebSocketProvider from '@bitCoinChart/context/CoinWebSocketContext';
+import TradeHistory from '@bitCoinChart/components/additional/TradeHistory';
+import AveragePriceCalculator from '@bitCoinChart/components/additional/AveragePriceCalculator';
+import CoinMobileTab from '@bitCoinChart/components/mobile/CoinMobileTab';
+import TradingViewChart from '@bitCoinChart/components/chart/TradingViewChart';
+import UpbitCoinChart from '@bitCoinChart/components/chart/UpbitCoinChart';
 
 /**
  * 차트 제공 UI

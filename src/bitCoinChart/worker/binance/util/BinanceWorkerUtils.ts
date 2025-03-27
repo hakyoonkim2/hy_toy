@@ -1,5 +1,5 @@
-import { PriceMap } from '../CoinCommonTypes';
-import { isUsCountry } from '../WorkerUtils';
+import { PriceMap } from '@bitCoinChart/worker/type/CoinCommonTypes';
+import { isUsCountry } from '@bitCoinChart/worker/util/WorkerUtils';
 
 export const BINANCE_API_URL = 'https://api.binance.com/api/v3';
 export const BINANCE_US_API_URL = 'https://api.binance.us/api/v3';

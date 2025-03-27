@@ -2,6 +2,7 @@ import { ConfigEnv, defineConfig, loadEnv, UserConfigExport } from 'vite';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import removeConsole from 'vite-plugin-remove-console';
+import path from 'path';
 
 export default ({ mode }: ConfigEnv): UserConfigExport => {
   // 1. 환경 변수 로드
@@ -17,6 +18,16 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     },
     worker: {
       format: 'es',
+    },
+    resolve: {
+      alias: {
+        '@assets': path.resolve(__dirname, 'src/assets'),
+        '@bitCoinChart': path.resolve(__dirname, 'src/bitCoinChart'),
+        '@stopwatch': path.resolve(__dirname, 'src/stopwatch'),
+        '@components': path.resolve(__dirname, 'src/components'),
+        '@style': path.resolve(__dirname, 'src/style'),
+        '@': path.resolve(__dirname, 'src'),
+      },
     },
     plugins: [
       react(),

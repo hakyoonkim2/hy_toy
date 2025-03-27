@@ -1,6 +1,6 @@
+import SymbolContextProvider from '@bitCoinChart/hooks/SymbolContextProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Outlet } from 'react-router-dom';
-import SymbolContextProvider from '../hooks/SymbolContextProvider';
 
 const queryClient = new QueryClient();
 

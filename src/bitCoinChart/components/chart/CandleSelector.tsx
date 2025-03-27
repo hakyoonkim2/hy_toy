@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import styles from '../style/CandleSelector.module.scss';
-import { CandleType } from '../types/CoinTypes';
+import styles from '@bitCoinChart/style/CandleSelector.module.scss';
+import { CandleType } from '@bitCoinChart/types/CoinTypes';
 
 const candleTypeOptions: { label: string; value: CandleType }[] = [
   { label: '초', value: 'seconds' },

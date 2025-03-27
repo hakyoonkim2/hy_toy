@@ -1,11 +1,19 @@
 /// <reference lib="webworker" />
+import { UPBIT_WEBSOCKET_URL } from '@bitCoinChart/types/CoinTypes';
+import { PriceMap } from '@bitCoinChart/worker/type/CoinCommonTypes';
+import { WorkerMessageEnum } from '@bitCoinChart/worker/enum/WorkerMessageEnum';
+import { UpbitSymbol, UpbitTickerData } from '@bitCoinChart/worker/upbit/type/UpbitWorkerTypes';
+import {
+  fetchUpbitAllOpenPrices,
+  getUpbitAllSymbols,
+} from '@bitCoinChart/worker/upbit/util/UpbitWorkerUtils';
+import {
+  dataSetting,
+  fetchAllTickers,
+  getPriceColor,
+  isUsCountry,
+} from '@bitCoinChart/worker/util/WorkerUtils';
 import { v4 as uuidv4 } from 'uuid';
-import { PriceMap } from '../CoinCommonTypes';
-import { UpbitSymbol, UpbitTickerData } from './UpbitWorkerTypes';
-import { fetchUpbitAllOpenPrices, getUpbitAllSymbols } from './UpbitWorkerUtils';
-import { dataSetting, fetchAllTickers, getPriceColor, isUsCountry } from '../WorkerUtils';
-import { UPBIT_WEBSOCKET_URL } from '../../types/CoinTypes';
-import { WorkerMessageEnum } from '../enum/WorkerMessageEnum';
 
 const sharedWorkerGlobal = self as unknown as SharedWorkerGlobalScope;
 

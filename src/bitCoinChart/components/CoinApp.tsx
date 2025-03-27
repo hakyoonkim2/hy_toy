@@ -1,8 +1,8 @@
-import style from '../style/chart.module.scss';
+import style from '@bitCoinChart/style/chart.module.scss';
 import { isMobile } from 'react-device-detect';
-import CoinChartView from './CoinChartView';
-import CoinSearch from './CoinSearch';
-import CoinPriceList from './CoinPriceList';
+import CoinSearch from '@bitCoinChart/components/pricelist/CoinSearch';
+import CoinChartView from '@bitCoinChart/components/chart/CoinChartView';
+import CoinPriceList from '@bitCoinChart/components/pricelist/CoinPriceList';
 
 const CoinApp: React.FC = () => {
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import style from '../style/Stopwatch.module.scss';
+import style from '@stopwatch/style/Stopwatch.module.scss';
 
 /**
  * 스탑워치 구현

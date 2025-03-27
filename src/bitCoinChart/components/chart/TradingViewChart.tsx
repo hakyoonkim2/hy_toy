@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import style from '../style/chart.module.scss';
+import style from '@bitCoinChart/style/chart.module.scss';
 import { isMobile } from 'react-device-detect';
 
 /**
@@ -35,8 +35,8 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({ symbol }) => {
           enable_publishing: false,
           save_image: false,
           overrides: {
-            'mainSeriesProperties.candleStyle.upColor': '#d32634',          // 상승 색 (예: 빨강)
-            'mainSeriesProperties.candleStyle.downColor': '#135ce7',        // 하락 색 (예: 진한 파랑)
+            'mainSeriesProperties.candleStyle.upColor': '#d32634', // 상승 색 (예: 빨강)
+            'mainSeriesProperties.candleStyle.downColor': '#135ce7', // 하락 색 (예: 진한 파랑)
             'mainSeriesProperties.candleStyle.borderUpColor': '#d32634',
             'mainSeriesProperties.candleStyle.borderDownColor': '#135ce7',
             'mainSeriesProperties.candleStyle.wickUpColor': '#d32634',
@@ -45,10 +45,10 @@ const TradingViewChart: React.FC<TradingViewChartProps> = ({ symbol }) => {
             'mainSeriesProperties.candleStyle.drawBorder': true,
           },
           studies_overrides: {
-            'volume.volume.color.1': '#d32634',  // 상승 볼륨 색상 (빨강)
-            'volume.volume.color.0': '#135ce7',  // 하락 볼륨 색상 (파랑)
-            'volume.volume.transparency': 40,   // 투명도 0~100
-          }
+            'volume.volume.color.1': '#d32634', // 상승 볼륨 색상 (빨강)
+            'volume.volume.color.0': '#135ce7', // 하락 볼륨 색상 (파랑)
+            'volume.volume.transparency': 40, // 투명도 0~100
+          },
         });
       }
     };

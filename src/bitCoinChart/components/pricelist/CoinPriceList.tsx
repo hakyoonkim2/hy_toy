@@ -1,9 +1,9 @@
+import CoinPriceItem from '@bitCoinChart/components/pricelist/CoinPriceItem';
+import { useSymbol } from '@bitCoinChart/hooks/SymbolContextProvider';
+import { bookmarkStorage } from '@bitCoinChart/utils/BookmarkStorageUtil';
+import { findKoreanSymbol } from '@bitCoinChart/utils/util';
+import LoadingFallback from '@components/LoadingFallback';
 import { useState } from 'react';
-import LoadingFallback from '../../components/LoadingFallback';
-import { bookmarkStorage } from '../utils/BookmarkStorageUtil';
-import CoinPriceItem from './CoinPriceItem';
-import { useSymbol } from '../hooks/SymbolContextProvider';
-import { findKoreanSymbol } from '../utils/util';
 
 const CoinPriceList = () => {
   const { symbolList, upbitSymbolList } = useSymbol();
