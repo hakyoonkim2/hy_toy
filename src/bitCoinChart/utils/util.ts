@@ -1,3 +1,4 @@
+import { CandleType } from '../types/CoinTypes';
 import { UpbitSymbol } from '../worker/upbit/UpbitWorkerTypes';
 
 export function convertKrTime(ms: number) {
@@ -88,4 +89,40 @@ export function findKoreanSymbol(
   });
   const result = upbitSymbolsMap.get(symbol.replace('USDT', ''));
   return result;
+}
+
+/**
+ * 단위와 간격을 기준으로 기준 시간에서 이전 시간 계산
+ * @param currentTime 기준 시간 (timestamp in ms)
+ * @param type 단위 ('seconds', 'minutes', 'days', 'weeks', 'months', 'years')
+ * @param interval 간격 (예: 15분, 1일, 3개월 등)
+ * @returns 이전 시각의 timestamp (ms)
+ */
+export function getPreviousTime(currentTime: number, type: CandleType, interval: number): number {
+  const date = new Date(currentTime);
+
+  switch (type) {
+    case 'seconds':
+      date.setSeconds(date.getSeconds() - interval);
+      break;
+    case 'minutes':
+      date.setMinutes(date.getMinutes() - interval);
+      break;
+    case 'days':
+      date.setDate(date.getDate() - interval);
+      break;
+    case 'weeks':
+      date.setDate(date.getDate() - interval * 7);
+      break;
+    case 'months':
+      date.setMonth(date.getMonth() - interval);
+      break;
+    case 'years':
+      date.setFullYear(date.getFullYear() - interval);
+      break;
+    default:
+      throw new Error(`Invalid candle type: ${type}`);
+  }
+
+  return date.getTime();
 }

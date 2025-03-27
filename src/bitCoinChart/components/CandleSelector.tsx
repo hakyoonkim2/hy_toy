@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from '../style/CandleSelector.module.scss';
-
-export type CandleType = 'seconds' | 'minutes' | 'days' | 'weeks' | 'months' | 'years';
+import { CandleType } from '../types/CoinTypes';
 
 const candleTypeOptions: { label: string; value: CandleType }[] = [
   { label: '초', value: 'seconds' },

@@ -33,7 +33,6 @@ const CoinChartView = () => {
       <div style={{ flexDirection: 'column' }}>
         <div className={style.chartwrapper}>
           <TradingViewChart symbol={symbol} />
-          {/* <CoinChart symbol={symbol} /> */}
           {isInUpbit ? <UpbitCoinChart symbol={symbol} /> : <></>}
         </div>
         <div style={{ flexDirection: 'row', display: 'flex' }}>
