@@ -96,7 +96,7 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
       <button
         className={style.saveBtn}
         onClick={handleBtnClick}
-        disabled={currentAmount === 0 && currentAvgPrice === 0}
+        disabled={currentAmount === 0 || currentAvgPrice === 0}
       >
         저장
       </button>
