@@ -158,8 +158,6 @@ const UpbitCoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
       chart.remove();
       resizeObserver.disconnect();
       requestOldParamSet.current.clear();
-      seriesRef.current?.setData([]);
-      volumeSeriesRef.current?.setData([]);
       setOldData([]);
       hasMoreOldData.current = true;
       isFetchingOldData.current = false;

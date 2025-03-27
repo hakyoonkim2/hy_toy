@@ -8,8 +8,9 @@ import CoinMobileSymbolInfo from './CoinMobileSymbolInfo';
 import CoinSearch from './CoinSearch';
 import UpbitCoinChart from './UpbitCoinChart';
 import { useSymbol } from '../hooks/SymbolContextProvider';
+import AveragePriceCalculator from './AveragePriceCalculator';
 
-const TABS = ['차트', '호가', '시세'] as const;
+const TABS = ['차트', '호가', '시세', '평단'] as const;
 
 type Tab = (typeof TABS)[number];
 
@@ -54,6 +55,7 @@ const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
               </div>
             )}
             {activeTab === '시세' && <TradeHistory symbol={symbol} />}
+            {activeTab === '평단' && <AveragePriceCalculator symbol={symbol} />}
           </CoinWebSocketProvider>
         </div>
       </div>
