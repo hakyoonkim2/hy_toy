@@ -1,8 +1,8 @@
-import { CoinWebSocketContext } from '../context/CoinWebSocketContext';
+import { CoinWebSocketContext } from '../../context/CoinWebSocketContext';
 import { useContext } from 'react';
-import useSymbolData from '../hooks/useSymbolData';
-import style from '../style/TradingHistory.module.scss';
-import { convertKrTime } from '../utils/util';
+import style from '@bitCoinChart/style/TradingHistory.module.scss';
+import { useBinanceSymbolData } from '@bitCoinChart/hooks/BinanceHooks';
+import { convertKrTime } from '@bitCoinChart/utils/util';
 
 type TradeHistoryProps = {
   symbol: string;
@@ -10,7 +10,7 @@ type TradeHistoryProps = {
 
 const TradeHistory: React.FC<TradeHistoryProps> = ({ symbol }) => {
   const { tradeHistory } = useContext(CoinWebSocketContext);
-  const { data } = useSymbolData(symbol);
+  const { data } = useBinanceSymbolData(symbol);
   const red = '#f75467';
   const blue = '#4386f9';
   const openPrice = data?.openPrice ?? 0;

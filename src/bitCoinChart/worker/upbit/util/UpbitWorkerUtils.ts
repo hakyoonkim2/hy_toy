@@ -1,5 +1,5 @@
-import { PriceMap } from '../CoinCommonTypes';
-import { UpbitSymbol } from './UpbitWorkerTypes';
+import { PriceMap } from '@bitCoinChart/worker/type/CoinCommonTypes';
+import { UpbitSymbol } from '@bitCoinChart/worker/upbit/type/UpbitWorkerTypes';
 
 // 1. 모든 종목 리스트 가져오기 (KRW 페어만 필터링)
 export async function getUpbitAllSymbols(): Promise<UpbitSymbol[]> {

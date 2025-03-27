@@ -1,5 +1,5 @@
-import { CandleType } from '../types/CoinTypes';
-import { UpbitSymbol } from '../worker/upbit/UpbitWorkerTypes';
+import { CandleType } from '@bitCoinChart/types/CoinTypes';
+import { UpbitSymbol } from '@bitCoinChart/worker/upbit/type/UpbitWorkerTypes';
 
 export function convertKrTime(ms: number) {
   return new Date(ms).toLocaleTimeString('ko-KR', {

@@ -1,14 +1,14 @@
 import { useMemo, useState } from 'react';
-import CoinWebSocketProvider from '../context/CoinWebSocketContext';
-import style from '../style/CoinMobileTab.module.scss';
-import TradingViewChart from './TradingViewChart';
-import { OrderBook } from './OrderBook';
-import TradeHistory from './TradeHistory';
-import CoinMobileSymbolInfo from './CoinMobileSymbolInfo';
-import CoinSearch from './CoinSearch';
-import UpbitCoinChart from './UpbitCoinChart';
-import { useSymbol } from '../hooks/SymbolContextProvider';
-import AveragePriceCalculator from './AveragePriceCalculator';
+import style from '@bitCoinChart/style/CoinMobileTab.module.scss';
+import { useSymbol } from '@bitCoinChart/hooks/SymbolContextProvider';
+import CoinSearch from '@bitCoinChart/components/pricelist/CoinSearch';
+import CoinWebSocketProvider from '@bitCoinChart/context/CoinWebSocketContext';
+import { OrderBook } from '@bitCoinChart/components/additional/OrderBook';
+import TradeHistory from '@bitCoinChart/components/additional/TradeHistory';
+import AveragePriceCalculator from '@bitCoinChart/components/additional/AveragePriceCalculator';
+import CoinMobileSymbolInfo from '@bitCoinChart/components/mobile/CoinMobileSymbolInfo';
+import TradingViewChart from '@bitCoinChart/components/chart/TradingViewChart';
+import UpbitCoinChart from '@bitCoinChart/components/chart/UpbitCoinChart';
 
 const TABS = ['차트', '호가', '시세', '평단'] as const;
 

@@ -1,6 +1,6 @@
+import CoinWebSocketManager from '@bitCoinChart/api/CoinWebSocketManager';
+import { CoinManagerData } from '@bitCoinChart/types/CoinTypes';
 import React, { createContext, useEffect, useState, ReactNode, useRef } from 'react';
-import CoinWebSocketManager from '../api/CoinWebSocketManager';
-import { CoinManagerData } from '../types/CoinTypes';
 
 // Context 생성
 export const CoinWebSocketContext = createContext<CoinManagerData>({

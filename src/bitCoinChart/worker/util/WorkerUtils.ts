@@ -1,6 +1,6 @@
-import { BinanceTickerData } from './binance/BinanceWorkerTypes';
-import { PriceMap } from './CoinCommonTypes';
-import { UpbitRestTicker, UpbitTickerData } from './upbit/UpbitWorkerTypes';
+import { BinanceTickerData } from '@bitCoinChart/worker/binance/type/BinanceWorkerTypes';
+import { PriceMap } from '@bitCoinChart/worker/type/CoinCommonTypes';
+import { UpbitRestTicker, UpbitTickerData } from '@bitCoinChart/worker/upbit/type/UpbitWorkerTypes';
 
 let region = '';
 

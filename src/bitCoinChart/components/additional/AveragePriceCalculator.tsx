@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import style from '../style/AveragePriceCalculator.module.scss';
+import style from '@bitCoinChart/style/AveragePriceCalculator.module.scss';
 
 type Props = {
   symbol: string;

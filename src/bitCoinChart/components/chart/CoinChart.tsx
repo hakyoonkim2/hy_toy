@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { createChart, CandlestickSeries, IChartApi, ISeriesApi } from 'lightweight-charts';
-import { CoinWebSocketContext } from '../context/CoinWebSocketContext';
-import style from '../style/chart.module.scss';
+import style from '@bitCoinChart/style/chart.module.scss';
 import { isMobile } from 'react-device-detect';
+import { CoinWebSocketContext } from '@bitCoinChart/context/CoinWebSocketContext';
 
 type CoinChartProps = {
   symbol: string;

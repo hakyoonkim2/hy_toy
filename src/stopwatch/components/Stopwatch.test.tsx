@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom';
-import StopWatch from './Stopwatch';
 import { act } from 'react';
+import StopWatch from '@stopwatch/components/Stopwatch';
 
 describe('StopWatch', () => {
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('StopWatch', () => {
     fireEvent.click(startButton);
 
     act(() => {
-        vi.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
 
     expect(screen.getByText('중단')).toBeInTheDocument();
@@ -40,15 +40,15 @@ describe('StopWatch', () => {
     fireEvent.click(startButton); // 시작
 
     act(() => {
-        vi.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
-    
+
     expect(screen.getByText(/00:01\./)).toBeInTheDocument();
 
     fireEvent.click(screen.getByText('중단')); // 정지
 
     act(() => {
-        vi.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
 
     expect(screen.getByText(/00:01\./)).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe('StopWatch', () => {
     fireEvent.click(screen.getByText('시작')); // 재시작
 
     act(() => {
-        vi.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1000);
     });
 
     expect(screen.getByText(/00:02\./)).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe('StopWatch', () => {
     render(<StopWatch />);
     fireEvent.click(screen.getByText('시작'));
     act(() => {
-        vi.advanceTimersByTime(1234);
+      vi.advanceTimersByTime(1234);
     });
 
     fireEvent.click(screen.getByText('랩'));
@@ -79,9 +79,9 @@ describe('StopWatch', () => {
   it('중단 상태에서 재설정하면 초기화됨', () => {
     render(<StopWatch />);
     fireEvent.click(screen.getByText('시작'));
-    
+
     act(() => {
-        vi.advanceTimersByTime(2345);
+      vi.advanceTimersByTime(2345);
     });
     fireEvent.click(screen.getByText('랩'));
     fireEvent.click(screen.getByText('중단'));

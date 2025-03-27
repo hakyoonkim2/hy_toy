@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import HytoyLogo from '../assets/hytoyLogo.svg?react';
-import style from '../style/Header.module.scss';
+import HytoyLogo from '@assets/hytoyLogo.svg?react';
+import style from '@style/Header.module.scss';
 
 /**
  * SPA 에서 항상 출력되는 헤더라인

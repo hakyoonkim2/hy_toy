@@ -1,10 +1,10 @@
 import { ChangeEvent, useActionState, useRef, useState, useMemo } from 'react';
-import { useSymbol } from '../hooks/SymbolContextProvider';
-import { findKoreanSymbol, searchCoinKeyword } from '../utils/util';
-import style from '../style/SearchFrom.module.scss';
+import style from '@bitCoinChart/style/SearchFrom.module.scss';
 import { isMobile } from 'react-device-detect';
-import ClearIcon from '../assets/ClearIcon.svg?react';
-import SearchIcon from '../assets/SearchIcon.svg?react';
+import ClearIcon from '@bitCoinChart/assets/ClearIcon.svg?react';
+import SearchIcon from '@bitCoinChart/assets/SearchIcon.svg?react';
+import { useSymbol } from '@bitCoinChart/hooks/SymbolContextProvider';
+import { findKoreanSymbol, searchCoinKeyword } from '@bitCoinChart/utils/util';
 
 const CoinSearch = () => {
   const { symbolList, symbol, setSymbol, upbitSymbolList } = useSymbol();
