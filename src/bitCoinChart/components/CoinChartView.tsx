@@ -9,6 +9,7 @@ import TradeHistory from './TradeHistory';
 import CoinSearch from './CoinSearch';
 import UpbitCoinChart from './UpbitCoinChart';
 import { useMemo } from 'react';
+import AveragePriceCalculator from './AveragePriceCalculator';
 
 /**
  * 차트 제공 UI
@@ -43,6 +44,9 @@ const CoinChartView = () => {
             <CoinWebSocketProvider symbol={symbol}>
               <TradeHistory symbol={symbol} />
             </CoinWebSocketProvider>
+          </div>
+          <div style={{ minWidth: '300px', marginLeft: '20px' }}>
+            <AveragePriceCalculator symbol={symbol} />
           </div>
         </div>
       </div>

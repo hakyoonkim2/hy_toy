@@ -1,0 +1,92 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.75rem;
+  font-family: 'Pretendard', sans-serif;
+  background-color: #121212;
+  border-radius: 8px;
+  padding: 0.5rem;
+  color: #bbb;
+  gap: 0.75rem;
+}
+
+.title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-weight: 600;
+  color: #bbb;
+}
+
+.input {
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #2a2a2a;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.input:focus {
+  border-color: #00c2ff;
+  outline: none;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ccc;
+}
+
+.result {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #1a1a1a;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.saveBtn {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #eee;
+  background-color: #333;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    background-color: #444;
+    border-color: #666;
+  }
+
+  &:active {
+    background-color: #222;
+    border-color: #555;
+  }
+
+  &:disabled {
+    background-color: #555;
+    color: #999;
+    border-color: #555;
+    cursor: not-allowed;
+  }
+}
