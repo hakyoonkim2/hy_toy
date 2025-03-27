@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { CurrentPriceData, UpbitCandleData } from '../types/CoinTypes';
+import { CurrentPriceData, UpbitCandleChartData, UpbitCandleData } from '../types/CoinTypes';
 import { Time } from 'lightweight-charts';
 
 export const useUpbitSymbolData = (symbol: string) => {
@@ -12,13 +12,32 @@ export const useUpbitSymbolData = (symbol: string) => {
   });
 };
 
-const fetchCandle = async (symbol: string, timerInterval: string, unit?: number) => {
-  const krwSymbol = 'KRW-'+ symbol.replace('USDT', '');
-  const apiUrl = encodeURIComponent(`https://api.upbit.com/v1/candles/${timerInterval}${unit ? '/'+ unit : ''}?market=${krwSymbol}&count=200`);
-  const res = await fetch(`https://proxy-server-flax-rho.vercel.app/api/proxy?url=${apiUrl}`);
+export const fetchUpbitCandles = async (
+  symbol: string,
+  timerInterval: string,
+  unit?: number,
+  toTime?: number,
+  signal?: AbortSignal
+): Promise<UpbitCandleChartData[]> => {
+  const krwSymbol = 'KRW-' + symbol.replace('USDT', '');
+
+  let toTimePram = '';
+
+  if (toTime) {
+    const iso = new Date(toTime).toISOString();
+    toTimePram = `&to=${iso}`;
+  }
+
+  const apiUrl = encodeURIComponent(
+    `https://api.upbit.com/v1/candles/${timerInterval}${unit ? '/' + unit : ''}?market=${krwSymbol}&count=200${toTimePram}`
+  );
+
+  const res = await fetch(`https://proxy-server-flax-rho.vercel.app/api/proxy?url=${apiUrl}`, {
+    signal: signal,
+  });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch candle data");
+    throw new Error('Failed to fetch candle data');
   }
   const data: UpbitCandleData[] = await res.json();
 
@@ -28,12 +47,12 @@ const fetchCandle = async (symbol: string, timerInterval: string, unit?: number)
     } else {
       return 'rgba(10, 73, 215, 0.6)';
     }
-  }
+  };
 
-  const candleStickData = data.map(candleData => {
-    
+  const candleStickData = data.map((candleData) => {
     return {
-      time: candleData.timestamp as Time,
+      // 초단위로 사용
+      time: Math.floor(candleData.timestamp / 1000) as Time,
       open: candleData.opening_price,
       high: candleData.high_price,
       low: candleData.low_price,
@@ -41,16 +60,23 @@ const fetchCandle = async (symbol: string, timerInterval: string, unit?: number)
       customValues: {
         volume: candleData.candle_acc_trade_volume,
         color: getVolumeColor(candleData.opening_price, candleData.trade_price),
-      }
-    }
+      },
+    };
   });
   return candleStickData.reverse();
 };
 
+/**
+ *
+ * @param symbol 종목정보
+ * @param timerInterval 캔들 종류 초, 분, 일, 주, 월, 년
+ * @param unit 종류 별 시간 구분 없는 캔들 종류별 없는 경우도 있음
+ * @returns
+ */
 export const useUpbitCandle = (symbol: string, timerInterval: string, unit?: number) => {
   return useQuery({
-    queryKey: ["upbit", "candle", symbol, timerInterval, unit],
-    queryFn: () => fetchCandle(symbol, timerInterval, unit),
+    queryKey: ['upbit', 'candle', symbol, timerInterval, unit],
+    queryFn: () => fetchUpbitCandles(symbol, timerInterval, unit),
     refetchInterval: 300,
     staleTime: 0,
   });

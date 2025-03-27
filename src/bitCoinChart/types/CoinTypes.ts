@@ -42,4 +42,18 @@ export type UpbitCandleData = {
   timestamp: number;
   trade_price: number;
   unit: number;
-}
+};
+
+export type UpbitCandleChartData = {
+  time: Time;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  customValues: {
+    volume: number;
+    color: string;
+  };
+};
+
+export type CandleType = 'seconds' | 'minutes' | 'days' | 'weeks' | 'months' | 'years';
