@@ -86,6 +86,7 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
           className={style.input}
           type="number"
           value={currentAmount}
+          defaultValue={0}
           onFocus={handleFocus}
           onChange={(e) => setCurrentAmount(parseFloat(e.target.value))}
         />
@@ -97,6 +98,7 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
           className={style.input}
           type="number"
           value={currentAvgPrice}
+          defaultValue={0}
           onFocus={handleFocus}
           onChange={(e) => setCurrentAvgPrice(parseFloat(e.target.value))}
         />
@@ -124,6 +126,7 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
             className={style.input}
             type="number"
             value={additionalTotalCost}
+            defaultValue={0}
             onFocus={handleFocus}
             onChange={(e) => setAdditionalTotalCost(parseFloat(e.target.value))}
           />
@@ -135,6 +138,7 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
             className={style.input}
             type="number"
             value={additionalAmount}
+            defaultValue={0}
             onFocus={handleFocus}
             onChange={(e) => setAdditionalAmount(parseFloat(e.target.value))}
           />
@@ -147,13 +151,14 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
           className={style.input}
           type="number"
           value={additionalPrice}
+          defaultValue={0}
           onFocus={handleFocus}
           onChange={(e) => setAdditionalPrice(parseFloat(e.target.value))}
         />
       </div>
       <div className={style.resultWrapper}>
-        <span className={style.result}>새로운 평균 단가: {result.newPriceAverage}</span>
-        <span className={style.result}>새로운 수량: {result.newTotalAmount}</span>
+        <span className={style.result}>평균 단가: {result.newPriceAverage}</span>
+        <span className={style.result}>수량: {result.newTotalAmount}</span>
       </div>
     </div>
   );

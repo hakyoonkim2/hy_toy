@@ -8,6 +8,8 @@
   padding: 0.5rem;
   color: #bbb;
   gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
 }
 
 .title {
@@ -35,6 +37,11 @@
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 270px;
+  min-width: 270px;
 }
 
 .input:focus {
@@ -59,10 +66,16 @@
   font-size: 0.875rem;
   display: flex;
   flex-direction: column;
+  max-width: 270px;
+  min-width: 270px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .result {
-  margin-left: 2rem;
+  margin-left: 0.7rem;
+  text-overflow: clip;
 }
 
 .saveBtn {
@@ -75,6 +88,8 @@
   border: 1px solid #555;
   border-radius: 4px;
   cursor: pointer;
+  max-width: 270px;
+  min-width: 270px;
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease;
