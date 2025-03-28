@@ -52,8 +52,9 @@ class CoinWebSocketManager {
           maker: json.m,
         });
 
-        if (this.tradingHistory.length > 50) {
-          this.tradingHistory.splice(0, this.tradingHistory.length - 50);
+        // webview에서 왼쪽 호가창과 높이 비슷하게 맞추기 위해 처리 (21개)
+        if (this.tradingHistory.length > 21) {
+          this.tradingHistory.splice(0, this.tradingHistory.length - 21);
         }
 
         // 받아진 json을 간단한 데이터 타입으로 변환
