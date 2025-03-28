@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import Bookmarked from '@bitCoinChart/assets/Bookmarked.svg?react';
 import NotBookmarked from '@bitCoinChart/assets/NotBookmarked.svg?react';
 import { useSymbol } from '@bitCoinChart/hooks/SymbolContextProvider';
-import { useBinanceSymbolData } from '@bitCoinChart/hooks/BinanceHooks';
+import { useBinanceSymbolData, useSymbolImage } from '@bitCoinChart/hooks/BinanceHooks';
 import { useUpbitSymbolData } from '@bitCoinChart/hooks/UpbitHooks';
 import { bookmarkStorage } from '@bitCoinChart/utils/BookmarkStorageUtil';
 import { fetchExchangeRate } from '@bitCoinChart/utils/util';
@@ -23,6 +23,7 @@ type CoinPriceItemProps = {
 const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark, koreanSymbol }) => {
   const { setSymbol } = useSymbol();
   const { data } = useBinanceSymbolData(symbol);
+  const { data: iconMap } = useSymbolImage();
   const { data: krwData } = useUpbitSymbolData(symbol);
   const ref = useRef(null);
   const navigator = useNavigate();
@@ -83,10 +84,22 @@ const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark, k
     }
   };
 
+  const coinIcon = iconMap?.get(symbol.replace('USDT', '').toLowerCase());
+
   return (
     <div id={`${symbol}-pricelist`} className={style.priceItem} onClick={handleClick}>
       <div className={style.priceTitle}>
-        <div>
+        <div style={{ alignItems: 'center', display: 'flex' }}>
+          {coinIcon ? (
+            <img
+              src={iconMap?.get(symbol.replace('USDT', '').toLowerCase())}
+              alt="Coin symbol icon"
+              width={15}
+              height={15}
+            />
+          ) : (
+            <></>
+          )}
           <strong className={style.symbolListLabel}>{symbol.replace('USDT', '')}</strong>
           {koreanSymbol && <strong className={style.priceKoreanLabel}>{`${koreanSymbol}`}</strong>}
         </div>
@@ -98,7 +111,11 @@ const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark, k
       </div>
       <div className={style.priceWrpper}>
         <div>
-          <strong ref={ref} className={style.price} style={{ color: color }}>{`${price}`}</strong>
+          <strong
+            ref={ref}
+            className={style.price}
+            style={{ color: color }}
+          >{`${price.toLocaleString()}`}</strong>
           <strong
             className={style.price}
             style={{ color: color, marginLeft: '10px' }}
