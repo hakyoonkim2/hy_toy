@@ -115,6 +115,10 @@ const UpbitCoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
       borderDownColor: '#135ce7',
       wickUpColor: '#d32634', //  양봉 꼬리 색상
       wickDownColor: '#135ce7', //  음봉 꼬리 색상
+      priceFormat: {
+        type: 'custom',
+        formatter: (price: number) => (price > 0 ? price.toLocaleString() : price.toPrecision(6)),
+      },
     });
     const volumeSeries = chart.addSeries(HistogramSeries, {
       color: '#26a69a',
