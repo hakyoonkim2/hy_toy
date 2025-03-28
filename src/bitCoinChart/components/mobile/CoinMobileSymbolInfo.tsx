@@ -3,6 +3,11 @@ import ArrowLeft from '@assets/ArrowLeft.svg?react';
 import style from '@bitCoinChart/style/CoinMobileSymbolInfo.module.scss';
 import coinsearchStyle from '@bitCoinChart/style/SearchFrom.module.scss';
 import { useBinanceSymbolData } from '@bitCoinChart/hooks/BinanceHooks';
+import CoinIcon from '@bitCoinChart/components/CoinIcon';
+import { useSymbol } from '@bitCoinChart/hooks/SymbolContextProvider';
+import { fetchExchangeRate, findKoreanSymbol } from '@bitCoinChart/utils/util';
+import { useQuery } from '@tanstack/react-query';
+import { useUpbitSymbolData } from '@bitCoinChart/hooks/UpbitHooks';
 
 type CoinMobileSymbolInfoProps = {
   symbol: string;
@@ -10,6 +15,8 @@ type CoinMobileSymbolInfoProps = {
 
 const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) => {
   const { data } = useBinanceSymbolData(symbol);
+  const { upbitSymbolList } = useSymbol();
+  const { data: krwData } = useUpbitSymbolData(symbol);
 
   const handleBack = () => {
     window.history.back();
@@ -20,12 +27,33 @@ const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) =
   const priceChange = price === 0 ? '0' : (((price - openPrice) / openPrice) * 100).toFixed(2);
   const diff = new Decimal(price).minus(openPrice);
 
+  const koreanSymbol = findKoreanSymbol(symbol, upbitSymbolList);
+
+  // 환율 정보 10분단위로 가져옴
+  const { data: exchangeRatio } = useQuery({
+    queryKey: ['exchange-rate', 'USD-KRW'],
+    queryFn: fetchExchangeRate,
+    refetchInterval: 1000 * 60 * 10, // 10분단위로 refetch 하도록 처리
+    staleTime: 1000 * 60 * 10, // 10분 동안은 fresh 상태
+    gcTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
+  });
+
+  const kpPositive =
+    krwData && exchangeRatio && price && krwData.price / exchangeRatio - price > 0 ? true : false;
+
   return (
     <div className={style.container}>
       <div className={style.topRow}>
         <ArrowLeft className={style.backIcon} onClick={handleBack} />
+        <CoinIcon symbol={symbol} />
         <span className={coinsearchStyle.selectedValue}>{symbol.replace('USDT', '')}</span>
-        <span className={coinsearchStyle.selectedUnit}>/ USD</span>
+        {koreanSymbol && (
+          <span
+            className={style.selectedUnit}
+            style={{ marginLeft: '6px', fontSize: '0.8rem', color: '#aaa' }}
+          >{`${koreanSymbol}`}</span>
+        )}
       </div>
       <div className={style.priceBox} style={{ color: data?.color }}>
         <div className={style.price}>{data?.price}</div>
@@ -34,6 +62,18 @@ const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) =
           <span>{parseFloat(priceChange) > 0 ? '▲' : '▼'}</span>
           <span>{diff.toString()}</span>
         </div>
+        {price && krwData && exchangeRatio ? (
+          <div className={style.changeInfo}>
+            <span>김프: &nbsp;</span>
+            <span
+              style={{ color: kpPositive ? '#f75467' : '#4386f9' }}
+            >{`${(((krwData.price / exchangeRatio - price) / price) * 100).toFixed(2)}% `}</span>
+            <span style={{ marginLeft: '10px' }}>KRW: &nbsp;</span>
+            <span style={{ color: data?.color }}>{`${krwData.price.toLocaleString()}`}</span>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

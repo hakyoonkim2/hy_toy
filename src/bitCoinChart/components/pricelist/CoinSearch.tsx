@@ -5,6 +5,7 @@ import ClearIcon from '@bitCoinChart/assets/ClearIcon.svg?react';
 import SearchIcon from '@bitCoinChart/assets/SearchIcon.svg?react';
 import { useSymbol } from '@bitCoinChart/hooks/SymbolContextProvider';
 import { findKoreanSymbol, searchCoinKeyword } from '@bitCoinChart/utils/util';
+import CoinIcon from '@bitCoinChart/components/CoinIcon';
 
 const CoinSearch = () => {
   const { symbolList, symbol, setSymbol, upbitSymbolList } = useSymbol();
@@ -165,6 +166,7 @@ const CoinSearch = () => {
 
       {!isMobile && (
         <div className={style.selectedSymbolBox}>
+          <CoinIcon symbol={symbol} />
           <span className={style.selectedValue}>{symbol.replace('USDT', '')}</span>
           {koreanSymbol && (
             <span
