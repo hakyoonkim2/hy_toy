@@ -40,6 +40,8 @@ export default function TypingGame() {
           if (c.top >= containerHeight - 24 && !c.isRemoving) {
             setHealth((prevHealth) => {
               const newHealth = prevHealth - 5;
+              setShake(true);
+              setTimeout(() => setShake(false), 300);
               if (newHealth <= 0) setIsGameOver(true);
               return newHealth;
             });
