@@ -49,14 +49,20 @@
   color: #ccc;
 }
 
-.result {
+.resultWrapper {
   margin-top: 0.5rem;
   padding: 0.5rem;
   background-color: #1a1a1a;
   border-radius: 4px;
-  text-align: center;
+  text-align: left;
   font-weight: 600;
   font-size: 0.875rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.result {
+  margin-left: 2rem;
 }
 
 .saveBtn {

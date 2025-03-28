@@ -126,3 +126,17 @@ export function getPreviousTime(currentTime: number, type: CandleType, interval:
 
   return date.getTime();
 }
+
+/**
+ * 정해진 유효숫자 개수만큼 숫자만 뽑아서 string으로 만들어주는 method
+ * @param value 숫자
+ * @param significantDigits 유효숫자개수
+ * @returns
+ */
+export function toSignificantString(value: number, significantDigits: number): string {
+  if (value === 0) return '0';
+
+  return value >= 1000
+    ? Number.parseFloat(value.toPrecision(significantDigits)).toLocaleString()
+    : Number.parseFloat(value.toPrecision(significantDigits)).toString();
+}

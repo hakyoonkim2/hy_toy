@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import style from '@bitCoinChart/style/AveragePriceCalculator.module.scss';
+import { toSignificantString } from '@bitCoinChart/utils/util';
 
 type Props = {
   symbol: string;
@@ -20,7 +21,7 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
   const [additionalPrice, setAdditionalPrice] = useState<number>(0);
   const [useTotalCost, setUseTotalCost] = useState<boolean>(false);
 
-  const getNewAveragePrice = () => {
+  const getNewAveragePrice = (): { newPriceAverage: string; newTotalAmount: string } => {
     const currentTotalCost = currentAmount * currentAvgPrice;
     let newTotalAmount = currentAmount;
     let newTotalCost = currentTotalCost;
@@ -36,9 +37,11 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
       newTotalCost += additionalAmount * additionalPrice;
     }
 
-    return newTotalAmount > 0
-      ? Number((newTotalCost / newTotalAmount).toFixed(2)).toLocaleString()
-      : '0';
+    return {
+      newPriceAverage:
+        newTotalAmount > 0 ? toSignificantString(newTotalCost / newTotalAmount, 8) : '0',
+      newTotalAmount: toSignificantString(newTotalAmount, 8),
+    };
   };
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -65,8 +68,13 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
     return () => {
       setCurrentAmount(0);
       setCurrentAvgPrice(0);
+      setAdditionalAmount(0);
+      setAdditionalPrice(0);
+      setAdditionalTotalCost(0);
     };
   }, [symbol]);
+
+  const result = getNewAveragePrice();
 
   return (
     <div className={style.container}>
@@ -143,8 +151,10 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
           onChange={(e) => setAdditionalPrice(parseFloat(e.target.value))}
         />
       </div>
-
-      <div className={style.result}>새로운 평균 단가: {getNewAveragePrice()}</div>
+      <div className={style.resultWrapper}>
+        <span className={style.result}>새로운 평균 단가: {result.newPriceAverage}</span>
+        <span className={style.result}>새로운 수량: {result.newTotalAmount}</span>
+      </div>
     </div>
   );
 };
