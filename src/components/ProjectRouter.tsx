@@ -4,6 +4,7 @@ import { lazy, Suspense } from 'react';
 import LoadingFallback from '@components/LoadingFallback';
 import ProjectNavigator from '@components/ProjectNavigator';
 import Header from '@components/Header';
+import TypingGame from '@typinggame/TypingGame';
 
 const isGitHub = import.meta.env.VITE_DEPLOY_TARGET === 'GH';
 
@@ -30,6 +31,7 @@ const ProjectRouter = () => {
               <Route index element={<CoinApp />} />
               {isMobile && <Route path="chartview" element={<CoinChartView />} />}
             </Route>
+            <Route path="/typinggame" element={<TypingGame />}></Route>
           </Routes>
         </Suspense>
       </div>

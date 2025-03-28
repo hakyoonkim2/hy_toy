@@ -15,10 +15,13 @@ function ProjectNavigator() {
   return (
     <div className={style.container}>
       <button className={style.projectBtn} data-path={'/stopwatch'} onClick={handleClick}>
-        {'Stopwatch'}
+        Stopwatch
       </button>
       <button className={style.projectBtn} data-path={'/coin'} onClick={handleClick}>
         Coin
+      </button>
+      <button className={style.projectBtn} data-path={'/typinggame'} onClick={handleClick}>
+        TypingGame
       </button>
     </div>
   );

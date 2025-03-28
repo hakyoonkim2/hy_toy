@@ -21,6 +21,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     },
     resolve: {
       alias: {
+        '@typinggame': path.resolve(__dirname, 'src/typinggame'),
         '@assets': path.resolve(__dirname, 'src/assets'),
         '@bitCoinChart': path.resolve(__dirname, 'src/bitCoinChart'),
         '@stopwatch': path.resolve(__dirname, 'src/stopwatch'),
