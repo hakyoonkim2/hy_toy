@@ -86,7 +86,6 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
           className={style.input}
           type="number"
           value={currentAmount}
-          defaultValue={0}
           onFocus={handleFocus}
           onChange={(e) => setCurrentAmount(parseFloat(e.target.value))}
         />
@@ -98,7 +97,6 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
           className={style.input}
           type="number"
           value={currentAvgPrice}
-          defaultValue={0}
           onFocus={handleFocus}
           onChange={(e) => setCurrentAvgPrice(parseFloat(e.target.value))}
         />
@@ -126,7 +124,6 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
             className={style.input}
             type="number"
             value={additionalTotalCost}
-            defaultValue={0}
             onFocus={handleFocus}
             onChange={(e) => setAdditionalTotalCost(parseFloat(e.target.value))}
           />
@@ -138,7 +135,6 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
             className={style.input}
             type="number"
             value={additionalAmount}
-            defaultValue={0}
             onFocus={handleFocus}
             onChange={(e) => setAdditionalAmount(parseFloat(e.target.value))}
           />
@@ -151,7 +147,6 @@ const AveragePriceCalculator = ({ symbol }: Props) => {
           className={style.input}
           type="number"
           value={additionalPrice}
-          defaultValue={0}
           onFocus={handleFocus}
           onChange={(e) => setAdditionalPrice(parseFloat(e.target.value))}
         />
