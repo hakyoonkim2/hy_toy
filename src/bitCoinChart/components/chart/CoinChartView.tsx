@@ -31,7 +31,7 @@ const CoinChartView = () => {
       style={{ paddingLeft: isMobile ? '0px' : '15px' }}
     >
       <CoinSearch />
-      <div style={{ flexDirection: 'column' }}>
+      <div style={{ flexDirection: 'column', marginTop: '10px' }}>
         <div className={style.chartwrapper}>
           <TradingViewChart symbol={symbol} />
           {isInUpbit ? <UpbitCoinChart symbol={symbol} /> : <></>}

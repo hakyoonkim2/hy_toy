@@ -1,12 +1,14 @@
 .chartwrapper {
   display: flex;
   margin-bottom: 10px;
+  gap: 3px;
 }
 
 .chart {
   width: 100%;
   height: 100%;
   position: relative;
+  min-width: 300px;
 }
 
 @media screen and (max-width: 768px) {

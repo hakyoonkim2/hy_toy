@@ -89,10 +89,11 @@ const UpbitCoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
     // 차트 생성 lightweight-charts 를 사용
     const chart = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
-      height: isMobile ? 250 : 500,
+      height: isMobile ? 250 : 499,
       layout: {
         background: { color: 'rgb(13, 13, 13)' },
         textColor: 'rgb(190, 190, 190)',
+        fontSize: isMobile ? 9 : 12,
       },
       grid: {
         vertLines: { color: 'rgb(15, 20 , 27)' },
@@ -281,11 +282,17 @@ const UpbitCoinChart: React.FC<CoinChartProps> = ({ symbol }) => {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <div className={style.chart}>
-        <div ref={chartContainerRef} />
-        <CandleSelector onChange={onChange} />
-      </div>
+    <div
+      className={style.chart}
+      style={{
+        width: '100%',
+        height: '100%',
+        outline: '1px solid #3d3d3d',
+        borderRadius: '3px',
+      }}
+    >
+      <div ref={chartContainerRef} />
+      <CandleSelector onChange={onChange} />
     </div>
   );
 };
