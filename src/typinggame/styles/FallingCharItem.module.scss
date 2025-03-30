@@ -1,0 +1,36 @@
+.char {
+  font-size: 24px;
+  font-weight: bold;
+  user-select: none;
+  pointer-events: none;
+  color: white;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  transition:
+    transform 0.5s ease,
+    opacity 0.5s ease;
+}
+
+.explode {
+  animation: explode 0.5s forwards;
+}
+
+/* 폭발 효과 */
+@keyframes explode {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    color: white;
+    text-shadow: none;
+  }
+  50% {
+    transform: scale(1.5) rotate(180deg);
+    color: gold;
+    text-shadow: 0 0 10px orange;
+  }
+  100% {
+    transform: scale(3) rotate(720deg);
+    opacity: 0;
+    color: red;
+    text-shadow: 0 0 20px red;
+  }
+}
