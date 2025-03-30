@@ -1,4 +1,4 @@
-name: CI/CD for
+name: CI/CD Pipeline hy_toy
 
 on:
   push:
