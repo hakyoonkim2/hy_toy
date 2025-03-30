@@ -6,8 +6,6 @@ import ProjectNavigator from '@components/ProjectNavigator';
 import Header from '@components/Header';
 import TypingGame from '@typinggame/TypingGame';
 
-const isGitHub = import.meta.env.VITE_DEPLOY_TARGET === 'GH';
-
 // 진입률이 낮을거 같아서 스플리팅
 // const StopWatch = lazy(() => import('../stopwatch/components/Stopwatch'));
 
@@ -19,8 +17,10 @@ const CoinChartView = lazy(() => import('../bitCoinChart/components/chart/CoinCh
  * 라우터
  */
 const ProjectRouter = () => {
+  const getBasename = () => (import.meta.env.VITE_DEPLOY_TARGET === 'GH' ? '/hy_toy/' : '/');
+
   return (
-    <BrowserRouter basename={isGitHub ? '/hy_toy/' : '/'}>
+    <BrowserRouter basename={getBasename()}>
       <div className="wrapper">
         <Header />
         <Suspense fallback={<LoadingFallback />}>
