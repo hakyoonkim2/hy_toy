@@ -9,7 +9,7 @@ import TypingGame from '@typinggame/TypingGame';
 const isGitHub = import.meta.env.VITE_DEPLOY_TARGET === 'GH';
 
 // 진입률이 낮을거 같아서 스플리팅
-const StopWatch = lazy(() => import('../stopwatch/components/Stopwatch'));
+// const StopWatch = lazy(() => import('../stopwatch/components/Stopwatch'));
 
 // chart는 대부분 웹소켓 웹워커 쉐어드워커 등 무거운 작업을 하므로 스플리팅
 const CoinAppWrapper = lazy(() => import('../bitCoinChart/components/CoinAppWrapper'));
@@ -26,7 +26,7 @@ const ProjectRouter = () => {
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/" element={<ProjectNavigator />} />
-            <Route path="/stopwatch" element={<StopWatch />} />
+            {/* <Route path="/stopwatch" element={<StopWatch />} /> */}
             <Route path="/coin" element={<CoinAppWrapper />}>
               <Route index element={<CoinApp />} />
               {isMobile && <Route path="chartview" element={<CoinChartView />} />}
