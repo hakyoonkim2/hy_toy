@@ -55,8 +55,6 @@
      컴포넌트 렌더링
 ```
 
----
-
 #### 🔍 상세 설명
 
 - **거래소 (Upbit, Binance)**  
@@ -68,19 +66,17 @@
 - **React 애플리케이션**  
   쓰로틀링된 데이터를 받아 `React Query`에 캐싱하고, 필요한 컴포넌트만 효율적으로 리렌더링합니다.
 
----
-
 #### ✅ 장점
 
 - **WebSocket 연결 최소화**: 하나의 Worker로 여러 탭 공유 (SharedWorker 사용 시)
 - **성능 최적화**: 빈번한 데이터 업데이트를 쓰로틀링으로 제어
 - **React Query 사용**: 전역 상태 관리 없이도 데이터 캐싱 및 갱신 용이
 
+---
+
 ## ⌨️ Typing Game
 
 **Skills:** React 18+, TypeScript, SCSS, React Device Detect
-
----
 
 ### 🔧 기능 및 구현 내용
 
@@ -110,8 +106,6 @@
   - PC와 모바일 환경에 맞게 게임 화면 크기 자동 조정
   - `react-device-detect`를 통해 모바일일 경우 UI 및 높이 조정
 
----
-
 ### 📡 게임 루프 구조
 
 ```plaintext
@@ -129,3 +123,37 @@
             ▼
 [ 올바른 키 입력 시: Char 제거 + 점수/콤보 증가 ]
 ```
+
+---
+
+## 🚀 hy_toy 프로젝트 CI/CD 파이프라인
+
+GitHub Actions를 활용한 **자동화된 CI/CD** 구조.  
+`main` 브랜치로 PR을 생성하면 코드 품질을 검사하고, 머지된 이후에는 자동으로 GitHub Pages에 배포.
+
+### 🧩 전체 워크플로우 개요
+
+| 트리거 이벤트           | Job 이름   | 설명                                 |
+| ----------------------- | ---------- | ------------------------------------ |
+| `pull_request` → `main` | 🧪 CI Test | Lint, Test 실행하여 코드 검증        |
+| `push` → `main`         | 🚀 Deploy  | 프로젝트 빌드 후 GitHub Pages에 배포 |
+
+Vercel의 경우 main 브랜치에 push된 경우 자동 배포 됨.
+
+### 🧪 CI 작업 (Pull Request 시 실행)
+
+- PR 생성 혹은 커밋 업데이트 시 자동 실행
+- 코드 다운로드 및 의존성 설치
+- ESLint 실행 (`npm run lint`)
+- 테스트 실행 (`npm run test`)
+
+### 🚀 배포 작업 (main 브랜치에 Push 시 실행)
+
+- main 브랜치에 커밋이 푸시되면 자동 실행
+- 프로젝트 빌드 (`npm run build`)
+- Git 정보 설정 (커밋용 봇 정보)
+- `gh-pages` 브랜치로 빌드 결과물 배포
+
+> GitHub에서 제공하는 `GITHUB_TOKEN`을 사용하여 인증 및 푸시 수행
+
+---
