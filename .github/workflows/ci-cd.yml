@@ -8,7 +8,7 @@ on:
 
 jobs:
   ci:
-    name: CI Test (pull_request)
+    name: CI Test
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -18,7 +18,7 @@ jobs:
       - run: npm run test
 
   deploy:
-    name: Deploy (push)
+    name: Deploy
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
