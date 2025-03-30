@@ -65,5 +65,8 @@
     "vite": "^6.2.0",
     "vite-plugin-remove-console": "^2.2.0",
     "vitest": "^3.0.9"
+  },
+  "overrides": {
+    "picomatch": "^4.0.2"
   }
 }
