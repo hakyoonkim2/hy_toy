@@ -1,4 +1,4 @@
-import style from '@typinggame/TypingGame.module.scss';
+import style from '@typinggame/styles/VitualKeyboard.module.scss';
 
 const rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
 

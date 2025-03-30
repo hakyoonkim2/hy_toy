@@ -1,5 +1,5 @@
 import { FallingChar } from '@typinggame/types/TypingGameTypes';
-import style from '@typinggame/TypingGame.module.scss';
+import style from '@typinggame/styles/FallingCharItem.module.scss';
 
 type Props = {
   fallingChar: FallingChar;

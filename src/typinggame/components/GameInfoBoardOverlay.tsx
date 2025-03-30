@@ -1,4 +1,4 @@
-import style from '@typinggame/TypingGame.module.scss';
+import style from '@typinggame/styles/GameInfoBoardOverlay.module.scss';
 
 type Props = {
   score: number;

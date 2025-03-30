@@ -3,7 +3,7 @@ import GameInfoBoardOverlay from '@typinggame/components/GameInfoBoardOverlay';
 import GameOverOverlay from '@typinggame/components/GameOverOverlay';
 import HealthBar from '@typinggame/components/HealthBar';
 import { FallingChar } from '@typinggame/types/TypingGameTypes';
-import style from '@typinggame/TypingGame.module.scss';
+import style from '@typinggame/styles/GameScreen.module.scss';
 
 type Props = {
   chars: FallingChar[];
