@@ -14,9 +14,9 @@ function ProjectNavigator() {
 
   return (
     <div className={style.container}>
-      <button className={style.projectBtn} data-path={'/stopwatch'} onClick={handleClick}>
+      {/* <button className={style.projectBtn} data-path={'/stopwatch'} onClick={handleClick}>
         Stopwatch
-      </button>
+      </button> */}
       <button className={style.projectBtn} data-path={'/coin'} onClick={handleClick}>
         Coin
       </button>
