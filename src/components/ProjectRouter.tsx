@@ -5,6 +5,7 @@ import LoadingFallback from '@components/LoadingFallback';
 import ProjectNavigator from '@components/ProjectNavigator';
 import Header from '@components/Header';
 import TypingGame from '@typinggame/TypingGame';
+import { AuthProvider } from '@/hooks/AuthContext';
 
 // 진입률이 낮을거 같아서 스플리팅
 // const StopWatch = lazy(() => import('../stopwatch/components/Stopwatch'));
@@ -21,20 +22,22 @@ const ProjectRouter = () => {
 
   return (
     <BrowserRouter basename={getBasename()}>
-      <div className="wrapper">
-        <Header />
-        <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/" element={<ProjectNavigator />} />
-            {/* <Route path="/stopwatch" element={<StopWatch />} /> */}
-            <Route path="/coin" element={<CoinAppWrapper />}>
-              <Route index element={<CoinApp />} />
-              {isMobile && <Route path="chartview" element={<CoinChartView />} />}
-            </Route>
-            <Route path="/typinggame" element={<TypingGame />}></Route>
-          </Routes>
-        </Suspense>
-      </div>
+      <AuthProvider>
+        <div className="wrapper">
+          <Header />
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<ProjectNavigator />} />
+              {/* <Route path="/stopwatch" element={<StopWatch />} /> */}
+              <Route path="/coin" element={<CoinAppWrapper />}>
+                <Route index element={<CoinApp />} />
+                {isMobile && <Route path="chartview" element={<CoinChartView />} />}
+              </Route>
+              <Route path="/typinggame" element={<TypingGame />}></Route>
+            </Routes>
+          </Suspense>
+        </div>
+      </AuthProvider>
     </BrowserRouter>
   );
 };

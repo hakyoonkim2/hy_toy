@@ -1,0 +1,37 @@
+.otherLogin {
+  display: flex;
+  flex-direction: column;
+}
+
+.notice {
+  background-color: #222;
+  border: 1px solid #444;
+  padding: 1rem;
+  border-radius: 12px;
+  color: #eee;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  animation: fadeIn 0.3s ease-in-out;
+
+  h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #9c9c9c;
+  }
+
+  strong {
+    color: #868686;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
