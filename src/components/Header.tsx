@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import HytoyLogo from '@assets/hytoyLogo.svg?react';
 import style from '@style/Header.module.scss';
+import UserInfo from '@components/account/UserInfo';
+import AuthFormBox from '@components/account/AuthFormBox';
+import { useAuth } from '@/hooks/AuthContext';
 
 /**
  * SPA 에서 항상 출력되는 헤더라인
@@ -9,6 +12,7 @@ import style from '@style/Header.module.scss';
  *
  */
 const Header = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
@@ -22,15 +26,16 @@ const Header = () => {
 
   return (
     <header>
-      <HytoyLogo
-        className={style.hytoylogo}
-        width="200px"
-        height="100px"
-        onClick={handleLogoClick}
-      />
-      <div className={style.right}>
-        {currentProject !== '' ? `${currentProject?.toUpperCase()}` : '프로젝트를 선택해주세요'}
+      <div className={style.left}>
+        <HytoyLogo
+          className={style.hytoylogo}
+          width="200px"
+          height="100px"
+          onClick={handleLogoClick}
+        />
+        {currentProject !== '' ? `${currentProject?.toUpperCase()}` : null}
       </div>
+      <div className={style.right}>{user ? <UserInfo /> : <AuthFormBox />}</div>
     </header>
   );
 };
