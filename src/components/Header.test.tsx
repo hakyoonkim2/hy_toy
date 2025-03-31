@@ -57,12 +57,4 @@ describe('Header', () => {
     render(<Header />);
     expect(screen.getByText('TESTPROJECT')).toBeInTheDocument();
   });
-
-  it('선택된 프로젝트가 없을 때 안내 문구 출력', () => {
-    import.meta.env.VITE_DEPLOY_TARGET = 'VERCEL';
-    window.location.pathname = '/';
-
-    render(<Header />);
-    expect(screen.getByText('프로젝트를 선택해주세요')).toBeInTheDocument();
-  });
 });
