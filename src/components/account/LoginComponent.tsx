@@ -41,13 +41,10 @@ const LoginComponent = ({ showSignUp }: Props) => {
           console.log('회원가입 성공:', result.user);
 
           if (auth.currentUser && name) {
-            await updateProfile(auth.currentUser, { displayName: name });
-          }
-
-          if (auth.currentUser) {
             await sendEmailVerification(auth.currentUser);
             setSubmittedEmail(email);
-            setEmailSent(true); // ✅ UI 메시지 활성화
+            setEmailSent(true);
+            await updateProfile(auth.currentUser, { displayName: name });
           }
         } else {
           const result = await signInWithEmailAndPassword(auth, email, password);
