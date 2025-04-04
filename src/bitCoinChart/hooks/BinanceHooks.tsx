@@ -17,25 +17,19 @@ interface CoinImage {
   image: string;
 }
 
-export const useSymbolImage = () => {
+export const useSymbolImage = (symbolList: string[]) => {
+  const symbolListParam = symbolList.join(',');
   return useQuery({
-    queryKey: ['symbol', 'images'],
+    queryKey: ['symbol', 'images', symbolListParam],
+    enabled: symbolList.length > 0,
     queryFn: async () => {
       const results: CoinImage[][] = [];
-      let count = 1;
 
-      while (count <= 3) {
-        const res = await fetch(
-          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=250&page=${count}`
-        );
-        count++;
-        const data = await res.json();
-        results.push(data);
-
-        // 너무 빠르게 연속 호출되지 않도록 약간 딜레이 (coingecko too many request 회피 목적으로 의도적으로 딜레이)
-        await new Promise((resolve) => setTimeout(resolve, 300));
-      }
-
+      const res = await fetch(
+        `https://proxy-server-flax-rho.vercel.app/api/proxy?icon=${symbolListParam}`
+      );
+      const data = await res.json();
+      results.push(data);
       const map = new Map();
 
       results.forEach((symbolDataArr: CoinImage[]) => {
