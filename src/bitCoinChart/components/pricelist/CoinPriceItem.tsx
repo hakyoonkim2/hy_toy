@@ -83,7 +83,6 @@ const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark, k
       });
     }
   };
-
   return (
     <div id={`${symbol}-pricelist`} className={style.priceItem} onClick={handleClick}>
       <div className={style.priceTitle}>
@@ -111,7 +110,7 @@ const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark, k
           >{`${priceChange}% `}</strong>
           <strong className={style.price} style={{ marginLeft: '10px' }}>{`USD`}</strong>
         </div>
-        {price && krwData && exchangeRatio ? (
+        {price && krwData && krwData.price && exchangeRatio ? (
           <div className={style.krwPrice}>
             <strong>김프: &nbsp;</strong>
             <strong

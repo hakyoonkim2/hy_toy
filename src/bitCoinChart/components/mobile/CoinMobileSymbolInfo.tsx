@@ -40,7 +40,9 @@ const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) =
   });
 
   const kpPositive =
-    krwData && exchangeRatio && price && krwData.price / exchangeRatio - price > 0 ? true : false;
+    krwData && krwData.price && exchangeRatio && price && krwData.price / exchangeRatio - price > 0
+      ? true
+      : false;
 
   return (
     <div className={style.container}>
@@ -62,7 +64,7 @@ const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) =
           <span>{parseFloat(priceChange) > 0 ? '▲' : '▼'}</span>
           <span>{diff.toString()}</span>
         </div>
-        {price && krwData && exchangeRatio ? (
+        {price && krwData && krwData.price && exchangeRatio ? (
           <div className={style.changeInfo}>
             <span>김프: &nbsp;</span>
             <span
