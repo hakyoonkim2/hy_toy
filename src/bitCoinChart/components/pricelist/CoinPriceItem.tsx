@@ -15,19 +15,13 @@ import CoinIcon from '@bitCoinChart/components/CoinIcon';
 type CoinPriceItemProps = {
   symbol: string;
   toggleBookmark: (symbol: string) => void;
-  imgSrc?: string;
   koreanSymbol?: string;
 };
 
 /**
  * 여러 종목 리스트의 현재가격을 실시간으로 추적하는 UI
  */
-const CoinPriceItem: React.FC<CoinPriceItemProps> = ({
-  symbol,
-  toggleBookmark,
-  imgSrc,
-  koreanSymbol,
-}) => {
+const CoinPriceItem: React.FC<CoinPriceItemProps> = ({ symbol, toggleBookmark, koreanSymbol }) => {
   const { setSymbol } = useSymbol();
   const { data } = useBinanceSymbolData(symbol);
   const { data: krwData } = useUpbitSymbolData(symbol);
@@ -94,7 +88,7 @@ const CoinPriceItem: React.FC<CoinPriceItemProps> = ({
     <div id={`${symbol}-pricelist`} className={style.priceItem} onClick={handleClick}>
       <div className={style.priceTitle}>
         <div style={{ alignItems: 'center', display: 'flex' }}>
-          <CoinIcon imgSrc={imgSrc} />
+          <CoinIcon symbol={symbol} />
           <strong className={style.symbolListLabel}>{symbol.replace('USDT', '')}</strong>
           {koreanSymbol && <strong className={style.priceKoreanLabel}>{`${koreanSymbol}`}</strong>}
         </div>
