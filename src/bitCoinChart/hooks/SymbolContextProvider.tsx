@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { UpbitSymbol } from '@bitCoinChart/worker/upbit/type/UpbitWorkerTypes';
 import { WorkerMessageEnum } from '@bitCoinChart/worker/enum/WorkerMessageEnum';
 import { isSharedWorker } from '@bitCoinChart/utils/util';
+import { useSymbolImages } from '@bitCoinChart/hooks/BinanceHooks';
 
 export const SymbolContext = createContext<{
   symbol: string;
@@ -32,6 +33,7 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
   const queryClient = useQueryClient();
   const isListInit = useRef(false);
   const isUpbitListInit = useRef(false);
+  useSymbolImages(symbolList);
 
   useEffect(() => {
     // server -> sharedWorker| worker -> client 로 전달된 데이터 핸들링

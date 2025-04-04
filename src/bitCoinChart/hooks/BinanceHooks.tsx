@@ -1,5 +1,6 @@
 import { CurrentPriceData } from '@bitCoinChart/types/CoinTypes';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 export const useBinanceSymbolData = (symbol: string) => {
   return useQuery<CurrentPriceData | null>({
@@ -17,36 +18,39 @@ interface CoinImage {
   image: string;
 }
 
-export const useSymbolImage = () => {
-  return useQuery({
-    queryKey: ['symbol', 'images'],
-    queryFn: async () => {
-      const results: CoinImage[][] = [];
-      let count = 1;
+export const useSymbolImages = (symbolList: string[]) => {
+  const queryClient = useQueryClient();
+  const symbolListParam = symbolList.map((symbol) => symbol.replace('USDT', '')).join(',');
 
-      while (count <= 3) {
-        const res = await fetch(
-          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=250&page=${count}`
+  useEffect(() => {
+    const fetchImages = async () => {
+      if (symbolList.length === 0) return;
+
+      const results: CoinImage[] = [];
+
+      const res = await fetch(
+        `https://proxy-server-flax-rho.vercel.app/api/proxy?icon=${symbolListParam}`
+      );
+      const data = await res.json();
+      results.push(...data);
+      const map = new Map<string, string>();
+
+      results.forEach((symbolData: CoinImage) => {
+        map.set(symbolData.symbol, symbolData.image);
+        // react-query에 캐시로 저장 (key: ['symbolImage', symbol])
+        queryClient.setQueryData(
+          ['symbolImage', symbolData.symbol.toLowerCase()],
+          symbolData.image
         );
-        count++;
-        const data = await res.json();
-        results.push(data);
-
-        // 너무 빠르게 연속 호출되지 않도록 약간 딜레이 (coingecko too many request 회피 목적으로 의도적으로 딜레이)
-        await new Promise((resolve) => setTimeout(resolve, 300));
-      }
-
-      const map = new Map();
-
-      results.forEach((symbolDataArr: CoinImage[]) => {
-        symbolDataArr.forEach((symbolData: CoinImage) => {
-          map.set(symbolData.symbol, symbolData.image);
-        });
       });
 
-      return map;
-    },
-    staleTime: Infinity, // worker를 통해 수동으로 적재하므로 staleTime을 높게 설정
-    gcTime: Infinity,
-  });
+      queryClient.setQueryData(['symbolImages'], map);
+    };
+
+    fetchImages();
+  }, [symbolList, queryClient]);
+
+  const imageMap = queryClient.getQueryData<Map<string, string>>(['symbolImages']) || new Map();
+
+  return { data: imageMap };
 };
