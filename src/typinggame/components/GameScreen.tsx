@@ -44,7 +44,7 @@ const GameScreen = ({
       ))}
 
       <HealthBar health={health} />
-      {isGameOver && <GameOverOverlay restartGame={restartGame} />}
+      {isGameOver && <GameOverOverlay restartGame={restartGame} score={score} />}
     </div>
   );
 };

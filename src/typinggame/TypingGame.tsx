@@ -3,7 +3,7 @@ import VirtualKeyboard from '@typinggame/components/VitualKeyboard';
 import useTypingGame from '@typinggame/hooks/useTypingGame';
 import GameScreen from '@typinggame/components/GameScreen';
 
-export default function TypingGame() {
+const TypingGame = () => {
   const {
     isGameOver,
     handleVirtualKeyPress,
@@ -37,4 +37,6 @@ export default function TypingGame() {
       />
     </div>
   );
-}
+};
+
+export default TypingGame;
