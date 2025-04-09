@@ -10,6 +10,9 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({ user: null, setShowingLogin: () => {} });
 
+/**
+ * @deprecated zustand로 마이그레이션 예정
+ */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [showingLogin, setShowingLogin] = useState<boolean>(false);

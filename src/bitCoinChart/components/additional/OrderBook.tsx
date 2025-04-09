@@ -4,6 +4,7 @@ import { CoinWebSocketContext } from '@bitCoinChart/context/CoinWebSocketContext
 import { isUsCountry } from '@bitCoinChart/worker/util/WorkerUtils';
 import { BINANCE_WEBSOCKET_URL, BINANCE_WEBSOCKET_US_URL } from '@bitCoinChart/types/CoinTypes';
 import LoadingFallback from '@components/LoadingFallback';
+import useTradeStore from '@bitCoinChart/store/useTradeStore';
 
 type Order = [string, string];
 
@@ -21,6 +22,7 @@ export const OrderBook: React.FC<OrderBookProps> = ({ symbol }) => {
   const blue = '#4386f9';
   const { candleData } = useContext(CoinWebSocketContext);
   const lastPrice = candleData.at(-1)?.close;
+  const setSelectedPrice = useTradeStore((s) => s.setSelectedPrice);
 
   // 최대 수량 계산 (비율 바를 위해)
   const getMaxAmount = () => {
@@ -45,7 +47,7 @@ export const OrderBook: React.FC<OrderBookProps> = ({ symbol }) => {
     });
 
     return () => {
-      socket.close();
+      if (socket) socket.close();
     };
   }, [symbol]);
 
@@ -61,11 +63,17 @@ export const OrderBook: React.FC<OrderBookProps> = ({ symbol }) => {
     };
 
     const rowStyle = {
-      border: lastPrice?.toString() === parseFloat(price).toString() ? '1px solid #FFFFFF' : 'none',
+      outline:
+        lastPrice?.toString() === parseFloat(price).toString() ? '1px solid #FFFFFF' : 'none',
     };
 
     return (
-      <div key={price} className={style.rowStyle} style={rowStyle}>
+      <div
+        key={price}
+        className={style.rowStyle}
+        style={rowStyle}
+        onClick={() => setSelectedPrice(parseFloat(price))}
+      >
         <div className={style.barstyle} style={barStyle}></div>
         <span style={{ color: type === 'ask' ? blue : red, fontWeight: 600 }}>
           {parseFloat(price)}

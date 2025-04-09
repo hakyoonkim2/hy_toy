@@ -9,8 +9,9 @@ import AveragePriceCalculator from '@bitCoinChart/components/additional/AverageP
 import CoinMobileSymbolInfo from '@bitCoinChart/components/mobile/CoinMobileSymbolInfo';
 import TradingViewChart from '@bitCoinChart/components/chart/TradingViewChart';
 import UpbitCoinChart from '@bitCoinChart/components/chart/UpbitCoinChart';
+import PaperTrade from '@bitCoinChart/components/trade/PaperTrade';
 
-const TABS = ['차트', '호가', '시세', '평단'] as const;
+const TABS = ['차트', '호가', '시세', '평단', '모의투자'] as const;
 
 type Tab = (typeof TABS)[number];
 
@@ -56,6 +57,7 @@ const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
             )}
             {activeTab === '시세' && <TradeHistory symbol={symbol} />}
             {activeTab === '평단' && <AveragePriceCalculator symbol={symbol} />}
+            {activeTab === '모의투자' && <PaperTrade symbol={symbol} />}
           </CoinWebSocketProvider>
         </div>
       </div>
