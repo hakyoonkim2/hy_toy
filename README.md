@@ -72,6 +72,45 @@
 - **성능 최적화**: 빈번한 데이터 업데이트를 쓰로틀링으로 제어
 - **React Query 사용**: 전역 상태 관리 없이도 데이터 캐싱 및 갱신 용이
 
+## 실시간 거래 체결 구조 추가
+
+- 클라이언트에서 체결 처리 로직 구현
+- 주문 매칭 및 체결은 `matchOrders()` 함수에서 처리
+- 매수/매도 각각:
+  - 보유 자산(`holdings`) 업데이트
+  - 현금(`wallet`) 업데이트
+  - 주문(`orders`) 삭제
+  - 체결 이력(`fills`) 저장
+- 부분 체결이 아닌 **단일 주문 단일 체결** 기준
+- 체결된 주문은 `fills` 컬렉션에 이력으로 남음 (orderId 참조 포함)
+
+### Firebase Firestore 연동 구조 개선
+
+- 주문(order) 저장: `coinwallet/{uid}/orders`
+- 체결(fills): `coinwallet/{uid}/fills`
+- 보유 자산: `coinwallet/{uid}/holdings/{symbol}`
+- 현금 지갑: `coinwallet/{uid}` 내부 필드 `cash`
+- `initFromServer(uid)` 호출 시:
+  - wallet, holdings, orders 데이터를 병렬로 fetch
+  - wallet이 없는 경우 `cash: "100000"`으로 자동 생성
+
+### 주문 완료 후 주문 → 체결 테이블 이동
+
+- `writeBatch`를 사용해 `orders` 문서 삭제 + `fills` 문서로 이동 동시 처리
+- 원래 주문의 `docId`를 `orderId`로 `fills`에 저장하여 추적 가능
+- 체결 이력은 `serverTimestamp()` 기준으로 시간 저장
+
+### Decimal 연산 유틸 정리 및 적용
+
+- 모든 금액/수량 계산은 `Decimal.js` 기반 유틸 함수 사용
+- `mulDecimals`, `addDecimals`, `divideDecimals`, `safeMul`, `safeDivide` 등 활용
+- **소수점 8 자리 정밀도 유지**로 실거래소 수준의 계산 신뢰성 확보
+
+### 상태 관리 (Zustand)
+
+- `useTradeStore` 내 `cash`, `holdings`, `orders`, `selectedPrice` 등 구독 방식 최적화
+- `initFromServer`로 서버 상태를 store에 불러오고 초기화 가능
+
 ---
 
 ## ⌨️ Typing Game
