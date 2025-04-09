@@ -1,0 +1,206 @@
+.container {
+  background-color: #121212;
+  padding: 1rem 0;
+  border: 1px solid #333;
+  border-radius: 12px;
+  color: #ddd;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 300px;
+
+  input {
+    text-align: right;
+  }
+}
+
+.titleRow {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: #aaa;
+  text-align: center;
+}
+
+.bottomButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ccc;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ccc;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    background-color: #222;
+  }
+}
+
+.contentContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 1rem;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1rem 0;
+}
+
+.rowContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  padding: 0 1rem;
+
+  input {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+    color: #eee;
+    width: 120px;
+    text-align: right;
+
+    &:disabled {
+      color: #777;
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+  }
+
+  button {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ccc;
+    font-size: 0.7rem;
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.orderList {
+  font-size: 0.75rem;
+  color: #ccc;
+  width: 100%;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(255, 255, 255, 0.02);
+    overflow: hidden;
+
+    th,
+    td {
+      padding: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: center;
+    }
+
+    th {
+      font-weight: 600;
+      color: #999;
+    }
+
+    td {
+      color: #ddd;
+    }
+
+    button {
+      font-size: 0.7rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ccc;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+}
+
+.betaWrapper {
+  position: absolute;
+  right: 0.7rem;
+  top: -0.3rem;
+  &:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.betaBadge {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  background-color: rgb(119, 119, 255);
+  color: white;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  cursor: default;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.tooltip {
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  white-space: pre-line;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  width: 220px;
+  z-index: 10;
+}

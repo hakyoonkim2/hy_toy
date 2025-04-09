@@ -1,3 +1,4 @@
+import { Timestamp } from 'firebase/firestore';
 import { CandlestickData, Time } from 'lightweight-charts';
 
 export const BINANCE_WEBSOCKET_URL = 'wss://stream.binance.com:9443/ws/';
@@ -57,3 +58,23 @@ export type UpbitCandleChartData = {
 };
 
 export type CandleType = 'seconds' | 'minutes' | 'days' | 'weeks' | 'months' | 'years';
+
+export type Order = {
+  docId: string;
+  symbol: string;
+  price: string;
+  amount: string;
+  filledAmount: string;
+  side: 'buy' | 'sell';
+  timestamp: Timestamp;
+};
+
+export type Holding = {
+  symbol: string;
+  price: string;
+  amount: string;
+};
+
+export type Wallet = {
+  cash: string;
+};

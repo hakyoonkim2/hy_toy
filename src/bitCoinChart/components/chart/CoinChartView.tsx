@@ -10,6 +10,8 @@ import AveragePriceCalculator from '@bitCoinChart/components/additional/AverageP
 import CoinMobileTab from '@bitCoinChart/components/mobile/CoinMobileTab';
 import TradingViewChart from '@bitCoinChart/components/chart/TradingViewChart';
 import UpbitCoinChart from '@bitCoinChart/components/chart/UpbitCoinChart';
+import PaperTrade from '@bitCoinChart/components/trade/PaperTrade';
+import CoinSymbolInfo from '@bitCoinChart/components/CoinSymbolInfo';
 
 /**
  * 차트 제공 UI
@@ -31,20 +33,24 @@ const CoinChartView = () => {
       style={{ paddingLeft: isMobile ? '0px' : '15px' }}
     >
       <CoinSearch />
+      <CoinSymbolInfo symbol={symbol} />
       <div style={{ flexDirection: 'column', marginTop: '10px' }}>
-        <div className={style.chartwrapper}>
+        <div className={style.chartwrapper} style={{ minWidth: '1200px' }}>
           <TradingViewChart symbol={symbol} />
           {isInUpbit ? <UpbitCoinChart symbol={symbol} /> : <></>}
         </div>
         <div style={{ flexDirection: 'row', display: 'flex' }}>
-          <div style={{ minWidth: '300px' }}>
-            <OrderBook symbol={symbol} />
-          </div>
-          <div style={{ minWidth: '300px', marginLeft: '20px' }}>
-            <CoinWebSocketProvider symbol={symbol}>
+          <CoinWebSocketProvider symbol={symbol}>
+            <div style={{ minWidth: '300px' }}>
+              <OrderBook symbol={symbol} />
+            </div>
+            <div style={{ minWidth: '400px', marginLeft: '20px' }}>
+              <PaperTrade symbol={symbol.replace('USDT', '')} />
+            </div>
+            <div style={{ minWidth: '300px', marginLeft: '20px' }}>
               <TradeHistory symbol={symbol} />
-            </CoinWebSocketProvider>
-          </div>
+            </div>
+          </CoinWebSocketProvider>
           <div style={{ minWidth: '300px', marginLeft: '20px' }}>
             <AveragePriceCalculator symbol={symbol} />
           </div>

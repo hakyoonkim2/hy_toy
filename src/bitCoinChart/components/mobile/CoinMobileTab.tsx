@@ -6,11 +6,12 @@ import CoinWebSocketProvider from '@bitCoinChart/context/CoinWebSocketContext';
 import { OrderBook } from '@bitCoinChart/components/additional/OrderBook';
 import TradeHistory from '@bitCoinChart/components/additional/TradeHistory';
 import AveragePriceCalculator from '@bitCoinChart/components/additional/AveragePriceCalculator';
-import CoinMobileSymbolInfo from '@bitCoinChart/components/mobile/CoinMobileSymbolInfo';
 import TradingViewChart from '@bitCoinChart/components/chart/TradingViewChart';
 import UpbitCoinChart from '@bitCoinChart/components/chart/UpbitCoinChart';
+import PaperTrade from '@bitCoinChart/components/trade/PaperTrade';
+import CoinSymbolInfo from '@bitCoinChart/components/CoinSymbolInfo';
 
-const TABS = ['차트', '호가', '시세', '평단'] as const;
+const TABS = ['차트', '호가', '시세', '평단', '모의투자'] as const;
 
 type Tab = (typeof TABS)[number];
 
@@ -29,7 +30,7 @@ const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
   return (
     <div className={style.mobileTabContainer}>
       <CoinSearch />
-      <CoinMobileSymbolInfo symbol={symbol} />
+      <CoinSymbolInfo symbol={symbol} />
       <div style={{ display: 'flex' }}>
         {TABS.map((tab) => (
           <div
@@ -56,6 +57,7 @@ const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
             )}
             {activeTab === '시세' && <TradeHistory symbol={symbol} />}
             {activeTab === '평단' && <AveragePriceCalculator symbol={symbol} />}
+            {activeTab === '모의투자' && <PaperTrade symbol={symbol} />}
           </CoinWebSocketProvider>
         </div>
       </div>

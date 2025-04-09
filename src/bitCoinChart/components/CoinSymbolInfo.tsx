@@ -1,6 +1,6 @@
 import Decimal from 'decimal.js';
 import ArrowLeft from '@assets/ArrowLeft.svg?react';
-import style from '@bitCoinChart/style/CoinMobileSymbolInfo.module.scss';
+import style from '@bitCoinChart/style/CoinSymbolInfo.module.scss';
 import coinsearchStyle from '@bitCoinChart/style/SearchFrom.module.scss';
 import { useBinanceSymbolData } from '@bitCoinChart/hooks/BinanceHooks';
 import CoinIcon from '@bitCoinChart/components/CoinIcon';
@@ -8,12 +8,13 @@ import { useSymbol } from '@bitCoinChart/hooks/SymbolContextProvider';
 import { fetchExchangeRate, findKoreanSymbol } from '@bitCoinChart/utils/util';
 import { useQuery } from '@tanstack/react-query';
 import { useUpbitSymbolData } from '@bitCoinChart/hooks/UpbitHooks';
+import { isMobile } from 'react-device-detect';
 
-type CoinMobileSymbolInfoProps = {
+type CoinMSymbolInfoProps = {
   symbol: string;
 };
 
-const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) => {
+const CoinSymbolInfo: React.FC<CoinMSymbolInfoProps> = ({ symbol }) => {
   const { data } = useBinanceSymbolData(symbol);
   const { upbitSymbolList } = useSymbol();
   const { data: krwData } = useUpbitSymbolData(symbol);
@@ -45,9 +46,9 @@ const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) =
       : false;
 
   return (
-    <div className={style.container}>
+    <div className={style.container} style={isMobile ? {} : { flexDirection: 'row' }}>
       <div className={style.topRow}>
-        <ArrowLeft className={style.backIcon} onClick={handleBack} />
+        {isMobile && <ArrowLeft className={style.backIcon} onClick={handleBack} />}
         <CoinIcon symbol={symbol} />
         <span className={coinsearchStyle.selectedValue}>{symbol.replace('USDT', '')}</span>
         {koreanSymbol && (
@@ -57,7 +58,20 @@ const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) =
           >{`${koreanSymbol}`}</span>
         )}
       </div>
-      <div className={style.priceBox} style={{ color: data?.color }}>
+      <div
+        className={style.priceBox}
+        style={
+          isMobile
+            ? { color: data?.color }
+            : {
+                flexDirection: 'row',
+                color: data?.color,
+                display: 'flex',
+                placeItems: 'baseline',
+                gap: '1rem',
+              }
+        }
+      >
         <div className={style.price}>{data?.price}</div>
         <div className={style.changeInfo} style={{ color: data?.color }}>
           <span>{`${priceChange} %`}</span>
@@ -81,4 +95,4 @@ const CoinMobileSymbolInfo: React.FC<CoinMobileSymbolInfoProps> = ({ symbol }) =
   );
 };
 
-export default CoinMobileSymbolInfo;
+export default CoinSymbolInfo;

@@ -1,14 +1,12 @@
 import { ChangeEvent, useActionState, useRef, useState, useMemo } from 'react';
 import style from '@bitCoinChart/style/SearchFrom.module.scss';
-import { isMobile } from 'react-device-detect';
 import ClearIcon from '@bitCoinChart/assets/ClearIcon.svg?react';
 import SearchIcon from '@bitCoinChart/assets/SearchIcon.svg?react';
 import { useSymbol } from '@bitCoinChart/hooks/SymbolContextProvider';
-import { findKoreanSymbol, searchCoinKeyword } from '@bitCoinChart/utils/util';
-import CoinIcon from '@bitCoinChart/components/CoinIcon';
+import { searchCoinKeyword } from '@bitCoinChart/utils/util';
 
 const CoinSearch = () => {
-  const { symbolList, symbol, setSymbol, upbitSymbolList } = useSymbol();
+  const { symbolList, setSymbol, upbitSymbolList } = useSymbol();
   const [inputValue, setInputValue] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1); // 키보드 이동용
@@ -116,8 +114,6 @@ const CoinSearch = () => {
     }
   };
 
-  const koreanSymbol = findKoreanSymbol(symbol, upbitSymbolList);
-
   return (
     <div className={style.seachContainer}>
       <form className={style.searchFrom} action={formAction}>
@@ -162,19 +158,6 @@ const CoinSearch = () => {
             </li>
           ))}
         </ul>
-      )}
-
-      {!isMobile && (
-        <div className={style.selectedSymbolBox}>
-          <CoinIcon symbol={symbol} />
-          <span className={style.selectedValue}>{symbol.replace('USDT', '')}</span>
-          {koreanSymbol && (
-            <span
-              className={style.selectedUnit}
-              style={{ marginLeft: '6px' }}
-            >{`${koreanSymbol}`}</span>
-          )}
-        </div>
       )}
     </div>
   );
