@@ -57,7 +57,7 @@ const CoinMobileTab: React.FC<CoinMobileTabProps> = ({ symbol }) => {
             )}
             {activeTab === '시세' && <TradeHistory symbol={symbol} />}
             {activeTab === '평단' && <AveragePriceCalculator symbol={symbol} />}
-            {activeTab === '모의투자' && <PaperTrade symbol={symbol} />}
+            {activeTab === '모의투자' && <PaperTrade symbol={symbol.replace('USDT','')} />}
           </CoinWebSocketProvider>
         </div>
       </div>
