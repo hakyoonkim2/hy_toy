@@ -38,5 +38,5 @@ export const safeMul = (a: string | number, b: string | number): string => {
 };
 
 export const isGreaterThen = (a: string | number, b: string | number): boolean => {
-  return new Decimal(a).gte(b);
+  return new Decimal(a).gt(b);
 };
