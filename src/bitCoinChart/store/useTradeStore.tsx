@@ -23,7 +23,6 @@ interface TradeState {
   // 추가
   selectedPrice: number | null;
   setSelectedPrice: (price: number | null) => void;
-  // reset: () => void
 }
 
 const useTradeStore = create<TradeState>((set, get) => ({

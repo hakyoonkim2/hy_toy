@@ -11,6 +11,7 @@ import CoinMobileTab from '@bitCoinChart/components/mobile/CoinMobileTab';
 import TradingViewChart from '@bitCoinChart/components/chart/TradingViewChart';
 import UpbitCoinChart from '@bitCoinChart/components/chart/UpbitCoinChart';
 import PaperTrade from '@bitCoinChart/components/trade/PaperTrade';
+import CoinSymbolInfo from '@bitCoinChart/components/CoinSymbolInfo';
 
 /**
  * 차트 제공 UI
@@ -32,6 +33,7 @@ const CoinChartView = () => {
       style={{ paddingLeft: isMobile ? '0px' : '15px' }}
     >
       <CoinSearch />
+      <CoinSymbolInfo symbol={symbol} />
       <div style={{ flexDirection: 'column', marginTop: '10px' }}>
         <div className={style.chartwrapper} style={{ minWidth: '1200px' }}>
           <TradingViewChart symbol={symbol} />
