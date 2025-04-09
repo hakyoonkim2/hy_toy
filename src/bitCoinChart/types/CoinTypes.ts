@@ -74,3 +74,7 @@ export type Holding = {
   price: string;
   amount: string;
 };
+
+export type Wallet = {
+  cash: string;
+};

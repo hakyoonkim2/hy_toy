@@ -62,9 +62,7 @@ const PaperTrade = ({ symbol }: Props) => {
   }, [selectedPrice, user]);
 
   useEffect(() => {
-    if (user?.uid) {
-      initFromServer(user.uid);
-    }
+    initFromServer(user?.uid);
   }, [user]);
 
   useEffect(() => {
@@ -208,8 +206,17 @@ const PaperTrade = ({ symbol }: Props) => {
 
   return (
     <div className={styles.container}>
-      <label className={styles.title}>모의투자</label>
-
+      <div className={styles.titleRow}>
+        <label className={styles.title}>모의투자</label>
+        <span className={styles.betaWrapper}>
+          <span className={styles.betaBadge}>Beta</span>
+          <div className={styles.tooltip}>
+            현재 모의 투자는 현재 사이트에 접속한 상태일때만 주문체결이 가능합니다.
+            <br />
+            웹사이트에 접속하지 않은 경우 체결에대한 기능은 조만간 도입예정입니다.
+          </div>
+        </span>
+      </div>
       <div style={{ display: 'flex', width: '100%' }}>
         {TABS.map((tab) => (
           <div

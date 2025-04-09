@@ -17,6 +17,14 @@
   }
 }
 
+.titleRow {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
 .title {
   font-size: 0.85rem;
   font-weight: 500;
@@ -155,4 +163,44 @@
       }
     }
   }
+}
+
+.betaWrapper {
+  position: absolute;
+  right: 0.7rem;
+  top: -0.3rem;
+  &:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.betaBadge {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  background-color: rgb(119, 119, 255);
+  color: white;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  cursor: default;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.tooltip {
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  white-space: pre-line;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  width: 220px;
+  z-index: 10;
 }
