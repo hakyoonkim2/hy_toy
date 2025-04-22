@@ -50,11 +50,12 @@ async function getBinanceOpenPrice(symbol: string) {
     // 어제의 open price (1d 캔들의 시작가)
     const openPrice = data.length >= 2 ? data[1][1] : data[0][1];
     const curPrice = data.length >= 2 ? data[1][4] : data[0][4];
+    const asset = data[0][7];
 
-    return { symbol, openPrice, curPrice };
+    return { symbol, openPrice, curPrice, asset };
   } catch (error) {
     console.error(`Error fetching data for ${symbol}:`, error);
-    return { symbol, openPrice: null, curPrice: null };
+    return { symbol, openPrice: null, curPrice: null, asset: null };
   }
 }
 
@@ -74,11 +75,12 @@ export async function fetchBinanceAllOpenPrices(priceMap: PriceMap) {
     let color = '#FFFFFF';
     const curPrice = parseFloat(x.curPrice);
     const openPrice = parseFloat(x.openPrice);
+    const asset = parseFloat(x.asset);
     if (openPrice < curPrice) {
       color = '#f75467';
     } else if (openPrice > curPrice) {
       color = '#4386f9';
     }
-    priceMap[x.symbol] = { price: curPrice, color: color, openPrice: openPrice };
+    priceMap[x.symbol] = { price: curPrice, color: color, openPrice: openPrice, asset };
   });
 }
