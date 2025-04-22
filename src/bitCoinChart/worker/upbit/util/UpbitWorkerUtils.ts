@@ -27,6 +27,6 @@ export async function fetchUpbitAllOpenPrices(priceMap: PriceMap, symbols: Upbit
   console.log(`Fetching open prices for ${symbols.length} symbols...`);
 
   symbols.forEach((x) => {
-    priceMap[x.market] = { price: 0, color: '#FFFFFF', openPrice: 0 };
+    priceMap[x.market] = { price: 0, color: '#FFFFFF', openPrice: 0, asset: 0 };
   });
 }

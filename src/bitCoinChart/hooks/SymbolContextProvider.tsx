@@ -47,9 +47,11 @@ const SymbolContextProvider = ({ children }: { children: ReactNode }) => {
 
         // symbolList가 구성되어있지 않았을때만 setting
         if (isListInit.current === false) {
-          const symbols = Object.keys(data.data);
+          const symbols = Object.keys(data.data).sort(
+            (a, b) => data.data[b].asset - data.data[a].asset
+          );
           if (symbols.length > 0) {
-            setSymbolList(Object.keys(data.data));
+            setSymbolList(symbols);
             isListInit.current = true;
           }
         }

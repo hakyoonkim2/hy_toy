@@ -10,12 +10,13 @@ export function dataSetting<T extends BinanceTickerData | UpbitTickerData>(
   newMessageMap: PriceMap
 ) {
   symbolFilterArr.forEach((x) => {
-    const { symbol, price: curPrice, openPrice } = getSymbolAndPrice(x);
+    const { symbol, price: curPrice, asset, openPrice } = getSymbolAndPrice(x);
 
     if (priceMap[symbol]) {
       const color = getPriceColor(priceMap[symbol].openPrice, curPrice);
       priceMap[symbol].price = curPrice;
       priceMap[symbol].color = color;
+      priceMap[symbol].asset = asset;
       if (openPrice) {
         priceMap[symbol].openPrice = openPrice;
       }
@@ -31,14 +32,16 @@ export function dataSetting<T extends BinanceTickerData | UpbitTickerData>(
 function getSymbolAndPrice(item: BinanceTickerData | UpbitTickerData): {
   symbol: string;
   price: number;
+  asset: number;
   openPrice?: number;
 } {
   if ('s' in item && 'c' in item) {
-    return { symbol: item.s, price: parseFloat(item.c) }; // Binance
+    return { symbol: item.s, price: parseFloat(item.c), asset: parseFloat(item.q) }; // Binance
   } else if ('code' in item && 'trade_price' in item) {
     return {
       symbol: item.code,
       price: item.trade_price,
+      asset: item.acc_trade_price_24h,
       openPrice: item.opening_price,
     }; // Upbit
   } else {
