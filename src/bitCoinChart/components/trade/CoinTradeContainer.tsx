@@ -9,6 +9,7 @@ const CoinTradeContainer = () => {
   const orders = useTradeStore((state) => state.orders);
   const { matchOrders } = useTradeStore.getState();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isMatchingRef = useRef(false);
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
@@ -16,6 +17,8 @@ const CoinTradeContainer = () => {
     const ordersSymbols = new Set(orders.map((order) => order.symbol));
     if (!intervalRef.current) {
       intervalRef.current = setInterval(() => {
+        if (isMatchingRef.current) return;
+
         const matchList: Order[] = [];
 
         ordersSymbols.forEach((value) => {
@@ -42,7 +45,12 @@ const CoinTradeContainer = () => {
           }
         });
         if (matchList.length > 0 && user) {
-          matchOrders(matchList, user.uid);
+          isMatchingRef.current = true;
+          matchOrders(matchList, user.uid)
+            .catch(console.error)
+            .finally(() => {
+              isMatchingRef.current = false;
+            });
         }
       }, 500);
     }

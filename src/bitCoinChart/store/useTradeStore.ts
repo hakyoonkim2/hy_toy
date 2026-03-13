@@ -1,8 +1,9 @@
 import { firebaseDB } from '@/firebase/firebase.config';
-import { Holding, Order, Wallet } from '@bitCoinChart/types/CoinTypes';
+import { Fill, Holding, Order, Wallet } from '@bitCoinChart/types/CoinTypes';
 import {
   addDecimals,
   divideDecimals,
+  isGreaterThen,
   minusDecimals,
   mulDecimals,
 } from '@bitCoinChart/utils/DecimalUtils';
@@ -13,6 +14,9 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
+  orderBy,
+  query,
   serverTimestamp,
   setDoc,
   writeBatch,
@@ -23,11 +27,12 @@ interface TradeState {
   cash: string;
   holdings: Record<string, Holding>;
   orders: Order[];
+  fills: Fill[];
   initFromServer: (uid?: string) => Promise<void>;
   buy: (symbol: string, price: string, amount: string, uid: string, total: string) => Promise<void>;
   sell: (symbol: string, price: string, amount: string, uid: string) => Promise<void>;
   cancelOrder: (docId: string, uid: string) => Promise<void>;
-  // 추가
+  loadFills: (uid: string) => Promise<void>;
   selectedPrice: number | null;
   setSelectedPrice: (price: number | null) => void;
   matchOrders: (orders: Order[], uid: string) => Promise<void>;
@@ -37,11 +42,22 @@ const useTradeStore = create<TradeState>((set, get) => ({
   cash: '0',
   holdings: {},
   orders: [],
+  fills: [],
 
   selectedPrice: null,
   setSelectedPrice: (price) => set({ selectedPrice: price }),
 
   buy: async (symbol: string, price: string, amount: string, uid: string, totalPrice: string) => {
+    // 잔고 검증을 Firebase 쓰기 이전에 수행
+    const pendingBuyTotal = get()
+      .orders.filter((o) => o.side === 'buy')
+      .reduce((acc, o) => addDecimals(acc, mulDecimals(o.amount, o.price)), '0');
+    const availableCash = minusDecimals(get().cash, pendingBuyTotal);
+
+    if (isGreaterThen(totalPrice, availableCash)) {
+      throw new Error('보유 현금이 부족합니다.');
+    }
+
     await addDoc(collection(firebaseDB, 'coinwallet', uid, 'orders'), {
       side: 'buy',
       symbol,
@@ -50,13 +66,22 @@ const useTradeStore = create<TradeState>((set, get) => ({
       filledAmount: '0',
       timestamp: serverTimestamp(),
     });
-    const newCash = minusDecimals(get().cash, totalPrice);
-    if (parseFloat(newCash) < 0) throw new Error('Not Enough money');
 
     await get().initFromServer(uid);
   },
 
   sell: async (symbol: string, price: string, amount: string, uid: string) => {
+    // 미체결 매도 수량을 고려한 가용 매도 수량 검증
+    const pendingSellAmount = get()
+      .orders.filter((o) => o.symbol === symbol && o.side === 'sell')
+      .reduce((acc, o) => addDecimals(acc, o.amount), '0');
+    const holdingAmount = get().holdings[symbol]?.amount ?? '0';
+    const availableToSell = minusDecimals(holdingAmount, pendingSellAmount);
+
+    if (isGreaterThen(amount, availableToSell)) {
+      throw new Error('보유 수량이 부족합니다.');
+    }
+
     await addDoc(collection(firebaseDB, 'coinwallet', uid, 'orders'), {
       side: 'sell',
       symbol,
@@ -76,9 +101,20 @@ const useTradeStore = create<TradeState>((set, get) => ({
     await get().initFromServer(uid);
   },
 
+  loadFills: async (uid: string) => {
+    const fillsQuery = query(
+      collection(firebaseDB, 'coinwallet', uid, 'fills'),
+      orderBy('filledAt', 'desc'),
+      limit(50)
+    );
+    const fillsSnap = await getDocs(fillsQuery);
+    const fills = fillsSnap.docs.map((d) => ({ docId: d.id, ...d.data() })) as Fill[];
+    set({ fills });
+  },
+
   initFromServer: async (uid?: string) => {
     if (!uid) {
-      set({ cash: '0', holdings: {}, orders: [] });
+      set({ cash: '0', holdings: {}, orders: [], fills: [] });
       return;
     }
 
@@ -129,8 +165,7 @@ const useTradeStore = create<TradeState>((set, get) => ({
     const walletRef = doc(firebaseDB, 'coinwallet', uid);
     const walletSnap = await getDoc(walletRef);
     if (!walletSnap.exists()) {
-      alert('유저 지갑에 문제가 발생하였습니다. 관리자에게 문의하세요');
-      throw new Error('지갑 없음');
+      throw new Error('유저 지갑에 문제가 발생하였습니다.');
     }
 
     let cash = (walletSnap.data() as Wallet).cash;
@@ -170,8 +205,7 @@ const useTradeStore = create<TradeState>((set, get) => ({
 
       if (side === 'sell') {
         if (!prevHolding) {
-          alert('보유 자산이 존재하지 않습니다.');
-          throw new Error('보유 자산 없음');
+          throw new Error('보유 자산이 존재하지 않습니다.');
         }
 
         holdingChanges[symbol] = {
@@ -198,11 +232,15 @@ const useTradeStore = create<TradeState>((set, get) => ({
       });
     }
 
-    // holdings 일괄 update
+    // holdings 일괄 update (수량 0이면 삭제)
     for (const symbol in holdingChanges) {
       const holding = holdingChanges[symbol];
       const holdingRef = doc(firebaseDB, 'coinwallet', uid, 'holdings', symbol);
-      batch.set(holdingRef, holding); // set으로 통일: 존재 유무 상관없이 덮어쓰기
+      if (parseFloat(holding.amount) <= 0) {
+        batch.delete(holdingRef);
+      } else {
+        batch.set(holdingRef, holding);
+      }
     }
 
     // wallet update

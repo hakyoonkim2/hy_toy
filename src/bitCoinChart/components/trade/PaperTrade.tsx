@@ -1,6 +1,6 @@
 import styles from '@bitCoinChart/style/PaperTrade.module.scss';
 import { useAuth } from '@/hooks/AuthContext';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useTradeStore from '@bitCoinChart/store/useTradeStore';
 import {
   addDecimals,
@@ -12,10 +12,11 @@ import {
   safeMul,
   sdDecimals,
 } from '@bitCoinChart/utils/DecimalUtils';
-import { Holding } from '@bitCoinChart/types/CoinTypes';
+import { CurrentPriceData, Holding } from '@bitCoinChart/types/CoinTypes';
 import { isMobile } from 'react-device-detect';
+import { useQueryClient } from '@tanstack/react-query';
 
-const TABS = ['매수', '매도', '거래내역'] as const;
+const TABS = ['매수', '매도', '미체결', '체결내역', '보유자산'] as const;
 const PERCENTS = [10, 25, 50, 100] as const;
 
 type Tab = (typeof TABS)[number];
@@ -26,12 +27,15 @@ type Props = {
 const PaperTrade = ({ symbol }: Props) => {
   const { user, setShowingLogin } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>('매수');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [price, setPrice] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
 
+  const queryClient = useQueryClient();
+
   // method 는 함께 구독
-  const { setSelectedPrice, buy, sell, initFromServer } = useTradeStore();
+  const { setSelectedPrice, buy, sell, initFromServer, loadFills } = useTradeStore();
 
   // state 는 개별 구독
   const cash = useTradeStore((state) => state.cash);
@@ -39,6 +43,8 @@ const PaperTrade = ({ symbol }: Props) => {
   const selectedPrice = useTradeStore((state) => state.selectedPrice);
   const cancelOrder = useTradeStore((state) => state.cancelOrder);
   const holding: Holding | undefined = useTradeStore((state) => state.holdings[symbol]);
+  const allHoldings = useTradeStore((state) => state.holdings);
+  const fills = useTradeStore((state) => state.fills);
 
   const pendingSymbolAmount = orders.reduce((acc, order) => {
     if (order.symbol === symbol && order.side === 'sell') {
@@ -55,6 +61,14 @@ const PaperTrade = ({ symbol }: Props) => {
   }, '0');
 
   const availableCash = minusDecimals(cash, pendingBuyCash);
+
+  // 에러 메시지 자동 소멸
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => setErrorMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   useEffect(() => {
     if (selectedPrice !== null && user) {
@@ -73,6 +87,13 @@ const PaperTrade = ({ symbol }: Props) => {
       setAmount('');
     };
   }, [symbol, activeTab]);
+
+  // 체결내역 탭 활성화 시 fills 로드
+  useEffect(() => {
+    if (activeTab === '체결내역' && user) {
+      loadFills(user.uid);
+    }
+  }, [activeTab, user]);
 
   const handleBtnClick = () => {
     setShowingLogin(true);
@@ -133,43 +154,41 @@ const PaperTrade = ({ symbol }: Props) => {
   };
 
   const handleOrderClick = async () => {
-    // user가 없는 경우 주문 불가
     if (!user) return;
 
     const orderTotalMoney = safeMul(price, amount);
 
     if (activeTab === '매수') {
-      // $5 미만 인 경우 주문 불가
       if (isGreaterThen(5, orderTotalMoney)) {
-        alert('최소 주문금액은 $5 입니다.');
+        setErrorMessage('최소 주문금액은 $5 입니다.');
         return;
       }
       if (isGreaterThen(orderTotalMoney, availableCash)) {
-        alert('보유 현금이 부족합니다.');
+        setErrorMessage('보유 현금이 부족합니다.');
         return;
       }
       try {
         await buy(symbol, price, amount, user.uid, total);
-      } catch (e) {
-        alert('주문이 오류, 다시 시도해주세요');
+      } catch {
+        setErrorMessage('주문 오류, 다시 시도해주세요.');
         return;
       }
     } else {
       const holdingAmount = holding?.amount ?? '0';
       try {
         if (isGreaterThen(amount, holdingAmount)) {
-          alert('보유 수량이 부족합니다.');
+          setErrorMessage('보유 수량이 부족합니다.');
           return;
         }
 
         if (isGreaterThen(5, orderTotalMoney)) {
-          alert('최소 주문금액은 $5 입니다.');
+          setErrorMessage('최소 주문금액은 $5 입니다.');
           return;
         }
 
         await sell(symbol, price, amount, user.uid);
-      } catch (e) {
-        alert('주문이 잘못되었습니다');
+      } catch {
+        setErrorMessage('주문이 잘못되었습니다.');
         return;
       }
     }
@@ -205,6 +224,65 @@ const PaperTrade = ({ symbol }: Props) => {
     );
   };
 
+  // 보유자산 탭 데이터 계산
+  const holdingRows = useMemo(() => {
+    return Object.values(allHoldings)
+      .filter((h) => parseFloat(h.amount) > 0)
+      .map((h) => {
+        const currentPriceData = queryClient.getQueryData([
+          'symbol',
+          h.symbol + 'USDT',
+        ]) as CurrentPriceData | null;
+
+        const currentPrice = currentPriceData?.price?.toString() ?? '0';
+        const hasPrice = currentPriceData !== null && currentPriceData !== undefined;
+        const marketValue = hasPrice ? mulDecimals(h.amount, currentPrice) : '0';
+        const costBasis = mulDecimals(h.amount, h.price);
+        const pnl = hasPrice ? minusDecimals(marketValue, costBasis) : '0';
+        const pnlPercent =
+          hasPrice && parseFloat(costBasis) > 0
+            ? sdDecimals(mulDecimals(divideDecimals(pnl, costBasis), '100'))
+            : '0';
+        const pnlNum = parseFloat(pnl);
+
+        return {
+          symbol: h.symbol,
+          amount: h.amount,
+          avgPrice: h.price,
+          currentPrice,
+          hasPrice,
+          marketValue,
+          pnl,
+          pnlPercent,
+          pnlColor: pnlNum >= 0 ? 'rgb(247, 84, 103)' : 'rgb(67, 134, 249)',
+          pnlSign: pnlNum >= 0 ? '+' : '-',
+          pnlNum,
+        };
+      });
+  }, [allHoldings, queryClient]);
+
+  const totalPortfolioValue = useMemo(() => {
+    const holdingsValue = holdingRows.reduce(
+      (acc, row) => (row.hasPrice ? addDecimals(acc, row.marketValue) : acc),
+      '0'
+    );
+    return addDecimals(cash, holdingsValue);
+  }, [holdingRows, cash]);
+
+  const totalPnl = useMemo(() => {
+    const totalCost = holdingRows.reduce(
+      (acc, row) => addDecimals(acc, mulDecimals(row.amount, row.avgPrice)),
+      '0'
+    );
+    const totalMarket = holdingRows.reduce(
+      (acc, row) => (row.hasPrice ? addDecimals(acc, row.marketValue) : acc),
+      '0'
+    );
+    return minusDecimals(totalMarket, totalCost);
+  }, [holdingRows]);
+
+  const totalPnlNum = parseFloat(totalPnl);
+
   return (
     <div className={styles.container}>
       <div className={styles.titleRow}>
@@ -212,11 +290,9 @@ const PaperTrade = ({ symbol }: Props) => {
         <span className={styles.betaWrapper}>
           <span className={styles.betaBadge}>Beta</span>
           <div className={styles.tooltip} style={isMobile ? { left: '-100px' } : {}}>
-            현재 모의 투자는 현재 사이트에 접속한 상태일때만 주문체결이 가능합니다.
+            현재 모의 투자는 사이트에 접속한 상태일때만 주문체결이 가능합니다.
             <br />
-            웹사이트에 접속하지 않은 경우 체결에대한 기능은 조만간 도입예정입니다.
-            <br />
-            현재 자산내역, 거래내역을 확인할 수 있는 UI는 제공하지 않아 업데이트 예정입니다.
+            보유자산, 체결내역 탭에서 거래 현황을 확인할 수 있습니다.
           </div>
         </span>
       </div>
@@ -232,6 +308,12 @@ const PaperTrade = ({ symbol }: Props) => {
           </div>
         ))}
       </div>
+
+      {errorMessage && (
+        <div className={styles.errorBanner} onClick={() => setErrorMessage(null)}>
+          {errorMessage}
+        </div>
+      )}
 
       <div className={styles.contentContainer}>
         {(activeTab === '매수' || activeTab === '매도') && (
@@ -302,7 +384,7 @@ const PaperTrade = ({ symbol }: Props) => {
           </>
         )}
 
-        {activeTab === '거래내역' && (
+        {activeTab === '미체결' && (
           <div className={styles.orderList}>
             <table className={styles.orderTable}>
               <thead>
@@ -340,6 +422,117 @@ const PaperTrade = ({ symbol }: Props) => {
                     </td>
                   </tr>
                 ))}
+                {orders.length === 0 && (
+                  <tr>
+                    <td colSpan={5} style={{ textAlign: 'center', padding: '1rem' }}>
+                      미체결 주문이 없습니다.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {activeTab === '체결내역' && (
+          <div className={styles.orderList}>
+            <table className={styles.orderTable}>
+              <thead>
+                <tr>
+                  <th>체결시간</th>
+                  <th>마켓명</th>
+                  <th>구분</th>
+                  <th>체결가격</th>
+                  <th>체결수량</th>
+                  <th>체결금액</th>
+                </tr>
+              </thead>
+              <tbody>
+                {fills.map((fill, i) => (
+                  <tr key={fill.docId || i}>
+                    <td>{formatTimeLineBreak(fill.filledAt.seconds * 1000)}</td>
+                    <td>{fill.symbol}</td>
+                    <td style={{ color: getColor(fill.type === 'buy' ? '매수' : '매도') }}>
+                      {fill.type === 'buy' ? '매수' : '매도'}
+                    </td>
+                    <td>{formatNumber(fill.price)} USD</td>
+                    <td>{formatNumber(fill.amount)}</td>
+                    <td>{formatNumber(mulDecimals(fill.price, fill.amount))} USD</td>
+                  </tr>
+                ))}
+                {fills.length === 0 && (
+                  <tr>
+                    <td colSpan={6} style={{ textAlign: 'center', padding: '1rem' }}>
+                      체결 내역이 없습니다.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {activeTab === '보유자산' && (
+          <div className={styles.orderList}>
+            <div className={styles.portfolioSummary}>
+              <div className={styles.rowContent}>
+                <div>보유 현금</div>
+                <div>{formatNumber(cash)} USD</div>
+              </div>
+              <div className={styles.rowContent}>
+                <div>총 평가금액</div>
+                <div>{formatNumber(totalPortfolioValue)} USD</div>
+              </div>
+              <div className={styles.rowContent}>
+                <div>총 평가손익</div>
+                <div
+                  style={{ color: totalPnlNum >= 0 ? 'rgb(247, 84, 103)' : 'rgb(67, 134, 249)' }}
+                >
+                  {totalPnlNum >= 0 ? '+' : ''}
+                  {formatNumber(totalPnl)} USD
+                </div>
+              </div>
+            </div>
+            <table className={styles.orderTable}>
+              <thead>
+                <tr>
+                  <th>코인</th>
+                  <th>보유수량</th>
+                  <th>매수평균가</th>
+                  <th>현재가</th>
+                  <th>평가손익</th>
+                </tr>
+              </thead>
+              <tbody>
+                {holdingRows.map((row) => (
+                  <tr key={row.symbol}>
+                    <td>{row.symbol}</td>
+                    <td>{formatNumber(row.amount)}</td>
+                    <td>{formatNumber(row.avgPrice)} USD</td>
+                    <td>{row.hasPrice ? `${formatNumber(row.currentPrice)} USD` : '---'}</td>
+                    <td style={{ color: row.pnlColor }}>
+                      {row.hasPrice ? (
+                        <>
+                          {row.pnlSign}
+                          {formatNumber(
+                            row.pnlNum >= 0 ? row.pnl : minusDecimals('0', row.pnl)
+                          )}{' '}
+                          USD
+                          <br />({row.pnlPercent}%)
+                        </>
+                      ) : (
+                        '---'
+                      )}
+                    </td>
+                  </tr>
+                ))}
+                {holdingRows.length === 0 && (
+                  <tr>
+                    <td colSpan={5} style={{ textAlign: 'center', padding: '1rem' }}>
+                      보유 자산이 없습니다.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -352,7 +545,7 @@ const PaperTrade = ({ symbol }: Props) => {
             Please Login
           </button>
         )}
-        {activeTab !== '거래내역' && user !== null && (
+        {(activeTab === '매수' || activeTab === '매도') && user !== null && (
           <button onClick={handleOrderClick} className={styles.bottomButton}>
             주문하기
           </button>

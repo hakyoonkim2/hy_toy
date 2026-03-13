@@ -78,3 +78,13 @@ export type Holding = {
 export type Wallet = {
   cash: string;
 };
+
+export type Fill = {
+  docId: string;
+  orderId: string;
+  symbol: string;
+  price: string;
+  amount: string;
+  type: 'buy' | 'sell';
+  filledAt: Timestamp;
+};
